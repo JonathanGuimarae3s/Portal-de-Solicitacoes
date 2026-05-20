@@ -1,6 +1,7 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.modelo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -13,6 +14,6 @@ public class TipoSolicitacao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String nome;
 }

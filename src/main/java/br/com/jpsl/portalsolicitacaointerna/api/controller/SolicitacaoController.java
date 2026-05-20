@@ -1,10 +1,13 @@
 package br.com.jpsl.portalsolicitacaointerna.api.controller;
 
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.SolicitacaoRepository;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.SolicitacaoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +23,15 @@ public class SolicitacaoController {
     private SolicitacaoService solicitacaoService;
 
     @GetMapping
-    public List<Solicitacao> listarTipoSolicitacao() {
+    public List<Solicitacao> listar(@RequestParam(value = "status", required = false) String status,
+                                    @RequestParam(value = "prioridade", required = false) String prioridade) {
+
+        if (StringUtils.hasLength(status) || StringUtils.hasLength(prioridade)) {
+            return solicitacaoService.filtrarSolicitacoes(status, prioridade);
+        }
+
         return solicitacaoRepository.findAll();
     }
-
 
     @GetMapping("/{id}")
     public Solicitacao buscarPorId(@PathVariable Long id) {
@@ -32,16 +40,25 @@ public class SolicitacaoController {
 
     @PostMapping
     public Solicitacao salvarSolicitacao(@RequestBody Solicitacao solicitacao) {
-        return solicitacaoService.salvar(solicitacao);
+        try {
+            return solicitacaoService.salvar(solicitacao);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
     public Solicitacao atualizarSolicitacao(@PathVariable Long id, @RequestBody Solicitacao solicitacao) {
         Solicitacao solicitacaoSalva = solicitacaoService.buscarPorId(id);
 
-        BeanUtils.copyProperties(solicitacao, solicitacaoSalva, "id");
+        try {
+            BeanUtils.copyProperties(solicitacao, solicitacaoSalva, "id");
 
-        return solicitacaoService.salvar(solicitacaoSalva);
+            return solicitacaoService.salvar(solicitacaoSalva);
+        } catch (EntidadeNaoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
+
     }
 
 }

@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 docs/
+
+/dev.env
+test.env
+.env
+.env.*

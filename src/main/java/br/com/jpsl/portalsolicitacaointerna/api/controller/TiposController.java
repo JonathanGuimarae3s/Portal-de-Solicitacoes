@@ -1,32 +1,71 @@
 package br.com.jpsl.portalsolicitacaointerna.api.controller;
 
+import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.request.TipoSolicitacaoRequest;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.TipoSolicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.TipoSolicitacaoRepository;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.TipoSolicitacaoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.util.List;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/tipos")
 public class TiposController {
 
-    @Autowired
     private TipoSolicitacaoRepository tipoSolicitacaoRepositorio;
 
-    @Autowired
     private TipoSolicitacaoService tipoSolicitacaoService;
 
+    public TiposController(TipoSolicitacaoRepository tipoSolicitacaoRepositorio, TipoSolicitacaoService tipoSolicitacaoService) {
+        this.tipoSolicitacaoRepositorio = tipoSolicitacaoRepositorio;
+        this.tipoSolicitacaoService = tipoSolicitacaoService;
+    }
+
     @GetMapping
-    public List<TipoSolicitacao> listarUsuarios() {
-        return tipoSolicitacaoRepositorio.findAll();
+    public PageResponse<TipoSolicitacaoResponse> listarTipos(@PageableDefault(size = 20, sort = "id") Pageable pageable) {
+        return PageResponse.from(tipoSolicitacaoService.listarTipos(pageable).map(ApiMapper::toResponse));
+    }
+
+    @GetMapping("/{id}")
+    public TipoSolicitacaoResponse buscarPorId(@PathVariable Long id) {
+        return ApiMapper.toResponse(tipoSolicitacaoService.buscarPorId(id));
     }
 
     @PostMapping
-    public TipoSolicitacao adicionarUsuario(@RequestBody TipoSolicitacao tipoSolicitacao) {
-        return tipoSolicitacaoService.salvarSolicitacao(tipoSolicitacao);
+    public ResponseEntity<TipoSolicitacaoResponse> adicionarUsuario(@RequestBody @Valid TipoSolicitacaoRequest request) {
+        TipoSolicitacao salva = tipoSolicitacaoService.salvarSolicitacao(novaTipoSolicitacao(request));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(salva.getId()).toUri();
+        return ResponseEntity.created(location)
+                .body(ApiMapper.toResponse(salva));
     }
 
+    @PutMapping("/{id}")
+    public TipoSolicitacaoResponse atualizar(@PathVariable Long id, @RequestBody @Valid TipoSolicitacaoRequest request) {
+        TipoSolicitacao tipoSolicitacao = tipoSolicitacaoService.buscarPorId(id);
+        aplicar(request,tipoSolicitacao);
+        return ApiMapper.toResponse(tipoSolicitacaoService.salvarSolicitacao(tipoSolicitacao));
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Long id) {
+        tipoSolicitacaoService.excluir(id);
+        return ResponseEntity.noContent().build();
+    }
+    private TipoSolicitacao novaTipoSolicitacao(TipoSolicitacaoRequest request) {
+        TipoSolicitacao tipoSolicitacao = new TipoSolicitacao();
+        tipoSolicitacao.setNome(request.nome());
+        return tipoSolicitacao;
+    }
+
+    private void aplicar(TipoSolicitacaoRequest request, TipoSolicitacao tipoSolicitacao) {
+        tipoSolicitacao.setNome(request.nome());
+    }
 }

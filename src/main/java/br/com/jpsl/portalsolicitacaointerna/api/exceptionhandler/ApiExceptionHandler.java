@@ -5,7 +5,7 @@ import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontrad
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
-import org.flywaydb.core.internal.util.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;

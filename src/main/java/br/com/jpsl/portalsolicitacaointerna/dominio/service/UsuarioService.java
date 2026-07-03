@@ -1,18 +1,24 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.service;
 
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
 public class UsuarioService {
 
-    @Autowired
     private UsuarioRepository usuarioRepository;
+
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
 
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
@@ -29,10 +35,30 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public Usuario adicionarUsuario(Usuario usuario) {
+    public Usuario atualizar(UsuarioRequest request, Long id){
+        Usuario usuario = buscarPorId(id);
 
-        if (buscarPorEmail(usuario.getEmail()) != null) {
-            throw new NegocioException("Já existe um usuário com o email: " + usuario.getEmail());
+        if (StringUtils.hasLength(request.nome())) {
+            usuario.setNome(request.nome());
+        }
+
+        if (StringUtils.hasLength(request.email()) && buscarPorEmail(request.email()) == null) {
+            usuario.setEmail(request.email());
+        } else {
+            throw new NegocioException("Email inválido ou email já cadastrado no sistema.");
+        }
+
+        if (StringUtils.hasLength(request.setor())) {
+            usuario.setSetor(request.setor());
+        }
+
+       return usuarioRepository.save(usuario);
+    }
+
+    public Usuario salvar(Usuario usuario) {
+        Usuario usuarioExistente = buscarPorEmail(usuario.getEmail());
+        if (usuarioExistente != null && !usuarioExistente.getId().equals(usuario.getId())) {
+            throw new NegocioException("Email inválido ou email já cadastrado no sistema.");
         }
 
         if (!StringUtils.hasLength(usuario.getSetor())) {
@@ -44,5 +70,14 @@ public class UsuarioService {
         }
 
         return usuarioRepository.save(usuario);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Usuario> listar(Pageable pageable) {
+        return usuarioRepository.findAll(pageable);
+    }
+
+    public Page<Usuario> buscaPorSetor(String setor, Pageable pageable) {
+        return usuarioRepository.findAllBySetor(setor, pageable);
     }
 }

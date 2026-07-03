@@ -1,60 +1,63 @@
 package br.com.jpsl.portalsolicitacaointerna.api.controller;
 
+import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.request.SolicitacaoRequest;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
-import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
-import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.SolicitacaoRepository;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.SolicitacaoService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/solicitacoes")
 public class SolicitacaoController {
 
-    @Autowired
-    private SolicitacaoRepository solicitacaoRepository;
 
-    @Autowired
     private SolicitacaoService solicitacaoService;
 
+    public SolicitacaoController(SolicitacaoService solicitacaoService) {
+        this.solicitacaoService = solicitacaoService;
+    }
+
     @GetMapping
-    public List<Solicitacao> listar(@RequestParam(value = "status", required = false) String status,
-                                    @RequestParam(value = "prioridade", required = false) String prioridade) {
+    public PageResponse<SolicitacaoResponse> listar(
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "prioridade", required = false) String prioridade,
+            Pageable pageable) {
 
         if (StringUtils.hasLength(status) || StringUtils.hasLength(prioridade)) {
-            return solicitacaoService.filtrarSolicitacoes(status, prioridade);
+            return PageResponse.from(solicitacaoService.filtrarSolicitacoes(status, prioridade, pageable)
+                    .map(ApiMapper::toResponse));
         }
 
-        return solicitacaoRepository.findAll();
+        return PageResponse.from(solicitacaoService.listarTodas(pageable)
+                .map(ApiMapper::toResponse));
     }
 
     @GetMapping("/{id}")
-    public Solicitacao buscarPorId(@PathVariable Long id) {
-        return solicitacaoService.buscarPorId(id);
+    public SolicitacaoResponse buscarPorId(@PathVariable Long id) {
+        return ApiMapper.toResponse(solicitacaoService.buscarPorId(id));
     }
 
     @PostMapping
-    public Solicitacao salvarSolicitacao(@RequestBody Solicitacao solicitacao) {
+    public SolicitacaoResponse salvarSolicitacao(@RequestBody @Valid SolicitacaoRequest request) {
         try {
-            return solicitacaoService.salvar(solicitacao);
+            return ApiMapper.toResponse(solicitacaoService.salvar(request));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public Solicitacao atualizarSolicitacao(@PathVariable Long id, @RequestBody Solicitacao solicitacao) {
-        Solicitacao solicitacaoSalva = solicitacaoService.buscarPorId(id);
+    public SolicitacaoResponse atualizarSolicitacao(@PathVariable Long id,
+                                                    @RequestBody @Valid SolicitacaoRequest request) {
 
         try {
-            BeanUtils.copyProperties(solicitacao, solicitacaoSalva, "id");
-
-            return solicitacaoService.salvar(solicitacaoSalva);
+            return ApiMapper.toResponse(solicitacaoService.atualizar(id, request));
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }

@@ -21,12 +21,14 @@ public class TipoSolicitacaoService {
         this.tipoSolicitacaoRepositorio = tipoSolicitacaoRepositorio;
     }
 
+    @Transactional(readOnly = true)
     public TipoSolicitacao buscarPorId(Long id) {
         return tipoSolicitacaoRepositorio.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Tipo de Solicitacao não encontrado com id: " + id)
         );
     }
 
+    @Transactional
     public TipoSolicitacao salvarSolicitacao(TipoSolicitacao tipoSolicitacao) {
 
         if (!StringUtils.hasLength(tipoSolicitacao.getNome())) {

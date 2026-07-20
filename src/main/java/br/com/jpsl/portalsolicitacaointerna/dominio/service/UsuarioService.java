@@ -14,18 +14,20 @@ import org.springframework.util.StringUtils;
 @Service
 public class UsuarioService {
 
-    private UsuarioRepository usuarioRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
+    @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
                 () -> new EntidadeNaoEncontradaException("Usuario não encontrado com id: " + id)
         );
     }
 
+    @Transactional(readOnly = true)
     public Usuario buscarPorEmail(String email) {
 
         if (!StringUtils.hasLength(email)) {
@@ -35,6 +37,7 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
+    @Transactional
     public Usuario atualizar(UsuarioRequest request, Long id){
         Usuario usuario = buscarPorId(id);
 
@@ -42,10 +45,13 @@ public class UsuarioService {
             usuario.setNome(request.nome());
         }
 
-        if (StringUtils.hasLength(request.email()) && buscarPorEmail(request.email()) == null) {
+        if (StringUtils.hasLength(request.email())) {
+            Usuario usuarioSalvo = buscarPorEmail(request.email());
+            if (usuarioSalvo != null && !usuarioSalvo.getId().equals(id)) {
+                throw new NegocioException("Email inválido ou email já cadastrado no sistema.");
+            }
+
             usuario.setEmail(request.email());
-        } else {
-            throw new NegocioException("Email inválido ou email já cadastrado no sistema.");
         }
 
         if (StringUtils.hasLength(request.setor())) {
@@ -55,6 +61,7 @@ public class UsuarioService {
        return usuarioRepository.save(usuario);
     }
 
+    @Transactional
     public Usuario salvar(Usuario usuario) {
         Usuario usuarioExistente = buscarPorEmail(usuario.getEmail());
         if (usuarioExistente != null && !usuarioExistente.getId().equals(usuario.getId())) {
@@ -77,6 +84,7 @@ public class UsuarioService {
         return usuarioRepository.findAll(pageable);
     }
 
+    @Transactional(readOnly = true)
     public Page<Usuario> buscaPorSetor(String setor, Pageable pageable) {
         return usuarioRepository.findAllBySetor(setor, pageable);
     }

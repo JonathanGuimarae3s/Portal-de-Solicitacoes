@@ -15,5 +15,6 @@ public class TipoSolicitacao {
     private Long id;
 
     @NotBlank
+    @Column(unique = true)
     private String nome;
 }

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -61,11 +62,13 @@ public class TiposController {
     }
     private TipoSolicitacao novaTipoSolicitacao(TipoSolicitacaoRequest request) {
         TipoSolicitacao tipoSolicitacao = new TipoSolicitacao();
-        tipoSolicitacao.setNome(request.nome());
+        String nome = StringUtils.trimAllWhitespace(request.nome());
+        tipoSolicitacao.setNome(nome);
         return tipoSolicitacao;
     }
 
     private void aplicar(TipoSolicitacaoRequest request, TipoSolicitacao tipoSolicitacao) {
-        tipoSolicitacao.setNome(request.nome());
+        String nome = StringUtils.trimAllWhitespace(request.nome());
+        tipoSolicitacao.setNome(nome);
     }
 }

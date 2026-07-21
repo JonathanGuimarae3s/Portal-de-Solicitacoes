@@ -2,8 +2,8 @@ package br.com.jpsl.portalsolicitacaointerna.api.controller;
 
 import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
-import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.request.TipoSolicitacaoRequest;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.TipoSolicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.TipoSolicitacaoRepository;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.TipoSolicitacaoService;
@@ -51,7 +51,7 @@ public class TiposController {
     @PutMapping("/{id}")
     public TipoSolicitacaoResponse atualizar(@PathVariable Long id, @RequestBody @Valid TipoSolicitacaoRequest request) {
         TipoSolicitacao tipoSolicitacao = tipoSolicitacaoService.buscarPorId(id);
-        aplicar(request,tipoSolicitacao);
+        aplicar(request, tipoSolicitacao);
         return ApiMapper.toResponse(tipoSolicitacaoService.salvarSolicitacao(tipoSolicitacao));
     }
 
@@ -60,6 +60,7 @@ public class TiposController {
         tipoSolicitacaoService.excluir(id);
         return ResponseEntity.noContent().build();
     }
+
     private TipoSolicitacao novaTipoSolicitacao(TipoSolicitacaoRequest request) {
         TipoSolicitacao tipoSolicitacao = new TipoSolicitacao();
         String nome = StringUtils.trimAllWhitespace(request.nome());

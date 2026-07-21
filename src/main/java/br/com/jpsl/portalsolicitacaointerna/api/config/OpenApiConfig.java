@@ -22,7 +22,7 @@ public class OpenApiConfig {
                         .description("API REST para abertura, aprovacao e acompanhamento de solicitacoes internas.")
                         .version("v1")
                         .contact(new Contact()
-                                .name("Jonathan")
+                                .name("Jonathan GUimarães")
                         )
                 )
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))

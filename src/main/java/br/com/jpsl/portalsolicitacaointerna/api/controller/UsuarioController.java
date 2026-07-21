@@ -68,7 +68,7 @@ public class UsuarioController {
                 .body(ApiMapper.toResponse(salva));
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/status/{id}")
     public UsuarioResponse atualizarStatus(@PathVariable Long id, @RequestBody @Valid UsuarioStatusRequest usuarioStatusRequest) {
         return ApiMapper.toResponse(usuarioService.atualizarStatus(id, usuarioStatusRequest.ativo()));
     }

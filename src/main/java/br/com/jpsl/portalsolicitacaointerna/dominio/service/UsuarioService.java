@@ -38,7 +38,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario atualizar(UsuarioRequest request, Long id){
+    public Usuario atualizar(UsuarioRequest request, Long id) {
         Usuario usuario = buscarPorId(id);
 
         if (StringUtils.hasLength(request.nome())) {
@@ -58,7 +58,7 @@ public class UsuarioService {
             usuario.setSetor(request.setor());
         }
 
-       return usuarioRepository.save(usuario);
+        return usuarioRepository.save(usuario);
     }
 
     @Transactional

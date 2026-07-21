@@ -5,26 +5,32 @@ import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResponse;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
 
-    private UsuarioService usuarioService;
+    private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, PasswordEncoder passwordEncoder) {
         this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -41,7 +47,7 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     public UsuarioResponse atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioRequest request) {
-        return ApiMapper.toResponse(usuarioService.atualizar(request,id));
+        return ApiMapper.toResponse(usuarioService.atualizar(request, id));
     }
 
     @PostMapping
@@ -73,6 +79,19 @@ public class UsuarioController {
 
         if (StringUtils.hasLength(request.setor())) {
             usuario.setSetor(request.setor());
+        }
+
+        if (StringUtils.hasLength(request.senha())) {
+            String senhaHash = passwordEncoder.encode(request.senha());
+            usuario.setSenha(senhaHash);
+        }
+
+        if (StringUtils.hasLength(request.perfil())) {
+            PerfilUsuario perfilUsuario = PerfilUsuario.fromString(request.perfil())
+                    .orElseThrow(() -> new NegocioException("Perfil de Usuário inválido. Valores válidos: " +
+                            "Perfil de Usuário : " + Arrays.toString(PerfilUsuario.values())));
+
+            usuario.setPerfil(perfilUsuario);
         }
     }
 

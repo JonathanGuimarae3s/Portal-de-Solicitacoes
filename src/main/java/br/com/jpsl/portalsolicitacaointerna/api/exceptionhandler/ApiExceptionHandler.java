@@ -1,5 +1,6 @@
 package br.com.jpsl.portalsolicitacaointerna.api.exceptionhandler;
 
+import br.com.jpsl.portalsolicitacaointerna.auth.excecao.AutenticacaoException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeEmUsoException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
     public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. " +
             "Tente novamente e se o problema persistir, entre " +
@@ -72,6 +73,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.NEGOCIO;
+        String message = ex.getMessage();
+
+
+        Problem problem = createProblemBuilder(status, problemType, message)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(AutenticacaoException.class)
+    public ResponseEntity<?> handleAutenticacaoException(AutenticacaoException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ProblemType problemType = ProblemType.ERRO_DE_SISTEMA;
         String message = ex.getMessage();
 
 

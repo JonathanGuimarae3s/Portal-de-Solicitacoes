@@ -11,11 +11,11 @@ FROM usuario;
 -- USUARIOS
 -- Senha dos usuarios mock: password
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (1, 'Joao Silva', 'joao.silva@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN', 'TI', 1);
+VALUES (1, 'Administrador Demo', 'admin@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN', 'TI', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (2, 'Maria Santos', 'maria.santos@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'GESTOR', 'RH', 1);
+VALUES (2, 'Gestor Demo', 'gestor@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'GESTOR', 'RH', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (3, 'Carlos Oliveira', 'carlos.oliveira@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'GESTOR', 'Financeiro', 1);
+VALUES (3, 'Usuario Demo', 'usuario@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Financeiro', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
 VALUES (4, 'Ana Costa', 'ana.costa@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Operacoes', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)

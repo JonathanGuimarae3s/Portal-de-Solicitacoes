@@ -34,7 +34,38 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
 
         Root<Solicitacao> root = criteriaQuery.from(Solicitacao.class);
 
-        var predicates = new ArrayList<>();
+        List<Predicate> predicates = criarPredicates(statusEnum, prioridadeEnum, criteriaBuilder, root);
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<Solicitacao> query = entityManager.createQuery(criteriaQuery);
+
+        List<Solicitacao> resultado = query
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList();
+
+
+        Long total = contarTotal(statusEnum, prioridadeEnum, criteriaBuilder);
+
+        return new PageImpl<>(resultado, pageable, total);
+    }
+
+    private Long contarTotal(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,
+                             CriteriaBuilder criteriaBuilder) {
+
+        CriteriaQuery<Long> countCriteria = criteriaBuilder.createQuery(Long.class);
+        Root<Solicitacao> countRoot = countCriteria.from(Solicitacao.class);
+        List<Predicate> countPredicates = criarPredicates(statusEnum, prioridadeEnum, criteriaBuilder, countRoot);
+
+        countCriteria.select(criteriaBuilder.count(countRoot));
+        countCriteria.where(countPredicates.toArray(new Predicate[0]));
+
+        return entityManager.createQuery(countCriteria).getSingleResult();
+    }
+
+    private List<Predicate> criarPredicates(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,
+                                            CriteriaBuilder criteriaBuilder, Root<Solicitacao> root) {
+        List<Predicate> predicates = new ArrayList<>();
 
         if (statusEnum != null) {
             predicates.add(criteriaBuilder.equal(root.get("status"), statusEnum));
@@ -44,15 +75,6 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
             predicates.add(criteriaBuilder.equal(root.get("prioridade"), prioridadeEnum));
         }
 
-
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
-
-        TypedQuery<Solicitacao> query = entityManager.createQuery(criteriaQuery);
-        query.setFirstResult((int) pageable.getOffset());
-        query.setMaxResults((int) pageable.getPageSize());
-
-        List<Solicitacao> solicitacaoList = query.getResultList();
-
-        return new PageImpl(solicitacaoList, pageable, solicitacaoList.size());
+        return predicates;
     }
 }

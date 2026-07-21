@@ -4,6 +4,7 @@ package br.com.jpsl.portalsolicitacaointerna.api.controller;
 import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioStatusRequest;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResponse;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
@@ -65,6 +66,11 @@ public class UsuarioController {
 
         return ResponseEntity.created(location)
                 .body(ApiMapper.toResponse(salva));
+    }
+
+    @PatchMapping("/{id}/status")
+    public UsuarioResponse atualizarStatus(@PathVariable Long id, @RequestBody @Valid UsuarioStatusRequest usuarioStatusRequest) {
+        return ApiMapper.toResponse(usuarioService.atualizarStatus(id, usuarioStatusRequest.ativo()));
     }
 
     private void aplicar(UsuarioRequest request, Usuario usuario) {

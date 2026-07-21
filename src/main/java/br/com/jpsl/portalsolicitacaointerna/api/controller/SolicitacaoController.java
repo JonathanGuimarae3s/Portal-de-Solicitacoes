@@ -6,11 +6,16 @@ import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.request.So
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
+import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.SolicitacaoService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/solicitacoes")
@@ -44,9 +49,18 @@ public class SolicitacaoController {
     }
 
     @PostMapping
-    public SolicitacaoResponse salvarSolicitacao(@RequestBody @Valid SolicitacaoRequest request) {
+    public ResponseEntity<SolicitacaoResponse> salvarSolicitacao(@RequestBody @Valid SolicitacaoRequest request) {
         try {
-            return ApiMapper.toResponse(solicitacaoService.salvar(request));
+            Solicitacao salva = solicitacaoService.salvar(request);
+
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(salva.getId())
+                    .toUri();
+
+            return ResponseEntity.created(location)
+                    .body(ApiMapper.toResponse(salva));
+
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }

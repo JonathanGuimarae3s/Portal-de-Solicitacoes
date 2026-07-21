@@ -3,6 +3,7 @@ package br.com.jpsl.portalsolicitacaointerna.auth.controller;
 import br.com.jpsl.portalsolicitacaointerna.auth.DTO.request.LoginRequest;
 import br.com.jpsl.portalsolicitacaointerna.auth.DTO.response.LoginResponse;
 import br.com.jpsl.portalsolicitacaointerna.auth.excecao.AutenticacaoException;
+import br.com.jpsl.portalsolicitacaointerna.auth.excecao.CredencialException;
 import br.com.jpsl.portalsolicitacaointerna.auth.service.TokenService;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import jakarta.validation.Valid;
@@ -38,7 +39,7 @@ public class AutenticacaoController {
 
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (BadCredentialsException e) {
-            throw new AutenticacaoException("Email ou senha invalidos.");
+            throw new CredencialException("Credencias inválidas.");
         }
     }
 

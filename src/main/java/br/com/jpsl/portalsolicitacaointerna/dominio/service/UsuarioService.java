@@ -1,10 +1,13 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.service;
 
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioStatusRequest;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
+import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.UsuarioRepository;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -87,5 +90,12 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Page<Usuario> buscaPorSetor(String setor, Pageable pageable) {
         return usuarioRepository.findAllBySetor(setor, pageable);
+    }
+
+    @Transactional
+    public Usuario atualizarStatus(Long id, @NotNull Boolean ativo) {
+        Usuario usuario = buscarPorId(id);
+        usuario.setAtivo(ativo);
+        return usuarioRepository.save(usuario);
     }
 }

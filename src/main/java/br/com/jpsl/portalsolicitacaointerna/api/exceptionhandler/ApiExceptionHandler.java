@@ -1,6 +1,7 @@
 package br.com.jpsl.portalsolicitacaointerna.api.exceptionhandler;
 
 import br.com.jpsl.portalsolicitacaointerna.auth.excecao.AutenticacaoException;
+import br.com.jpsl.portalsolicitacaointerna.auth.excecao.CredencialException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeEmUsoException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
@@ -12,6 +13,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -96,6 +98,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(CredencialException.class)
+    public ResponseEntity<?> handleCredencialException(CredencialException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+        String message = ex.getMessage();
+
+
+        Problem problem = createProblemBuilder(status, problemType, message)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -112,6 +128,22 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
 
     //INICIO DAS EXCECOES SOBREESCRITAS DO SPRING
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolation(
+            DataIntegrityViolationException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
+
+        String message = "Operacao nao permitida por violar uma restricao do banco de dados.";
+
+        Problem problem = createProblemBuilder(status, problemType, message)
+                .userMessage(message)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
 
     @Autowired
     private MessageSource messageSouce;

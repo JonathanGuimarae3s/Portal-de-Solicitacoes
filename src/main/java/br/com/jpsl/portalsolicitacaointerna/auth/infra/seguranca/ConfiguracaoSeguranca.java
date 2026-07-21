@@ -35,6 +35,7 @@ public class ConfiguracaoSeguranca {
                         authorize -> authorize.
                                 requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/tipos", "/tipos/**")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
@@ -44,13 +45,16 @@ public class ConfiguracaoSeguranca {
 
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMIN", "GESTOR")
                                 .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
-
                                 .requestMatchers(HttpMethod.GET, "/solicitacoes", "/solicitacoes/**")
+
+
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
                                 .requestMatchers(HttpMethod.POST, "/solicitacoes")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
                                 .requestMatchers(HttpMethod.PUT, "/solicitacoes/**")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+
+                                .requestMatchers(HttpMethod.PATCH, "/usuarios/**").hasRole("ADMIN")
 
                                 .anyRequest().authenticated()
                 )

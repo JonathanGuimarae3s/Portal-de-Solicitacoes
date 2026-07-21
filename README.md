@@ -216,10 +216,3 @@ mvnw.cmd test
 
 O profile de teste usa H2 em memória para subir o contexto sem depender do Oracle local.
 
-Neste momento o projeto mantém apenas um teste de carga de contexto. Testes unitários e de controller ficaram como melhoria posterior.
-
-## Próximos passos
-
-- Implementar `PATCH /usuarios/{id}/status` para ativar/desativar usuário.
-- Implementar regra fina de segurança por dono/setor da solicitação.
-- Criar testes unitários e de controller quando essa etapa entrar no escopo.

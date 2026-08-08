@@ -15,7 +15,12 @@ public interface SolicitacaoRepository extends JpaRepository<Solicitacao, Long>,
     @Override
     Page<Solicitacao> findAll(Pageable pageable);
 
+
     @Override
     Page<Solicitacao> filtrar(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum, Pageable pageable);
+
+    Long countSolicitacaoByStatus(StatusSolicitacao status);
+
+
 }
 

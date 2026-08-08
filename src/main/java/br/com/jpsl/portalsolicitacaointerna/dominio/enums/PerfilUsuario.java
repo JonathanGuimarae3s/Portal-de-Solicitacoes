@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 public enum PerfilUsuario {
     ADMIN("Administrador"),
     GESTOR("Gestor"),
-    USUARIO("Usuario");
+    USUARIO("Usuario.js");
 
     String descricao;
 

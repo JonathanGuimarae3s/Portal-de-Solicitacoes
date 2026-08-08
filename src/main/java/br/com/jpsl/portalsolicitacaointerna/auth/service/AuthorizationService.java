@@ -20,7 +20,7 @@ public class AuthorizationService implements UserDetailsService {
 
         UserDetails usuario = usuarioRepository.findUserDetailsByEmail(username);
         if (usuario == null) {
-            throw new UsernameNotFoundException("Usuario nao encontrado com email: " + username);
+            throw new UsernameNotFoundException("Usuario.js nao encontrado com email: " + username);
         }
 
         return usuario;

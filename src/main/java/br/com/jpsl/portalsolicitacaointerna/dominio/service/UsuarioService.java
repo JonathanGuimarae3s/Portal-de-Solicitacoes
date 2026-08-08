@@ -26,7 +26,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
-                () -> new EntidadeNaoEncontradaException("Usuario não encontrado com id: " + id)
+                () -> new EntidadeNaoEncontradaException("Usuario.js não encontrado com id: " + id)
         );
     }
 

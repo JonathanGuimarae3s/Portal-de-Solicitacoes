@@ -10,6 +10,8 @@ import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +54,8 @@ public class UsuarioController {
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar usuário")
+    @SecurityRequirements
     public ResponseEntity<UsuarioResponse> adicionarUsuario(@RequestBody @Valid UsuarioRequest request) {
         Usuario usuario = new Usuario();
 

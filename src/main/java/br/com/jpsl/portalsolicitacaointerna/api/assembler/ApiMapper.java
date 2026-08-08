@@ -1,7 +1,9 @@
 package br.com.jpsl.portalsolicitacaointerna.api.assembler;
 
 
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.QuantidadeSolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResumoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResumoResponse;
@@ -47,10 +49,29 @@ public final class ApiMapper {
                 solicitacao.getDescricao(),
                 solicitacao.getPrioridade(),
                 solicitacao.getStatus(),
+                solicitacao.getDataCriacao(),
                 toResumeResponse(solicitacao.getUsuario()),
                 toResponse(solicitacao.getTipo())
         );
     }
+
+    public static SolicitacaoResumoResponse toResumoResponse(Solicitacao solicitacao) {
+        return new SolicitacaoResumoResponse(
+                solicitacao.getId(),
+                solicitacao.getTitulo(),
+                solicitacao.getStatus(),
+                solicitacao.getPrioridade()
+        );
+    }
+
+    public static QuantidadeSolicitacaoResponse toResponse(Long total, Long emAprovacao, Long aprovadas, Long usuariosAtivos) {
+        return new QuantidadeSolicitacaoResponse(
+                total,
+                emAprovacao,
+                aprovadas,usuariosAtivos
+        );
+    }
+
 
 }
 

@@ -5,12 +5,16 @@ import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.Usuar
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PrioridadeSolicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.StatusSolicitacao;
 
+import java.time.LocalDateTime;
+
 public record SolicitacaoResponse(
         Long id,
         String titulo,
         String descricao,
         PrioridadeSolicitacao prioridade,
         StatusSolicitacao status,
+        LocalDateTime dataCriacao,
         UsuarioResumoResponse usuario,
         TipoSolicitacaoResponse tipo) {
 }
+

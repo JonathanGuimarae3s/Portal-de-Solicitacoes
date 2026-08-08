@@ -56,6 +56,12 @@ OpenAPI JSON:
 http://localhost:8080/v3/api-docs
 ```
 
+Collection Postman:
+
+```text
+postman/portal-solicitacao-interna.postman_collection.json
+```
+
 ## Autenticação
 
 O login retorna um token JWT.
@@ -77,7 +83,14 @@ Resposta:
 
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiJ9..."
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "expiresInMillis": 7200000,
+  "usuarioAutenticado": {
+    "nome": "Administrador Demo",
+    "email": "admin@empresa.com",
+    "perfil": "ADMIN",
+    "setor": "TI"
+  }
 }
 ```
 
@@ -143,9 +156,20 @@ Body planejado para ativar/desativar usuário:
 | Método | Rota | Acesso |
 |---|---|---|
 | GET | `/solicitacoes` | ADMIN, GESTOR, USUARIO |
+| GET | `/solicitacoes/resumo` | ADMIN, GESTOR, USUARIO |
+| GET | `/solicitacoes/contabilizaSolicitacoes` | ADMIN, GESTOR, USUARIO |
 | GET | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
 | POST | `/solicitacoes` | ADMIN, GESTOR, USUARIO |
 | PUT | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
+
+Os endpoints de listagem aceitam paginação com `page`, `size` e `sort`. Tanto `/solicitacoes` quanto
+`/solicitacoes/resumo` aceitam os filtros opcionais `status` e `prioridade`. O resumo retorna apenas
+`id`, `titulo`, `status` e `prioridade`, enquanto `/solicitacoes/contabilizaSolicitacoes` retorna os
+indicadores usados no dashboard.
+
+Nas respostas detalhadas de solicitações, `dataCriacao` é preenchida automaticamente pela API no
+momento do cadastro e retornada no formato ISO-8601, por exemplo `2026-08-08T10:30:00`. Esse campo
+não deve ser enviado nos requests de criação ou atualização.
 
 ## Regras de negócio
 
@@ -220,6 +244,5 @@ Neste momento o projeto mantém apenas um teste de carga de contexto. Testes uni
 
 ## Próximos passos
 
-- Implementar `PATCH /usuarios/{id}/status` para ativar/desativar usuário.
 - Implementar regra fina de segurança por dono/setor da solicitação.
 - Criar testes unitários e de controller quando essa etapa entrar no escopo.

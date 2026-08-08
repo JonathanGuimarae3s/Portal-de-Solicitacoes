@@ -149,4 +149,12 @@ public class SolicitacaoService {
 
         return solicitacaoRepository.save(solicitacao);
     }
+
+    public Long contabilizaSolicitacoesPorStatus(StatusSolicitacao statusSolicitacao) {
+        return solicitacaoRepository.countSolicitacaoByStatus(statusSolicitacao);
+    }
+
+    public Long contabilizaSolicitacoes() {
+        return solicitacaoRepository.count();
+    }
 }

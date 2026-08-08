@@ -11,25 +11,25 @@ FROM usuario;
 -- USUARIOS
 -- Senha dos usuarios mock: password
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (1, 'Administrador Demo', 'admin@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN', 'TI', 1);
+VALUES (1, 'Administrador Demo', 'admin@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'ADMIN', 'TI', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (2, 'Gestor Demo', 'gestor@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'GESTOR', 'RH', 1);
+VALUES (2, 'Gestor Demo', 'gestor@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'GESTOR', 'RH', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (3, 'Usuario Demo', 'usuario@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Financeiro', 1);
+VALUES (3, 'Usuario.js Demo', 'usuario@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Financeiro', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (4, 'Ana Costa', 'ana.costa@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Operacoes', 1);
+VALUES (4, 'Ana Costa', 'ana.costa@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Operacoes', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (5, 'Bruno Almeida', 'bruno.almeida@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Comercial', 1);
+VALUES (5, 'Bruno Almeida', 'bruno.almeida@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Comercial', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (6, 'Fernanda Lima', 'fernanda.lima@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Marketing', 1);
+VALUES (6, 'Fernanda Lima', 'fernanda.lima@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Marketing', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (7, 'Rafael Mendes', 'rafael.mendes@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'TI', 1);
+VALUES (7, 'Rafael Mendes', 'rafael.mendes@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'TI', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (8, 'Juliana Rocha', 'juliana.rocha@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Juridico', 1);
+VALUES (8, 'Juliana Rocha', 'juliana.rocha@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Juridico', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (9, 'Pedro Henrique', 'pedro.henrique@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Compras', 1);
+VALUES (9, 'Pedro Henrique', 'pedro.henrique@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Compras', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (10, 'Camila Ferreira', 'camila.ferreira@empresa.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'USUARIO', 'Atendimento', 1);
+VALUES (10, 'Camila Ferreira', 'camila.ferreira@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Atendimento', 1);
 
 -- TIPOS DE SOLICITACAO
 INSERT INTO tipo_solicitacao (id, nome)
@@ -47,7 +47,7 @@ VALUES (6, 'Manutencao de Equipamento');
 
 -- SOLICITACOES: exatamente 30 registros
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (1, 'Acesso ao sistema negado', 'Usuario nao consegue fazer login no sistema corporativo', 'MEDIA', 'ABERTA', 1,
+VALUES (1, 'Acesso ao sistema negado', 'Usuario.js nao consegue fazer login no sistema corporativo', 'MEDIA', 'ABERTA', 1,
         1);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
@@ -69,7 +69,7 @@ INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, 
 VALUES (7, 'Criacao de acesso', 'Novo colaborador precisa de acesso ao portal interno', 'MEDIA', 'ABERTA', 5, 5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (8, 'Alteracao de permissao', 'Usuario precisa de permissao adicional no sistema', 'ALTA', 'EM_APROVACAO', 6, 5);
+VALUES (8, 'Alteracao de permissao', 'Usuario.js precisa de permissao adicional no sistema', 'ALTA', 'EM_APROVACAO', 6, 5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
 VALUES (9, 'Impressora sem conexao', 'Impressora do setor nao aparece na rede', 'BAIXA', 'ABERTA', 7, 6);
@@ -95,7 +95,7 @@ INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, 
 VALUES (15, 'Acesso ao ambiente de homologacao', 'Solicito acesso ao ambiente de testes', 'MEDIA', 'APROVADA', 7, 5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (16, 'Recuperacao de senha', 'Usuario esqueceu a senha de acesso ao portal interno', 'BAIXA', 'CONCLUIDA', 1, 1);
+VALUES (16, 'Recuperacao de senha', 'Usuario.js esqueceu a senha de acesso ao portal interno', 'BAIXA', 'CONCLUIDA', 1, 1);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
 VALUES (17, 'Erro ao salvar solicitacao', 'Ao finalizar cadastro, sistema retorna erro inesperado', 'ALTA', 'ABERTA', 2,
@@ -110,7 +110,7 @@ VALUES (19, 'Orientacao sobre fluxo interno', 'Setor precisa de orientacao sobre
         'CONCLUIDA', 6, 4);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (20, 'Permissao indevida identificada', 'Usuario possui acesso a modulo que nao deveria acessar', 'ALTA',
+VALUES (20, 'Permissao indevida identificada', 'Usuario.js possui acesso a modulo que nao deveria acessar', 'ALTA',
         'ABERTA', 8, 5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
@@ -118,7 +118,7 @@ VALUES (21, 'Cadastro de usuario externo', 'Necessario cadastrar fornecedor com 
         'EM_APROVACAO', 9, 5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (22, 'Problema com VPN', 'Usuario nao consegue conectar na VPN corporativa', 'ALTA', 'ABERTA', 10, 1);
+VALUES (22, 'Problema com VPN', 'Usuario.js nao consegue conectar na VPN corporativa', 'ALTA', 'ABERTA', 10, 1);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
 VALUES (23, 'Atualizacao de software', 'Solicito atualizacao da ferramenta de atendimento', 'BAIXA', 'APROVADA', 2, 2);
@@ -130,7 +130,7 @@ INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, 
 VALUES (25, 'Consultoria para painel gerencial', 'Apoio para definir indicadores do setor', 'MEDIA', 'CONCLUIDA', 4, 4);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (26, 'Acesso ao modulo de compras', 'Usuario precisa consultar pedidos e fornecedores', 'MEDIA', 'APROVADA', 9,
+VALUES (26, 'Acesso ao modulo de compras', 'Usuario.js precisa consultar pedidos e fornecedores', 'MEDIA', 'APROVADA', 9,
         5);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
@@ -144,7 +144,7 @@ INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, 
 VALUES (29, 'Erro ao pesquisar solicitacoes', 'Filtro por setor retorna resultado incorreto', 'MEDIA', 'ABERTA', 7, 3);
 
 INSERT INTO solicitacao (id, titulo, descricao, prioridade, status, usuario_id, tipo_id)
-VALUES (30, 'Usuario inativo tentando acessar', 'Foi identificado acesso indevido no portal interno', 'ALTA',
+VALUES (30, 'Usuario.js inativo tentando acessar', 'Foi identificado acesso indevido no portal interno', 'ALTA',
         'REJEITADA', 10, 5);
 
 ALTER TABLE usuario MODIFY id GENERATED BY DEFAULT AS IDENTITY (START WITH LIMIT VALUE);

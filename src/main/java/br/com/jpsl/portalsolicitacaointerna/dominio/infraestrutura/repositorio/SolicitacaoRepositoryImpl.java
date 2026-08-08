@@ -34,8 +34,10 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
 
         Root<Solicitacao> root = criteriaQuery.from(Solicitacao.class);
 
+
         List<Predicate> predicates = criarPredicates(statusEnum, prioridadeEnum, criteriaBuilder, root);
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
+criteriaQuery.orderBy(criteriaBuilder.asc(root.get("")));
 
         TypedQuery<Solicitacao> query = entityManager.createQuery(criteriaQuery);
 

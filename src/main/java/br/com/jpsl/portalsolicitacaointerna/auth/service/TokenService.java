@@ -9,15 +9,17 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
 
     @Value("${api.security.token.secret}")
     private String secret;
+    
+    @Value("${api.security.token.expiration-hours:2}")
+    private Long expirationHours;
 
 
     public String gerarToken(Usuario usuario) {
@@ -48,11 +50,16 @@ public class TokenService {
         }
     }
 
+    public Long getExpiresInMillis() {
+        return getExpirationDuration().toMillis();
+    }
 
     private Instant retornaExpiracao() {
-        return LocalDateTime.now()
-                .plusHours(2)
-                .toInstant(ZoneOffset.of("-03:00"));
+        return Instant.now().plus(getExpirationDuration());
+    }
+
+    private Duration getExpirationDuration() {
+        return Duration.ofHours(expirationHours);
     }
 
 }

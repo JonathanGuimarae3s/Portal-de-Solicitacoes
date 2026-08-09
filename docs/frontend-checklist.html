@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklist Frontend Vue</title>
+    <style>
+      :root {
+        --bg: #f5f7fb;
+        --card: #ffffff;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --border: #d9e0ea;
+        --primary: #2563eb;
+        --success: #15803d;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .container {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 32px 0;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: 2rem;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        min-height: 38px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+        font-weight: 700;
+        padding: 8px 12px;
+      }
+
+      button.primary {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      .progress-card {
+        margin-bottom: 20px;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+      }
+
+      .progress-info {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .progress-bar {
+        height: 12px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e5e7eb;
+      }
+
+      .progress-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--success);
+        transition: width 0.2s ease;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      section {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        overflow: hidden;
+      }
+
+      section h2 {
+        margin: 0;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--border);
+        font-size: 1.05rem;
+      }
+
+      ul {
+        margin: 0;
+        padding: 10px 18px 18px;
+        list-style: none;
+      }
+
+      li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 9px 0;
+        border-bottom: 1px solid #edf0f5;
+      }
+
+      li:last-child {
+        border-bottom: 0;
+      }
+
+      input[type='checkbox'] {
+        width: 18px;
+        height: 18px;
+        margin-top: 1px;
+        accent-color: var(--success);
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+
+      label {
+        line-height: 1.35;
+        cursor: pointer;
+      }
+
+      input[type='checkbox']:checked + label {
+        color: var(--muted);
+        text-decoration: line-through;
+      }
+
+      .note {
+        margin-top: 20px;
+        padding: 16px;
+        border-left: 4px solid var(--primary);
+        border-radius: 8px;
+        background: #eff6ff;
+      }
+
+      @media (max-width: 800px) {
+        header {
+          flex-direction: column;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <div>
+          <h1>Checklist Frontend Vue</h1>
+          <p>
+            Trilha para construir o frontend do Portal de Solicitação Interna
+            estudando Vue, PrimeVue e integração com a API.
+          </p>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
+          <button id="clearButton" type="button">Limpar</button>
+        </div>
+      </header>
+
+      <div class="progress-card">
+        <div class="progress-info">
+          <span id="progressText">0 de 0 concluídos</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="grid" id="checklist"></div>
+
+      <div class="note">
+        <strong>Direção recomendada:</strong>
+        comece pelo Vue básico, depois layout, rotas, login, integração com API,
+        telas principais e tratamento de erros.
+      </div>
+    </main>
+
+    <script>
+      const storageKey = 'portal-frontend-vue-checklist'
+
+      const phases = [
+        {
+          title: 'Fase 1 - Fundamentos Vue',
+          items: [
+            'Entender src/main.js e como o Vue monta o App.vue.',
+            'Estudar interpolação com {{ variavel }}.',
+            'Estudar v-if e v-for.',
+            'Estudar v-model em formulários.',
+            'Estudar eventos com @click e @submit.prevent.',
+            'Criar componentes simples em src/components.'
+          ]
+        },
+        {
+          title: 'Fase 2 - Layout',
+          items: [
+            'Criar layout base da aplicação.',
+            'Criar navbar ou sidebar.',
+            'Criar links visuais para Dashboard, Solicitações, Usuários e Tipos.',
+            'Estudar componentes do PrimeVue: Button, InputText, Password, Card, Tag e DataTable.',
+            'Deixar o layout responsivo para celular.'
+          ]
+        },
+        {
+          title: 'Fase 3 - Rotas',
+          items: [
+            'Instalar Vue Router com npm install vue-router.',
+            'Criar src/router/index.js.',
+            'Criar LoginView.vue.',
+            'Criar DashboardView.vue.',
+            'Criar SolicitacoesView.vue.',
+            'Criar UsuariosView.vue.',
+            'Criar TiposView.vue.',
+            'Proteger rotas que exigem login.'
+          ]
+        },
+        {
+          title: 'Fase 4 - Integração com API',
+          items: [
+            'Instalar Axios com npm install axios.',
+            'Criar src/services/api.js.',
+            'Configurar VITE_API_BASE_URL no .env.',
+            'Fazer login em /auth/login.',
+            'Salvar token JWT no localStorage.',
+            'Enviar Authorization: Bearer TOKEN nas requisições.'
+          ]
+        },
+        {
+          title: 'Fase 5 - Autenticação',
+          items: [
+            'Criar estado de autenticação.',
+            'Instalar Pinia com npm install pinia.',
+            'Criar src/stores/auth.js.',
+            'Implementar login.',
+            'Implementar logout.',
+            'Recuperar token salvo ao recarregar a página.',
+            'Redirecionar usuário não logado para /login.'
+          ]
+        },
+        {
+          title: 'Fase 6 - Solicitações',
+          items: [
+            'Criar listagem de solicitações.',
+            'Implementar filtro por status.',
+            'Implementar filtro por prioridade.',
+            'Entender a paginação retornada pela API.',
+            'Criar formulário de nova solicitação.',
+            'Criar edição de solicitação.',
+            'Implementar fluxo ABERTA -> EM_APROVACAO.',
+            'Implementar fluxo EM_APROVACAO -> APROVADA.',
+            'Implementar fluxo EM_APROVACAO -> REJEITADA.',
+            'Implementar fluxo APROVADA -> CONCLUIDA.'
+          ]
+        },
+        {
+          title: 'Fase 7 - Usuários',
+          items: [
+            'Criar listagem de usuários.',
+            'Criar filtro por setor.',
+            'Criar formulário de cadastro.',
+            'Criar edição de usuário.',
+            'Criar botão para PATCH /usuarios/status/{id}.',
+            'Mostrar badge Ativo ou Inativo.',
+            'Ocultar ações conforme perfil do usuário.'
+          ]
+        },
+        {
+          title: 'Fase 8 - Tipos de Solicitação',
+          items: [
+            'Criar listagem de tipos.',
+            'Criar cadastro de tipo.',
+            'Criar edição de tipo.',
+            'Criar exclusão de tipo.',
+            'Tratar erro quando o tipo estiver em uso.'
+          ]
+        },
+        {
+          title: 'Fase 9 - UX e Erros',
+          items: [
+            'Criar componente de loading.',
+            'Criar componente de alerta.',
+            'Criar confirmação antes de excluir.',
+            'Tratar erro 400 Bad Request.',
+            'Tratar erro 401 Unauthorized.',
+            'Tratar erro 403 Forbidden.',
+            'Tratar erro 404 Not Found.',
+            'Tratar erro 409 Conflict.',
+            'Tratar erro 500 Internal Server Error.'
+          ]
+        },
+        {
+          title: 'Fase 10 - Apresentação',
+          items: [
+            'Testar login como ADMIN.',
+            'Testar login como GESTOR.',
+            'Testar login como USUARIO.',
+            'Demonstrar criação de solicitação.',
+            'Demonstrar aprovação de solicitação.',
+            'Demonstrar ativação/desativação de usuário.',
+            'Conferir responsividade.',
+            'Conferir console do navegador sem erros.',
+            'Rodar npm run build.'
+          ]
+        }
+      ]
+
+      const checklist = document.querySelector('#checklist')
+      const progressText = document.querySelector('#progressText')
+      const progressPercent = document.querySelector('#progressPercent')
+      const progressFill = document.querySelector('#progressFill')
+      const clearButton = document.querySelector('#clearButton')
+      const markAllButton = document.querySelector('#markAllButton')
+
+      function getSavedState() {
+        return JSON.parse(localStorage.getItem(storageKey) || '{}')
+      }
+
+      function saveState(state) {
+        localStorage.setItem(storageKey, JSON.stringify(state))
+      }
+
+      function createItemId(phaseIndex, itemIndex) {
+        return `phase-${phaseIndex}-item-${itemIndex}`
+      }
+
+      function renderChecklist() {
+        const saved = getSavedState()
+
+        checklist.innerHTML = phases
+          .map((phase, phaseIndex) => {
+            const items = phase.items
+              .map((item, itemIndex) => {
+                const id = createItemId(phaseIndex, itemIndex)
+                const checked = saved[id] ? 'checked' : ''
+
+                return `
+                  <li>
+                    <input type="checkbox" id="${id}" data-id="${id}" ${checked}>
+                    <label for="${id}">${item}</label>
+                  </li>
+                `
+              })
+              .join('')
+
+            return `
+              <section>
+                <h2>${phase.title}</h2>
+                <ul>${items}</ul>
+              </section>
+            `
+          })
+          .join('')
+
+        updateProgress()
+      }
+
+      function updateProgress() {
+        const checks = Array.from(document.querySelectorAll('input[type="checkbox"]'))
+        const total = checks.length
+        const done = checks.filter((check) => check.checked).length
+        const percent = total === 0 ? 0 : Math.round((done / total) * 100)
+
+        progressText.textContent = `${done} de ${total} concluídos`
+        progressPercent.textContent = `${percent}%`
+        progressFill.style.width = `${percent}%`
+      }
+
+      checklist.addEventListener('change', (event) => {
+        if (event.target.type !== 'checkbox') return
+
+        const saved = getSavedState()
+        saved[event.target.dataset.id] = event.target.checked
+        saveState(saved)
+        updateProgress()
+      })
+
+      clearButton.addEventListener('click', () => {
+        localStorage.removeItem(storageKey)
+        renderChecklist()
+      })
+
+      markAllButton.addEventListener('click', () => {
+        const saved = {}
+
+        phases.forEach((phase, phaseIndex) => {
+          phase.items.forEach((_, itemIndex) => {
+            saved[createItemId(phaseIndex, itemIndex)] = true
+          })
+        })
+
+        saveState(saved)
+        renderChecklist()
+      })
+
+      renderChecklist()
+    </script>
+  </body>
+</html>

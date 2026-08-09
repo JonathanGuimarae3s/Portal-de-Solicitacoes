@@ -1,42 +1,69 @@
-# masteclass-vue-pinia-router
+# Portal de Solicitação Interna — Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend do Portal de Solicitação Interna, desenvolvido com Vue 3, TypeScript, Vite, Pinia, Vue Router, PrimeVue e Tailwind CSS.
 
-## Recommended IDE Setup
+## Executar o projeto
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Crie o arquivo `.env`:
 
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```properties
+VITE_API_URL=http://localhost:8080
 ```
 
-### Compile and Hot-Reload for Development
+Instale as dependências e inicie o servidor:
 
-```sh
+```bash
+npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+Validação para produção:
 
-```sh
+```bash
 npm run build
 ```
+
+## Arquitetura
+
+O projeto utiliza organização por funcionalidades. Cada módulo concentra suas páginas, serviços, stores, componentes e tipos.
+
+```text
+src/
+  assets/                 # estilos e arquivos estáticos importados
+  core/                   # infraestrutura compartilhada da aplicação
+    http/                 # cliente Axios e configuração de autenticação
+  modules/                # funcionalidades de negócio
+    auth/
+      pages/
+      services/
+      stores/
+      types/
+    dashboard/
+      components/
+      pages/
+      services/
+      stores/
+      types/
+    solicitacoes/
+      pages/
+    usuarios/
+      pages/
+  router/                 # rotas e guards de navegação
+  shared/                 # componentes e layouts reutilizáveis
+    components/
+    layouts/
+  App.vue
+  main.ts
+```
+
+## Responsabilidades
+
+- `core`: integrações técnicas usadas por vários módulos, sem regras de interface.
+- `modules`: código pertencente a uma funcionalidade específica.
+- `services`: comunicação HTTP e adaptação das respostas da API.
+- `stores`: estado reativo e coordenação dos casos de uso da tela.
+- `types`: contratos TypeScript do módulo.
+- `shared`: componentes visuais realmente reutilizáveis.
+- `router`: definição das rotas e proteção de páginas autenticadas.
+
+Componentes específicos devem permanecer dentro do próprio módulo. Um componente só deve ir para `shared` quando puder ser reutilizado sem depender de uma regra de negócio específica.

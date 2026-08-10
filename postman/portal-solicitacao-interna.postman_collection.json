@@ -572,7 +572,7 @@
           }
         },
         {
-          "name": "Listar resumo das solicitacoes",
+          "name": "Dashboard - listar solicitacoes",
           "request": {
             "auth": {
               "type": "bearer",
@@ -587,13 +587,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/solicitacoes/resumo?page=0&size=10&sort=id,desc",
+              "raw": "{{baseUrl}}/dashboard/solicitacoes?page=0&size=10&sort=id,desc",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "solicitacoes",
-                "resumo"
+                "dashboard",
+                "solicitacoes"
               ],
               "query": [
                 {
@@ -624,7 +624,7 @@
           }
         },
         {
-          "name": "Contabilizar solicitacoes para o dashboard",
+          "name": "Dashboard - consultar indicadores",
           "request": {
             "auth": {
               "type": "bearer",
@@ -639,13 +639,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/solicitacoes/contabilizaSolicitacoes",
+              "raw": "{{baseUrl}}/dashboard/indicadores",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "solicitacoes",
-                "contabilizaSolicitacoes"
+                "dashboard",
+                "indicadores"
               ]
             },
             "description": "Retorna total, emAprovacao, aprovadas e usuariosAtivos para o dashboard."

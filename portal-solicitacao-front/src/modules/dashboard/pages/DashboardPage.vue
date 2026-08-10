@@ -2,29 +2,31 @@
 import {onMounted} from "vue";
 import {storeToRefs} from "pinia";
 import Button from "primevue/button";
-import Column from "primevue/column";
-import DataTable from "primevue/datatable";
 import Message from "primevue/message";
 import DashboardCard from "../components/DashboardCard.vue";
 import {useDashboardStore} from "../stores/dashboard.store";
 import Loading from "@/shared/components/Loading.vue";
 import Titulo from "@/shared/components/Titulo.vue";
-import {PrioridadeSolicitacao, StatusSolicitacao} from "@/modules/dashboard/interfaces/dashboard.types.ts";
+import TabelaDashboard from "@/modules/dashboard/pages/TabelaDashboard.vue";
 
 const dashboardStore = useDashboardStore();
-const {indicadores, solicitacoes, erro, isLoading} = storeToRefs(dashboardStore);
+const {indicadores, erroIndicadores, isLoading,} = storeToRefs(dashboardStore);
 
-onMounted(() => dashboardStore.carregarDashboard());
+onMounted(() => {
+  dashboardStore.carregarDashboard()
+
+});
+
 </script>
 
 <template>
   <Loading v-if="isLoading"/>
 
-  <Message v-else-if="erro" severity="error" :closable="false">
-    {{ erro }}
+  <Message v-else-if="erroIndicadores" severity="error" :closable="false">
+    {{ erroIndicadores }}
   </Message>
 
-  <div v-else class="flex flex-col gap-9">
+  <div v-else class="flex flex-col gap-6 pb-4">
     <div class="flex items-center justify-between">
       <Titulo text="Dashboard" subtext="Resumo geral das solicitações internas."/>
       <Button label="Nova solicitação"/>
@@ -37,28 +39,7 @@ onMounted(() => dashboardStore.carregarDashboard());
       <DashboardCard titulo="Usuários ativos" descricao="Ambiente dev" :quantidade="indicadores?.usuariosAtivos"/>
     </div>
 
-    <DataTable :value="solicitacoes?.dados"
-               :total-records="solicitacoes?.totalDados"
-               :paginator="true"
-               :rows="8" class="w-full"
-               paginatorPosition="top"
-    >
-      <Column field="id" header="Código"/>
-      <Column field="titulo" header="Título"/>
-      <Column field="status" header="Status">
-        <template #body="slotProps">
-            <span>
-                {{ StatusSolicitacao[slotProps.data.status as keyof typeof StatusSolicitacao] }}
-            </span>
-        </template>
-      </Column>
-      <Column field="prioridade" header="Prioridade">
-        <template #body="slotProps">
-            <span>
-                {{ PrioridadeSolicitacao[slotProps.data.prioridade as keyof typeof PrioridadeSolicitacao] }}
-            </span>
-        </template>
-      </Column>
-    </DataTable>
+    <TabelaDashboard/>
+
   </div>
 </template>

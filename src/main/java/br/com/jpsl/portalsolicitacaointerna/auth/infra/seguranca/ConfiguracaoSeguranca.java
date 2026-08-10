@@ -50,6 +50,9 @@ public class ConfiguracaoSeguranca {
                                 .requestMatchers(HttpMethod.PUT, "/tipos/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.DELETE, "/tipos/**").hasRole("ADMIN")
 
+                                .requestMatchers(HttpMethod.GET, "/dashboard", "/dashboard/**")
+                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMIN", "GESTOR")
                                 .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/solicitacoes", "/solicitacoes/**")

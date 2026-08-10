@@ -1,10 +1,9 @@
-import { defineStore } from "pinia";
-import { ref } from "vue";
-import {
-    buscarIndicadoresDashboard,
-    buscarSolicitacoesResumo,
-} from "../services/dashboard.service";
+import {defineStore} from "pinia";
+import {ref} from "vue";
+import {buscarIndicadoresDashboard, buscarSolicitacoesResumo,} from "../services/dashboard.service";
+
 import type {
+    ConsultaSolicitacoes,
     IndicadoresDashboard,
     PageResponse,
     SolicitacaoResumo,
@@ -12,26 +11,23 @@ import type {
 
 export const useDashboardStore = defineStore("dashboard", () => {
     const isLoading = ref(false);
-    const erro = ref<string | null>(null);
+
+    const erroIndicadores = ref<string | null>(null);
     const indicadores = ref<IndicadoresDashboard | null>(null);
+
+
     const solicitacoes = ref<PageResponse<SolicitacaoResumo> | null>(null);
 
     async function carregarDashboard() {
         try {
             isLoading.value = true;
-            erro.value = null;
 
-            const [novosIndicadores, novasSolicitacoes] = await Promise.all([
-                buscarIndicadoresDashboard(),
-                buscarSolicitacoesResumo(),
-            ]);
+            erroIndicadores.value = null;
 
-            indicadores.value = novosIndicadores;
-            solicitacoes.value = novasSolicitacoes;
+            indicadores.value = await buscarIndicadoresDashboard()
 
-            console.log(solicitacoes.value);
         } catch {
-            erro.value = "Não foi possível carregar o dashboard.";
+            erroIndicadores.value = "Não foi possível carregar o dashboard.";
             indicadores.value = null;
             solicitacoes.value = null;
         } finally {
@@ -39,11 +35,28 @@ export const useDashboardStore = defineStore("dashboard", () => {
         }
     }
 
+    const erroTabela = ref<string | null>(null);
+
+    async function carregarSolicitacoes(consulta: ConsultaSolicitacoes) {
+        try {
+
+            erroTabela.value = null;
+            solicitacoes.value = await buscarSolicitacoesResumo(consulta);
+        } catch {
+            erroTabela.value = "Não foi possível carregar as solicitações.";
+            solicitacoes.value = null;
+
+            throw new Error(erroTabela.value);
+        }
+    }
+
     return {
         isLoading,
-        erro,
+        erroIndicadores,
+        erroTabela,
         indicadores,
         solicitacoes,
         carregarDashboard,
+        carregarSolicitacoes
     };
 });

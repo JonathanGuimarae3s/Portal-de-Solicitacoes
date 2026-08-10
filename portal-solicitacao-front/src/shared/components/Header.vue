@@ -17,7 +17,7 @@ async function handleLogout() {
 
 <template>
   <header class="flex justify-between items-center px-6 h-16 border-b border-zinc-800">
-    <h1 class="text-xl font-black">Portal solicitacoes</h1>
+    <h1 class="text-xl font-black">Portal solicitações</h1>
 
     <div class="flex gap-3 items-center">
 

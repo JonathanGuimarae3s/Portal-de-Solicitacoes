@@ -20,5 +20,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     Page<Usuario> findAllBySetor(String cargo, Pageable pageable);
 
+    Long countByAtivoTrue();
 
 }

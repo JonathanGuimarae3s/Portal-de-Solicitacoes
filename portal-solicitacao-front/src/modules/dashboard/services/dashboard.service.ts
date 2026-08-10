@@ -1,5 +1,6 @@
 import api from "@/core/http/api";
 import type {
+    ConsultaSolicitacoes,
     IndicadoresDashboard,
     PageResponse,
     SolicitacaoResumo,
@@ -7,18 +8,27 @@ import type {
 
 export async function buscarIndicadoresDashboard(): Promise<IndicadoresDashboard> {
     const response = await api.get<IndicadoresDashboard>(
-        "/solicitacoes/contabilizaSolicitacoes",
+        "/dashboard/indicadores",
     );
 
     return response.data;
 }
 
-export async function buscarSolicitacoesResumo(): Promise<PageResponse<SolicitacaoResumo>> {
+export async function buscarSolicitacoesResumo(
+    consulta: ConsultaSolicitacoes = {
+        pagina: 0,
+        tamanho: 10,
+        ordenarPor: "id",
+    }
+): Promise<PageResponse<SolicitacaoResumo>> {
+
     const response = await api.get<PageResponse<SolicitacaoResumo>>(
-        "/solicitacoes/resumo",
+        "/dashboard/solicitacoes",
         {
             params: {
-                sort: "id,desc",
+                page: consulta.pagina,
+                size: consulta.tamanho,
+                sort: `${consulta.ordenarPor},desc`,
             },
         },
     );

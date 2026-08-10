@@ -150,10 +150,12 @@ public class SolicitacaoService {
         return solicitacaoRepository.save(solicitacao);
     }
 
+    @Transactional(readOnly = true)
     public Long contabilizaSolicitacoesPorStatus(StatusSolicitacao statusSolicitacao) {
         return solicitacaoRepository.countSolicitacaoByStatus(statusSolicitacao);
     }
 
+    @Transactional(readOnly = true)
     public Long contabilizaSolicitacoes() {
         return solicitacaoRepository.count();
     }

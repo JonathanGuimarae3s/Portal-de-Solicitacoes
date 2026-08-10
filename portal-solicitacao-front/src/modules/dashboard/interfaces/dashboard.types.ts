@@ -1,3 +1,5 @@
+import {PrioridadeSolicitacao, type StatusSolicitacao} from "@/modules/enums/enums.ts";
+
 export interface IndicadoresDashboard {
     total: number;
     emAprovacao: number;
@@ -12,21 +14,6 @@ export interface SolicitacaoResumo {
     prioridade: PrioridadeSolicitacao;
 }
 
-export enum StatusSolicitacao {
-    ABERTA = "Aberta",
-    EM_APROVACAO = "Em aprovacao",
-    APROVADA = "Aprovada",
-    REJEITADA = "Rejeitada",
-    CONCLUIDA = "Concluído"
-
-}
-
-export enum PrioridadeSolicitacao {
-
-    BAIXA = "Baixa",
-    MEDIA = "Média",
-    ALTA = "Alta"
-}
 
 export interface PageResponse<T> {
     dados: T[];
@@ -34,4 +21,11 @@ export interface PageResponse<T> {
     tamanho: number;
     totalDados: number;
     totalPaginas: number;
+}
+
+
+export interface ConsultaSolicitacoes {
+    pagina: number;
+    tamanho: number;
+    ordenarPor: string;
 }

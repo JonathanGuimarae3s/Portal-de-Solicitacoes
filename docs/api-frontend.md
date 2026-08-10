@@ -423,7 +423,7 @@ Response:
 }
 ```
 
-### GET `/solicitacoes/resumo`
+### GET `/dashboard/solicitacoes`
 
 Acesso: `ADMIN`, `GESTOR`, `USUARIO`.
 
@@ -449,7 +449,7 @@ Response:
 }
 ```
 
-### GET `/solicitacoes/contabilizaSolicitacoes`
+### GET `/dashboard/indicadores`
 
 Acesso: `ADMIN`, `GESTOR`, `USUARIO`.
 
@@ -462,11 +462,11 @@ Response:
   "total": 30,
   "emAprovacao": 8,
   "aprovadas": 12,
-  "usuariosAtivos": 0
+  "usuariosAtivos": 18
 }
 ```
 
-No estado atual da API, `usuariosAtivos` ainda é retornado como `0` pelo controller.
+`usuariosAtivos` é calculado a partir dos usuários cujo campo `ativo` está como `true`.
 
 ### POST `/solicitacoes`
 

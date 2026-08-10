@@ -92,6 +92,11 @@ public class UsuarioService {
         return usuarioRepository.findAllBySetor(setor, pageable);
     }
 
+    @Transactional(readOnly = true)
+    public Long contabilizarUsuariosAtivos() {
+        return usuarioRepository.countByAtivoTrue();
+    }
+
     @Transactional
     public Usuario atualizarStatus(Long id, @NotNull Boolean ativo) {
         Usuario usuario = buscarPorId(id);

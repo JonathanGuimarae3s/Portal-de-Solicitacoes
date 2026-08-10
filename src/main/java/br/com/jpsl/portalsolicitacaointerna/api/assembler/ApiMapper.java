@@ -1,7 +1,7 @@
 package br.com.jpsl.portalsolicitacaointerna.api.assembler;
 
 
-import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.QuantidadeSolicitacaoResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.dashboard.response.DashboardIndicadoresResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResumoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
@@ -64,11 +64,13 @@ public final class ApiMapper {
         );
     }
 
-    public static QuantidadeSolicitacaoResponse toResponse(Long total, Long emAprovacao, Long aprovadas, Long usuariosAtivos) {
-        return new QuantidadeSolicitacaoResponse(
+    public static DashboardIndicadoresResponse toDashboardIndicadoresResponse(
+            Long total, Long emAprovacao, Long aprovadas, Long usuariosAtivos) {
+        return new DashboardIndicadoresResponse(
                 total,
                 emAprovacao,
-                aprovadas,usuariosAtivos
+                aprovadas,
+                usuariosAtivos
         );
     }
 

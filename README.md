@@ -156,16 +156,21 @@ Body planejado para ativar/desativar usuário:
 | Método | Rota | Acesso |
 |---|---|---|
 | GET | `/solicitacoes` | ADMIN, GESTOR, USUARIO |
-| GET | `/solicitacoes/resumo` | ADMIN, GESTOR, USUARIO |
-| GET | `/solicitacoes/contabilizaSolicitacoes` | ADMIN, GESTOR, USUARIO |
 | GET | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
 | POST | `/solicitacoes` | ADMIN, GESTOR, USUARIO |
 | PUT | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
 
+### Dashboard
+
+| Método | Rota | Acesso |
+|---|---|---|
+| GET | `/dashboard/solicitacoes` | ADMIN, GESTOR, USUARIO |
+| GET | `/dashboard/indicadores` | ADMIN, GESTOR, USUARIO |
+
 Os endpoints de listagem aceitam paginação com `page`, `size` e `sort`. Tanto `/solicitacoes` quanto
-`/solicitacoes/resumo` aceitam os filtros opcionais `status` e `prioridade`. O resumo retorna apenas
-`id`, `titulo`, `status` e `prioridade`, enquanto `/solicitacoes/contabilizaSolicitacoes` retorna os
-indicadores usados no dashboard.
+`/dashboard/solicitacoes` aceitam os filtros opcionais `status` e `prioridade`. A listagem do dashboard
+retorna apenas `id`, `titulo`, `status` e `prioridade`. `/dashboard/indicadores` retorna as quantidades
+de solicitações e a quantidade real de usuários ativos do sistema.
 
 Nas respostas detalhadas de solicitações, `dataCriacao` é preenchida automaticamente pela API no
 momento do cadastro e retornada no formato ISO-8601, por exemplo `2026-08-08T10:30:00`. Esse campo

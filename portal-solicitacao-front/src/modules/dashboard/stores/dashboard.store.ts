@@ -2,12 +2,8 @@ import {defineStore} from "pinia";
 import {ref} from "vue";
 import {buscarIndicadoresDashboard, buscarSolicitacoesResumo,} from "../services/dashboard.service";
 
-import type {
-    ConsultaSolicitacoes,
-    IndicadoresDashboard,
-    PageResponse,
-    SolicitacaoResumo,
-} from "@/modules/dashboard/interfaces/dashboard.types";
+import type {IndicadoresDashboard, SolicitacaoResumo,} from "@/modules/dashboard/interfaces/dashboard.types";
+import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
 
 export const useDashboardStore = defineStore("dashboard", () => {
     const isLoading = ref(false);
@@ -37,7 +33,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
     const erroTabela = ref<string | null>(null);
 
-    async function carregarSolicitacoes(consulta: ConsultaSolicitacoes) {
+    async function carregarSolicitacoes(consulta: Consulta) {
         try {
 
             erroTabela.value = null;

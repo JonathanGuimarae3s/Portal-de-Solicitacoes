@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
+import 'primeicons/primeicons.css'
+
+
+ó
 body {
-  background-color: #000;
-  color: #fff;
+    background-color: #000;
+    color: #fff;
 }
 
 @layer components {
-  .btn {
-    @apply flex justify-center items-center;
-    @apply px-4 py-2  rounded;
-  }
+    .btn {
+        @apply flex justify-center items-center;
+        @apply px-4 py-2  rounded;
+    }
 
-  .btn-primary {
-    @apply bg-purple-600 text-white hover:bg-purple-700;
-  }
+    .btn-primary {
+        @apply bg-purple-600 text-white hover:bg-purple-700;
+    }
 
-  .btn-secondary {
-    @apply bg-zinc-600 text-white hover:bg-zinc-700;
-  }
+    .btn-secondary {
+        @apply bg-zinc-600 text-white hover:bg-zinc-700;
+    }
 
-  .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700;
-  }
+    .btn-danger {
+        @apply bg-red-600 text-white hover:bg-red-700;
+    }
 }

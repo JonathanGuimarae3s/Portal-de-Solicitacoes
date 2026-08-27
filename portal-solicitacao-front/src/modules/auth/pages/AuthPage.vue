@@ -6,6 +6,10 @@ import {ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import type {UserLogin} from '@/modules/auth/interfaces/UserLogin';
 import {useAuthStore} from '../stores/auth';
+import Message from "primevue/message";
+import axios from "axios";
+import type {ErrorResponse} from "@/interfaces/interfaces.ts";
+
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -18,9 +22,12 @@ const userLogin = ref<UserLogin>({
 
 let emailInvalido = ref(false);
 let senhaInvalida = ref(false);
-let acessoInvalido = ref(false);
+let errorLogin = ref(false);
+
+let menssagemLogin = ref("")
 
 async function handleLogin() {
+
   if (!userLogin.value.email || !userLogin.value.password) {
     emailInvalido.value = true;
     senhaInvalida.value = true;
@@ -32,8 +39,16 @@ async function handleLogin() {
     await redirect();
   } catch (error) {
 
-    acessoInvalido.value = true;
-    alert("Erro ao fazer login: " + error);
+    errorLogin.value = true;
+
+
+    if (axios.isAxiosError<ErrorResponse>(error)) {
+      menssagemLogin.value =
+          error.response?.data.detail ??
+          "Não foi possível conectar ao servidor.";
+    }
+
+
   }
 
 }
@@ -50,7 +65,9 @@ async function redirect() {
 
 <template>
 
+
   <Loading v-if="authStore.isLoading"/>
+
   <div v-else class="flex flex-col  gap-4 justify-center items-center min-h-screen">
 
     <Panel header="Login">
@@ -59,18 +76,20 @@ async function redirect() {
 
         <div>
           <label for="email">Email</label>
-          <InputText id="email" v-model="userLogin.email" fluid :invalid="emailInvalido || acessoInvalido"/>
+          <InputText id="email" v-model="userLogin.email" fluid :invalid="emailInvalido || errorLogin"/>
           <p v-if="emailInvalido" class="text-red-500 text-sm">Email é obrigatório</p>
         </div>
 
         <div>
           <label for="password">Senha</label>
           <Password v-model="userLogin.password" inputId="password" :feedback="false" toggleMask fluid
-                    :invalid="senhaInvalida || acessoInvalido"/>
+                    :invalid="senhaInvalida || errorLogin"/>
           <p v-if="senhaInvalida" class="text-red-500 text-sm">Senha é obrigatória</p>
         </div>
 
-        <p v-if="acessoInvalido">Credencias inválidas.</p>
+        <Message v-if="errorLogin" severity="error" :closable="false">
+          {{ menssagemLogin }}
+        </Message>
 
       </div>
 

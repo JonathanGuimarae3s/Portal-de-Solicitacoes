@@ -1,4 +1,4 @@
-import {PrioridadeSolicitacao, type StatusSolicitacao} from "@/modules/enums/enums.ts";
+import {PrioridadeSolicitacao, type StatusSolicitacao} from "@/enums/enums.ts";
 
 export interface IndicadoresDashboard {
     total: number;
@@ -15,17 +15,6 @@ export interface SolicitacaoResumo {
 }
 
 
-export interface PageResponse<T> {
-    dados: T[];
-    pagina: number;
-    tamanho: number;
-    totalDados: number;
-    totalPaginas: number;
-}
 
 
-export interface ConsultaSolicitacoes {
-    pagina: number;
-    tamanho: number;
-    ordenarPor: string;
-}
+

@@ -9,6 +9,7 @@ import MenuItem from "./MenuItem.vue";
     <nav class="flex flex-col">
         <MenuItem label="Dashboard" to="/" />
         <MenuItem label="Solicitações" to="/solicitacoes" />
+        <MenuItem label="Tipos" to="/Tipos" />
         <MenuItem label="Usuários" to="/usuarios" />
     </nav>
 

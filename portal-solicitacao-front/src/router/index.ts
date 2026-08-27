@@ -12,19 +12,20 @@ router.beforeEach((to) => {
 
 
     if (
-        to.name !== "Auth" &&
+        to.name !== "Login" &&
         to.meta.requiresAuth &&
         !authStore.isAuthenticated
     ) {
-        return {name: "Auth", query: {redirect: to.fullPath}};
+        return {name: "Login", query: {redirect: to.fullPath}};
     }
 
-    if (authStore.isAuthenticated && to.name === "Auth") {
+    if (authStore.isAuthenticated && to.name === "Login") {
         const redirect = to.query.redirect;
         return typeof redirect === "string" && redirect.startsWith("/")
             ? redirect
             : {name: "Dashboard"};
     }
+
 });
 
 export default router;

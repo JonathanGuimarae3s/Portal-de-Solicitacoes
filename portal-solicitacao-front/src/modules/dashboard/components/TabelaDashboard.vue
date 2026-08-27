@@ -2,8 +2,8 @@
 import Column from "primevue/column"
 import DataTable, {type DataTablePageEvent, type DataTableSortEvent} from "primevue/datatable"
 import {onMounted, ref} from "vue";
-import {PrioridadeSolicitacao, StatusSolicitacao} from "@/modules/enums/enums.ts"
-import {useDashboardStore} from "@/modules/dashboard/stores/dashboard.store.ts";
+import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.js"
+import {useDashboardStore} from "@/modules/dashboard/stores/dashboard.store.js";
 import {storeToRefs} from "pinia";
 import Message from "primevue/message";
 import Loading from "@/shared/components/Loading.vue";
@@ -58,6 +58,7 @@ async function loadLazyData() {
       first,
       rows,
       sortField,
+      sortOrder,
     } = lazyParams.value;
 
 
@@ -65,6 +66,8 @@ async function loadLazyData() {
       pagina: Math.floor(first / rows),
       tamanho: rows,
       ordenarPor: sortField,
+      direcao: sortOrder === 1 ? "asc" : "desc",
+
     });
 
 

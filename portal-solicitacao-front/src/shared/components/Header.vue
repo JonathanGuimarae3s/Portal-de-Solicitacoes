@@ -9,7 +9,7 @@ const {userSession} = storeToRefs(authStore);
 
 async function handleLogout() {
   await authStore.logout();
-  router.push({name: "Auth"})
+  router.push({name: "Login"})
 }
 
 

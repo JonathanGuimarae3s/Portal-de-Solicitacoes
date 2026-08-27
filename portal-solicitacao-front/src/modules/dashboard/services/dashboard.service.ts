@@ -1,10 +1,9 @@
 import api from "@/core/http/api";
 import type {
-    ConsultaSolicitacoes,
     IndicadoresDashboard,
-    PageResponse,
     SolicitacaoResumo,
 } from "@/modules/dashboard/interfaces/dashboard.types";
+import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
 
 export async function buscarIndicadoresDashboard(): Promise<IndicadoresDashboard> {
     const response = await api.get<IndicadoresDashboard>(
@@ -15,10 +14,11 @@ export async function buscarIndicadoresDashboard(): Promise<IndicadoresDashboard
 }
 
 export async function buscarSolicitacoesResumo(
-    consulta: ConsultaSolicitacoes = {
+    consulta: Consulta = {
         pagina: 0,
         tamanho: 10,
         ordenarPor: "id",
+        direcao: "desc",
     }
 ): Promise<PageResponse<SolicitacaoResumo>> {
 
@@ -28,7 +28,7 @@ export async function buscarSolicitacoesResumo(
             params: {
                 page: consulta.pagina,
                 size: consulta.tamanho,
-                sort: `${consulta.ordenarPor},desc`,
+                sort: `${consulta.ordenarPor},${consulta.direcao}`,
             },
         },
     );

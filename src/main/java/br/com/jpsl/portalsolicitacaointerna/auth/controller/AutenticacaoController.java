@@ -53,7 +53,7 @@ public class AutenticacaoController {
 
             return ResponseEntity.ok(new LoginResponse(token, expiresInMillis, usuarioAutenticado));
         } catch (BadCredentialsException e) {
-            throw new CredencialException("Credencias inválidas.");
+            throw new CredencialException("Credencias inválidas ou inexistente.");
         }
     }
 

@@ -1,5 +1,5 @@
 import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
-import type {TipoSolitacao} from "@/modules/tipos/stores/tipos.stores.ts";
+import type {TipoSolitacao, TipoSolitacaoRequest} from "@/modules/tipos/stores/tipos.stores.ts";
 import api from "@/core/http/api.ts";
 
 export async function buscarTipos(consulta: Consulta = {
@@ -24,10 +24,52 @@ export async function buscarTipos(consulta: Consulta = {
     return response.data;
 }
 
-export async function deletarTipos(id: number) {
+export async function buscarPorId(id: number) {
+
+    const response = await api.get(
+        `/tipos/${id}`,
+    ).catch((error) => {
+        throw error;
+    })
+
+    return response.data;
+
+
+}
+
+export async function deletarTipo(id: number) {
 
     const response = await api.delete(
         `/tipos/${id}`,
+    ).catch((error) => {
+        throw error;
+    })
+
+    return response.data;
+
+
+}
+
+
+export async function atualizar(id: number, tipoSolicitacaoRequest: TipoSolitacaoRequest) {
+
+
+    const response = await api.put<TipoSolitacaoRequest>(
+        `/tipos/${id}`, tipoSolicitacaoRequest
+    ).catch((error) => {
+        throw error;
+    })
+
+    return response.data;
+
+
+}
+
+export async function salvar(tipoSolicitacaoRequest: TipoSolitacaoRequest) {
+
+
+    const response = await api.post<TipoSolitacaoRequest>(
+        `/tipos`, tipoSolicitacaoRequest
     ).catch((error) => {
         throw error;
     })

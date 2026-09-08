@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. " +
             "Tente novamente e se o problema persistir, entre " +
@@ -179,7 +179,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
                                                                             WebRequest request) {
         ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 
-        String messageApi = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+        String messageApi = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.;;;";
 
         List<Field> fieldList = ex.getBindingResult()
                 .getFieldErrors()
@@ -197,13 +197,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
         HttpStatus status = HttpStatus.resolve(statusCode.value());
 
+        String userMessage = fieldList.get(0).getField() + " " + fieldList.get(0).getUserMessage();
+        userMessage = userMessage.substring(0, 1).toUpperCase() + userMessage.substring(1);
+
+
         Problem problem = createProblemBuilder(status, problemType, messageApi)
-                .userMessage(messageApi)
+                .userMessage(userMessage)
                 .fields(fieldList)
                 .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+
 
     @Override
     protected @Nullable ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,

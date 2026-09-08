@@ -41,7 +41,7 @@ public class TiposController {
     }
 
     @PostMapping
-    public ResponseEntity<TipoSolicitacaoResponse> adicionarUsuario(@RequestBody @Valid TipoSolicitacaoRequest request) {
+    public ResponseEntity<TipoSolicitacaoResponse> addTipoSolicitacao(@RequestBody @Valid TipoSolicitacaoRequest request) {
         TipoSolicitacao salva = tipoSolicitacaoService.salvarSolicitacao(novaTipoSolicitacao(request));
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(salva.getId()).toUri();
         return ResponseEntity.created(location)
@@ -62,13 +62,12 @@ public class TiposController {
     }
     private TipoSolicitacao novaTipoSolicitacao(TipoSolicitacaoRequest request) {
         TipoSolicitacao tipoSolicitacao = new TipoSolicitacao();
-        String nome = StringUtils.trimAllWhitespace(request.nome());
-        tipoSolicitacao.setNome(nome);
+        tipoSolicitacao.setNome(request.nome());
         return tipoSolicitacao;
     }
 
     private void aplicar(TipoSolicitacaoRequest request, TipoSolicitacao tipoSolicitacao) {
-        String nome = StringUtils.trimAllWhitespace(request.nome());
+        String nome = request.nome();
         tipoSolicitacao.setNome(nome);
     }
 }

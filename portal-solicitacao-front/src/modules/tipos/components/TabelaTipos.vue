@@ -11,12 +11,17 @@ import Button from "primevue/button";
 import ButtonGroup from "primevue/buttongroup";
 
 import IconComponent from "@/modules/tipos/components/IconComponent.vue";
-import {ConfirmDialog, useConfirm, useToast} from "primevue";
+import {ConfirmDialog, useConfirm} from "primevue";
 import axios from "axios";
 import Toast from "primevue/toast";
+import DialogEdicaoTipo from "@/modules/tipos/components/DialogEdicaoTipo.vue";
+import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 
 const tiposStores = useTiposStores();
 const {tipos, erro} = storeToRefs(tiposStores);
+const isLoading = ref(false);
+
+const {toastError, toastSuccess} = useCustomToast();
 
 
 const lazyParams = ref<LazyParams>({
@@ -26,7 +31,6 @@ const lazyParams = ref<LazyParams>({
   sortOrder: -1,
 });
 
-const isLoading = ref(false);
 
 async function onPage(event: DataTablePageEvent) {
   lazyParams.value.first = event.first;
@@ -78,26 +82,12 @@ onMounted(() => {
   loadLazyData();
 });
 
+defineExpose({
+  loadLazyData
+})
 
 const confirm = useConfirm();
-const toast = useToast();
 
-const confirm1 = () => {
-  confirm.require({
-    message: 'Are you sure you want to proceed?',
-    header: 'Confirmation',
-    icon: 'pi pi-exclamation-triangle',
-    rejectClass: 'p-button-secondary p-button-outlined',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Save',
-    accept: () => {
-      toast.add({severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000});
-    },
-    reject: () => {
-      toast.add({severity: 'error', summary: 'Rejected', detail: 'You have rejected', life: 3000});
-    }
-  });
-};
 
 const apagar = (id: number) => {
   confirm.require({
@@ -116,7 +106,8 @@ const apagar = (id: number) => {
 
         await tiposStores.apagarTipos(id)
 
-        toast.add({severity: 'success', summary: 'Concluído', detail: 'Registro deletado!', life: 5000});
+        toastSuccess('Registro deletado!')
+
       } catch (error) {
 
         let erroDeletar: string | undefined = "Não foi possível deletar o registro. Tente mais tarde.";
@@ -124,8 +115,7 @@ const apagar = (id: number) => {
           erroDeletar = error.response?.data.detail
         }
 
-
-        toast.add({severity: 'error', summary: 'Error', detail: erroDeletar, life: 5000});
+        toastError(erroDeletar)
 
 
       } finally {
@@ -134,6 +124,81 @@ const apagar = (id: number) => {
     },
   });
 };
+
+
+const visible = ref(false);
+
+
+const tipoSolicitacaoEditada = ref({
+  id: 0,
+  nome: ""
+})
+
+
+const preparaDialog = async (id: number) => {
+
+  if (id === null) {
+    toastError("Registro não capturado")
+    return
+  }
+
+
+  try {
+    tipoSolicitacaoEditada.value = await tiposStores.buscarTipoPorId(id)
+  } catch (e) {
+    if (axios.isAxiosError<ErrorResponse>(e)) {
+      let erro =
+          e.response?.data.userMessage ??
+          "Não foi possível conectar ao servidor.";
+
+      toastError(erro)
+    }
+  } finally {
+    visible.value = true;
+  }
+
+}
+
+const fecharDialog = () => {
+  if (visible.value) {
+    tipoSolicitacaoEditada.value = {
+      id: 0,
+      nome: ""
+    }
+    visible.value = false;
+  }
+}
+
+
+const atualizarRegistro = async () => {
+
+  try {
+
+    const request = {
+      nome: tipoSolicitacaoEditada.value.nome
+    }
+
+
+    await tiposStores.atualizarTipo(tipoSolicitacaoEditada.value.id, request)
+    toastSuccess("Registro Atualizado!")
+    fecharDialog()
+    await loadLazyData()
+
+  } catch (e) {
+
+
+    if (axios.isAxiosError<ErrorResponse>(e)) {
+      let erro =
+          e.response?.data.userMessage ??
+          "Não foi possível conectar ao servidor.";
+
+      toastError(erro)
+    }
+
+
+  }
+}
+
 
 </script>
 
@@ -171,7 +236,7 @@ const apagar = (id: number) => {
 
         <ButtonGroup>
 
-          <Button severity="info" @click="confirm1()">
+          <Button severity="info" @click="preparaDialog(slotProps.data.id)">
             <IconComponent icon="pi pi-pencil" :estilo="{fontWeight: 'bold'}"/>
           </Button>
 
@@ -184,6 +249,10 @@ const apagar = (id: number) => {
       </template>
     </Column>
   </DataTable>
+
+
+  <DialogEdicaoTipo :atualizar-registro="atualizarRegistro" :fechar-dialog="fecharDialog"
+                    :tipo-solicitacao-editada="tipoSolicitacaoEditada" :visible="visible"/>
 
 
 </template>

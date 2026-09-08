@@ -20,6 +20,15 @@ export interface ErrorResponse {
     timestamp: string;
     title: string;
     type: string;
+    "userMessage": string | null;
+    "fields": [
+        {
+            "field": string,
+            "userMessage": string
+        }
+    ] | null;
+
+
 }
 
 type SortOrder = 1 | -1;

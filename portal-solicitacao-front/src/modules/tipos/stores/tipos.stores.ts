@@ -1,13 +1,17 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
-import {buscarTipos, deletarTipos} from "@/modules/tipos/services/tiposService.ts";
+import {atualizar, buscarPorId, buscarTipos, deletarTipo, salvar} from "@/modules/tipos/services/tiposService.ts";
 
 
 export interface TipoSolitacao {
     id: number;
     nome: string;
 
+}
+
+export interface TipoSolitacaoRequest {
+    nome: string;
 }
 
 export const useTiposStores = defineStore("tipos", () => {
@@ -38,15 +42,30 @@ export const useTiposStores = defineStore("tipos", () => {
         }
     }
 
-    async function apagarTipos(id: number) {
+    async function buscarTipoPorId(id: number) {
         try {
 
             isLoading.value = true;
 
             erro.value = null;
 
-            await deletarTipos(id)
+            return await buscarPorId(id)
 
+        } catch (error) {
+            throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function apagarTipo(id: number) {
+        try {
+
+            isLoading.value = true;
+
+            erro.value = null;
+
+            await deletarTipo(id)
 
         } catch (error) {
 
@@ -56,5 +75,38 @@ export const useTiposStores = defineStore("tipos", () => {
         }
     }
 
-    return {tipos, isLoading, erro, carregaTipos, apagarTipos};
+    async function atualizarTipo(id: number, request: TipoSolitacaoRequest) {
+        try {
+
+            isLoading.value = true;
+
+            erro.value = null;
+
+            await atualizar(id, request)
+
+        } catch (error) {
+
+            throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function salvarTipo(request: TipoSolitacaoRequest) {
+        try {
+
+            isLoading.value = true;
+
+            erro.value = null;
+
+            await salvar(request)
+
+        } catch (error) {
+            throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    return {tipos, isLoading, erro, carregaTipos, apagarTipos: apagarTipo, atualizarTipo, buscarTipoPorId, salvarTipo};
 });

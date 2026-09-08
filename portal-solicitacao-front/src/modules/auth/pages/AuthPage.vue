@@ -44,7 +44,7 @@ async function handleLogin() {
 
     if (axios.isAxiosError<ErrorResponse>(error)) {
       menssagemLogin.value =
-          error.response?.data.detail ??
+          error.response?.data.userMessage ??
           "Não foi possível conectar ao servidor.";
     }
 

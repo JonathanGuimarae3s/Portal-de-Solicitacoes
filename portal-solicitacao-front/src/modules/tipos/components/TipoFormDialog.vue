@@ -2,14 +2,16 @@
 import Button from "primevue/button"
 import Dialog from "primevue/dialog"
 import InputText from "primevue/inputtext"
-import type {TipoSolitacaoRequest} from "@/modules/tipos/stores/tipos.stores.ts";
+import type {TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
 
 
 interface iProps {
-  salvar: () => void,
+  salvar: (modo: "cadastro" | "edicao") => void,
   fecharDialog: () => void;
-  tipoSolicitacao: TipoSolitacaoRequest,
-  visible: boolean,
+  modo: "cadastro" | "edicao";
+  tipoSolicitacao: TipoSolicitacaoRequest,
+  visible: boolean;
+  loading?: boolean;
 }
 
 defineProps<iProps>();
@@ -21,8 +23,11 @@ defineProps<iProps>();
 
       <template #header>
         <div class="inline-flex align-items-center justify-content-center gap-2">
-          <span
-              class="font-bold white-space-nowrap">Novo Tipo de solicitação</span>
+          <span v-if="modo == 'cadastro'"
+                class="font-bold white-space-nowrap">Novo Tipo de solicitação</span>
+
+          <span v-if="modo == 'edicao'"
+                class="font-bold white-space-nowrap">Editando Registro  </span>
         </div>
       </template>
       <div class="mb-3">
@@ -32,8 +37,8 @@ defineProps<iProps>();
 
       </div>
       <template #footer>
-        <Button label="Cancelar" text severity="secondary" @click="fecharDialog" autofocus/>
-        <Button label="Salvar" outlined severity="success" @click="salvar" autofocus/>
+        <Button label="Cancelar" text severity="secondary" @click="fecharDialog"/>
+        <Button label="Salvar" outlined severity="success" @click="salvar(modo)" autofocus/>
       </template>
     </Dialog>
   </div>

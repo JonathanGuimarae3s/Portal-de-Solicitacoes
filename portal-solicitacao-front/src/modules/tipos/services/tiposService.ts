@@ -1,6 +1,9 @@
 import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
-import type {TipoSolitacao, TipoSolitacaoRequest} from "@/modules/tipos/stores/tipos.stores.ts";
+
 import api from "@/core/http/api.ts";
+import type {TipoSolicitacao, TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
+
+const ENDPOINT = "/tipos";
 
 export async function buscarTipos(consulta: Consulta = {
     pagina: 0,
@@ -10,8 +13,8 @@ export async function buscarTipos(consulta: Consulta = {
 }) {
 
 
-    const response = await api.get<PageResponse<TipoSolitacao>>(
-        "/tipos",
+    const response = await api.get<PageResponse<TipoSolicitacao>>(
+        ENDPOINT,
         {
             params: {
                 page: consulta.pagina,
@@ -27,10 +30,8 @@ export async function buscarTipos(consulta: Consulta = {
 export async function buscarPorId(id: number) {
 
     const response = await api.get(
-        `/tipos/${id}`,
-    ).catch((error) => {
-        throw error;
-    })
+        `${ENDPOINT}/${id}`,
+    )
 
     return response.data;
 
@@ -40,10 +41,8 @@ export async function buscarPorId(id: number) {
 export async function deletarTipo(id: number) {
 
     const response = await api.delete(
-        `/tipos/${id}`,
-    ).catch((error) => {
-        throw error;
-    })
+        `${ENDPOINT}/${id}`,
+    )
 
     return response.data;
 
@@ -51,28 +50,24 @@ export async function deletarTipo(id: number) {
 }
 
 
-export async function atualizar(id: number, tipoSolicitacaoRequest: TipoSolitacaoRequest) {
+export async function atualizar(id: number, tipoSolicitacaoRequest: TipoSolicitacaoRequest) {
 
 
-    const response = await api.put<TipoSolitacaoRequest>(
-        `/tipos/${id}`, tipoSolicitacaoRequest
-    ).catch((error) => {
-        throw error;
-    })
+    const response = await api.put<TipoSolicitacaoRequest>(
+        `${ENDPOINT}/${id}`, tipoSolicitacaoRequest
+    )
 
     return response.data;
 
 
 }
 
-export async function salvar(tipoSolicitacaoRequest: TipoSolitacaoRequest) {
+export async function salvar(tipoSolicitacaoRequest: TipoSolicitacaoRequest) {
 
 
-    const response = await api.post<TipoSolitacaoRequest>(
-        `/tipos`, tipoSolicitacaoRequest
-    ).catch((error) => {
-        throw error;
-    })
+    const response = await api.post<TipoSolicitacaoRequest>(
+        ENDPOINT, tipoSolicitacaoRequest
+    )
 
     return response.data;
 

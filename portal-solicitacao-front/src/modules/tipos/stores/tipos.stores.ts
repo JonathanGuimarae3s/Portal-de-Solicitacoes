@@ -1,112 +1,68 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
-import {atualizar, buscarPorId, buscarTipos, deletarTipo, salvar} from "@/modules/tipos/services/tiposService.ts";
+import type {TipoSolicitacao, TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
+import * as tiposService from "@/modules/tipos/services/tiposService.ts";
 
-
-export interface TipoSolitacao {
-    id: number;
-    nome: string;
-
-}
-
-export interface TipoSolitacaoRequest {
-    nome: string;
-}
-
-export const useTiposStores = defineStore("tipos", () => {
-
+export const useTiposStore = defineStore("tipos", () => {
+    const tipos = ref<PageResponse<TipoSolicitacao> | null>(null);
     const isLoading = ref(false);
-
     const erro = ref<string | null>(null);
 
-    const tipos = ref<PageResponse<TipoSolitacao> | null>(null);
-
-    async function carregaTipos(consulta: Consulta) {
+    async function executarComLoading<T>(acao: () => Promise<T>): Promise<T> {
+        isLoading.value = true;
+        erro.value = null;
 
         try {
+            return await acao();
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
-            isLoading.value = true;
-
-            erro.value = null;
-
-            tipos.value = await buscarTipos(consulta)
-
-
+    async function carregarTipos(consulta: Consulta): Promise<void> {
+        try {
+            tipos.value = await executarComLoading(
+                () => tiposService.buscarTipos(consulta)
+            );
         } catch {
-            erro.value = "Não foi possível carregar o dashboard.";
             tipos.value = null;
-
-        } finally {
-            isLoading.value = false;
+            erro.value = "Não foi possível carregar os tipos.";
         }
     }
 
-    async function buscarTipoPorId(id: number) {
-        try {
-
-            isLoading.value = true;
-
-            erro.value = null;
-
-            return await buscarPorId(id)
-
-        } catch (error) {
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+    function buscarTipoPorId(id: number): Promise<TipoSolicitacao> {
+        return executarComLoading(
+            () => tiposService.buscarPorId(id)
+        );
     }
 
-    async function apagarTipo(id: number) {
-        try {
-
-            isLoading.value = true;
-
-            erro.value = null;
-
-            await deletarTipo(id)
-
-        } catch (error) {
-
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+    function criarTipo(request: TipoSolicitacaoRequest): Promise<void> {
+        return executarComLoading(async () => {
+            await tiposService.salvar(request);
+        });
     }
 
-    async function atualizarTipo(id: number, request: TipoSolitacaoRequest) {
-        try {
-
-            isLoading.value = true;
-
-            erro.value = null;
-
-            await atualizar(id, request)
-
-        } catch (error) {
-
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+    function atualizarTipo(id: number, request: TipoSolicitacaoRequest): Promise<void> {
+        return executarComLoading(async () => {
+            await tiposService.atualizar(id, request);
+        });
     }
 
-    async function salvarTipo(request: TipoSolitacaoRequest) {
-        try {
-
-            isLoading.value = true;
-
-            erro.value = null;
-
-            await salvar(request)
-
-        } catch (error) {
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+    function excluirTipo(id: number): Promise<void> {
+        return executarComLoading(async () => {
+            await tiposService.deletarTipo(id);
+        });
     }
 
-    return {tipos, isLoading, erro, carregaTipos, apagarTipos: apagarTipo, atualizarTipo, buscarTipoPorId, salvarTipo};
+    return {
+        tipos,
+        isLoading,
+        erro,
+        carregarTipos,
+        buscarTipoPorId,
+        criarTipo,
+        atualizarTipo,
+        excluirTipo,
+    };
 });

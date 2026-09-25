@@ -2,9 +2,10 @@ package br.com.jpsl.portalsolicitacaointerna.dominio.service;
 
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioStatusRequest;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
-import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.UsuarioRepository;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public Usuario buscarPorId(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
-                () -> new EntidadeNaoEncontradaException("Usuario.js não encontrado com id: " + id)
+                () -> new EntidadeNaoEncontradaException("Usuario não encontrado com id: " + id)
         );
     }
 
@@ -58,7 +59,7 @@ public class UsuarioService {
         }
 
         if (StringUtils.hasLength(request.setor())) {
-            usuario.setSetor(request.setor());
+            usuario.setSetor(converterSetor(request.setor()));
         }
 
         return usuarioRepository.save(usuario);
@@ -71,7 +72,7 @@ public class UsuarioService {
             throw new NegocioException("Email inválido ou email já cadastrado no sistema.");
         }
 
-        if (!StringUtils.hasLength(usuario.getSetor())) {
+        if (usuario.getSetor() == null) {
             throw new NegocioException("O setor do usuário é obrigatório.");
         }
 
@@ -88,14 +89,31 @@ public class UsuarioService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Usuario> buscaPorSetor(String setor, Pageable pageable) {
+    public Page<Usuario> buscaPorSetor(Setor setor, Pageable pageable) {
         return usuarioRepository.findAllBySetor(setor, pageable);
+    }
+
+    public Setor converterSetor(String setor) {
+        return Setor.fromString(setor)
+                .orElseThrow(() -> new NegocioException(
+                        "Setor inválido. Valores válidos: " + java.util.Arrays.toString(Setor.values())));
     }
 
     @Transactional(readOnly = true)
     public Long contabilizarUsuariosAtivos() {
         return usuarioRepository.countByAtivoTrue();
     }
+
+    @Transactional(readOnly = true)
+    public Long contabilizarUsuariosAtivos(PerfilUsuario perfilUsuario, Setor setor, Usuario usuarioLogado) {
+        return switch (perfilUsuario) {
+            case GESTOR -> usuarioRepository.countByAtivoTrueAndSetor(setor);
+            case ADMIN -> usuarioRepository.countByAtivoTrue();
+            case USUARIO -> usuarioLogado.isAtivo() ? 1L : 0L;
+        };
+    }
+
+
 
     @Transactional
     public Usuario atualizarStatus(Long id, @NotNull Boolean ativo) {

@@ -16,6 +16,7 @@ import Message from "primevue/message";
 import Loading from "@/shared/components/Loading.vue";
 import type {TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
 import Toast from "primevue/toast";
+import {obterMensagemErro} from "@/utils/mensagem.store.ts";
 
 const {toastError, toastSuccess} = useCustomToast();
 
@@ -90,7 +91,7 @@ const fecharDialog = () => {
   idSelecionado.value = null
 }
 
-const salvar = async (modo: "cadastro" | "edicao") => {
+const salvar = async (modo: "cadastro" | "edicao") =>  {
 
   try {
 
@@ -122,13 +123,9 @@ const salvar = async (modo: "cadastro" | "edicao") => {
     await loadLazyData()
 
   } catch (e) {
-    if (axios.isAxiosError<ErrorResponse>(e)) {
-      let erro =
-          e.response?.data.userMessage ??
-          "Não foi possível conectar ao servidor.";
+    let erro = obterMensagemErro(e)
 
-      toastError(erro)
-    }
+    toastError(erro)
   }
 }
 
@@ -150,13 +147,9 @@ const abrirEdicao = async (id: number) => {
     preparaDialog("edicao")
 
   } catch (e) {
-    if (axios.isAxiosError<ErrorResponse>(e)) {
-      let erro =
-          e.response?.data.userMessage ??
-          "Não foi possível conectar ao servidor.";
+    let erro = obterMensagemErro(e)
 
-      toastError(erro)
-    }
+    toastError(erro)
   }
 }
 

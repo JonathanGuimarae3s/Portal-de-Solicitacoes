@@ -7,9 +7,10 @@ import {useRoute, useRouter} from 'vue-router';
 import type {UserLogin} from '@/modules/auth/interfaces/UserLogin';
 import {useAuthStore} from '../stores/auth';
 import Message from "primevue/message";
-import axios from "axios";
-import type {ErrorResponse} from "@/interfaces/interfaces.ts";
+import {obterMensagemErro} from "@/utils/mensagem.store.ts";
+import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 
+const {toastError, toastSuccess} = useCustomToast();
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -37,16 +38,14 @@ async function handleLogin() {
   try {
     await authStore.autenticar(userLogin.value.email, userLogin.value.password);
     await redirect();
-  } catch (error) {
+  } catch (e) {
 
     errorLogin.value = true;
 
 
-    if (axios.isAxiosError<ErrorResponse>(error)) {
-      menssagemLogin.value =
-          error.response?.data.userMessage ??
-          "Não foi possível conectar ao servidor.";
-    }
+    let erro = obterMensagemErro(e)
+
+    toastError(erro)
 
 
   }

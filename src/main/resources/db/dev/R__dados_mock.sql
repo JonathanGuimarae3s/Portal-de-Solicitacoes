@@ -15,21 +15,21 @@ VALUES (1, 'Administrador Demo', 'admin@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
 VALUES (2, 'Gestor Demo', 'gestor@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'GESTOR', 'RH', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (3, 'Usuario.js Demo', 'usuario@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Financeiro', 1);
+VALUES (3, 'Usuario.js Demo', 'usuario@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'FINANCEIRO', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (4, 'Ana Costa', 'ana.costa@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Operacoes', 1);
+VALUES (4, 'Ana Costa', 'ana.costa@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'OPERACOES', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (5, 'Bruno Almeida', 'bruno.almeida@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Comercial', 1);
+VALUES (5, 'Bruno Almeida', 'bruno.almeida@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'COMERCIAL', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (6, 'Fernanda Lima', 'fernanda.lima@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Marketing', 1);
+VALUES (6, 'Fernanda Lima', 'fernanda.lima@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'MARKETING', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
 VALUES (7, 'Rafael Mendes', 'rafael.mendes@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'TI', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (8, 'Juliana Rocha', 'juliana.rocha@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Juridico', 1);
+VALUES (8, 'Juliana Rocha', 'juliana.rocha@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'JURIDICO', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (9, 'Pedro Henrique', 'pedro.henrique@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Compras', 1);
+VALUES (9, 'Pedro Henrique', 'pedro.henrique@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'COMPRAS', 1);
 INSERT INTO usuario (id, nome, email, senha, perfil, setor, ativo)
-VALUES (10, 'Camila Ferreira', 'camila.ferreira@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'Atendimento', 1);
+VALUES (10, 'Camila Ferreira', 'camila.ferreira@empresa.com', '$2a$10$LvOubRDj/ZkzXVMB2f1sr.uUZU0U9PICpl87pBpNyfD4Mgm4PQdoq', 'USUARIO', 'ATENDIMENTO', 1);
 
 -- TIPOS DE SOLICITACAO
 INSERT INTO tipo_solicitacao (id, nome)

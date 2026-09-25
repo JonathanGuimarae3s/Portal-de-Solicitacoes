@@ -1,8 +1,10 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.infraestrutura.repositorio;
 
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PrioridadeSolicitacao;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.StatusSolicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
+import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.SolicitacaoRepositoryQueries;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -27,7 +29,7 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
 
     @Override
     public Page<Solicitacao> filtrar(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,
-                                     Pageable pageable) {
+                                     Usuario usuario, Setor setor, Pageable pageable) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Solicitacao> criteriaQuery = criteriaBuilder.createQuery(Solicitacao.class);
@@ -35,9 +37,9 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
         Root<Solicitacao> root = criteriaQuery.from(Solicitacao.class);
 
 
-        List<Predicate> predicates = criarPredicates(statusEnum, prioridadeEnum, criteriaBuilder, root);
+        List<Predicate> predicates = criarPredicates(statusEnum, prioridadeEnum, setor, usuario, criteriaBuilder, root);
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
-criteriaQuery.orderBy(criteriaBuilder.asc(root.get("")));
+        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("status")));
 
         TypedQuery<Solicitacao> query = entityManager.createQuery(criteriaQuery);
 
@@ -47,17 +49,17 @@ criteriaQuery.orderBy(criteriaBuilder.asc(root.get("")));
                 .getResultList();
 
 
-        Long total = contarTotal(statusEnum, prioridadeEnum, criteriaBuilder);
+        Long total = contarTotal(statusEnum, prioridadeEnum, criteriaBuilder, usuario, setor);
 
         return new PageImpl<>(resultado, pageable, total);
     }
 
     private Long contarTotal(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,
-                             CriteriaBuilder criteriaBuilder) {
+                             CriteriaBuilder criteriaBuilder, Usuario usuario, Setor setor) {
 
         CriteriaQuery<Long> countCriteria = criteriaBuilder.createQuery(Long.class);
         Root<Solicitacao> countRoot = countCriteria.from(Solicitacao.class);
-        List<Predicate> countPredicates = criarPredicates(statusEnum, prioridadeEnum, criteriaBuilder, countRoot);
+        List<Predicate> countPredicates = criarPredicates(statusEnum, prioridadeEnum, setor, usuario, criteriaBuilder, countRoot);
 
         countCriteria.select(criteriaBuilder.count(countRoot));
         countCriteria.where(countPredicates.toArray(new Predicate[0]));
@@ -66,7 +68,7 @@ criteriaQuery.orderBy(criteriaBuilder.asc(root.get("")));
     }
 
     private List<Predicate> criarPredicates(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,
-                                            CriteriaBuilder criteriaBuilder, Root<Solicitacao> root) {
+                                            Setor setor, Usuario usuario, CriteriaBuilder criteriaBuilder, Root<Solicitacao> root) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (statusEnum != null) {
@@ -75,6 +77,14 @@ criteriaQuery.orderBy(criteriaBuilder.asc(root.get("")));
 
         if (prioridadeEnum != null) {
             predicates.add(criteriaBuilder.equal(root.get("prioridade"), prioridadeEnum));
+        }
+
+        if (usuario != null) {
+            predicates.add(criteriaBuilder.equal(root.get("usuario"), usuario));
+        }
+
+        if (setor != null) {
+            predicates.add(criteriaBuilder.equal(root.get("usuario").get("setor"), setor));
         }
 
         return predicates;

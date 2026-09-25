@@ -3,345 +3,293 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checklist Frontend Vue</title>
+    <title>Checklist do Portal - API e Frontend</title>
     <style>
       :root {
-        --bg: #f5f7fb;
-        --card: #ffffff;
-        --text: #1f2937;
-        --muted: #6b7280;
-        --border: #d9e0ea;
-        --primary: #2563eb;
-        --success: #15803d;
+        color-scheme: dark;
+        --bg: #09090b;
+        --card: #18181b;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --border: #3f3f46;
+        --primary: #38bdf8;
+        --success: #34d399;
+        --critical: #fb7185;
       }
 
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-width: 320px;
-        background: var(--bg);
-        color: var(--text);
-        font-family: Arial, Helvetica, sans-serif;
-      }
-
-      .container {
-        width: min(1100px, calc(100% - 32px));
-        margin: 0 auto;
-        padding: 32px 0;
-      }
-
-      header {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 20px;
-        margin-bottom: 24px;
-      }
-
-      h1 {
-        margin: 0 0 8px;
-        font-size: 2rem;
-      }
-
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.5;
-      }
-
-      .actions {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      button {
-        min-height: 38px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background: var(--card);
-        color: var(--text);
-        cursor: pointer;
-        font-weight: 700;
-        padding: 8px 12px;
-      }
-
-      button.primary {
-        border-color: var(--primary);
-        background: var(--primary);
-        color: #ffffff;
-      }
-
-      .progress-card {
-        margin-bottom: 20px;
-        padding: 18px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background: var(--card);
-      }
-
-      .progress-info {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 10px;
-        font-weight: 700;
-      }
-
-      .progress-bar {
-        height: 12px;
-        overflow: hidden;
-        border-radius: 999px;
-        background: #e5e7eb;
-      }
-
-      .progress-fill {
-        width: 0%;
-        height: 100%;
-        border-radius: inherit;
-        background: var(--success);
-        transition: width 0.2s ease;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      section {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        background: var(--card);
-        overflow: hidden;
-      }
-
-      section h2 {
-        margin: 0;
-        padding: 16px 18px;
-        border-bottom: 1px solid var(--border);
-        font-size: 1.05rem;
-      }
-
-      ul {
-        margin: 0;
-        padding: 10px 18px 18px;
-        list-style: none;
-      }
-
-      li {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 9px 0;
-        border-bottom: 1px solid #edf0f5;
-      }
-
-      li:last-child {
-        border-bottom: 0;
-      }
-
-      input[type='checkbox'] {
-        width: 18px;
-        height: 18px;
-        margin-top: 1px;
-        accent-color: var(--success);
-        cursor: pointer;
-        flex: 0 0 auto;
-      }
-
-      label {
-        line-height: 1.35;
-        cursor: pointer;
-      }
-
-      input[type='checkbox']:checked + label {
-        color: var(--muted);
-        text-decoration: line-through;
-      }
-
-      .note {
-        margin-top: 20px;
-        padding: 16px;
-        border-left: 4px solid var(--primary);
-        border-radius: 8px;
-        background: #eff6ff;
-      }
-
-      @media (max-width: 800px) {
-        header {
-          flex-direction: column;
-        }
-
-        .grid {
-          grid-template-columns: 1fr;
-        }
-      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 56px; }
+      header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+      h1 { margin: 0 0 8px; font-size: clamp(1.65rem, 4vw, 2.4rem); }
+      p { margin: 0; color: var(--muted); line-height: 1.55; }
+      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      button { min-height: 40px; border: 1px solid var(--border); border-radius: 9px; background: var(--card); color: var(--text); cursor: pointer; font-weight: 700; padding: 8px 13px; }
+      button:hover { border-color: var(--primary); }
+      button.primary { border-color: var(--primary); background: var(--primary); color: #082f49; }
+      .score-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
+      .score { padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+      .score strong { display: block; margin-top: 6px; font-size: 1.7rem; }
+      .score span { color: var(--muted); font-size: .88rem; }
+      .progress-card, .priority-note { margin-bottom: 18px; padding: 17px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+      .progress-info { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; font-weight: 700; }
+      .progress-bar { height: 11px; overflow: hidden; border-radius: 999px; background: #3f3f46; }
+      .progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--success); transition: width .2s ease; }
+      .priority-note { border-left: 4px solid var(--critical); }
+      .priority-note strong { color: var(--critical); }
+      .schedule { margin-bottom: 18px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+      .schedule h2 { margin: 0; padding: 16px 17px; border-bottom: 1px solid var(--border); font-size: 1.1rem; }
+      .schedule table { width: 100%; border-collapse: collapse; }
+      .schedule th, .schedule td { padding: 11px 14px; border-bottom: 1px solid #2d2d32; text-align: left; vertical-align: top; }
+      .schedule th { color: var(--muted); font-size: .78rem; text-transform: uppercase; }
+      .schedule tr:last-child td { border-bottom: 0; }
+      .scope-lock { margin: 0 17px 16px; padding: 14px; border-radius: 8px; background: #111827; color: var(--muted); line-height: 1.55; }
+      .scope-lock strong { color: var(--primary); }
+      .area-title { grid-column: 1 / -1; margin: 18px 0 0; padding: 12px 0 4px; border-bottom: 1px solid var(--border); font-size: 1.35rem; }
+      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+      section { border: 1px solid var(--border); border-radius: 10px; background: var(--card); overflow: hidden; }
+      section h2 { margin: 0; padding: 15px 17px; border-bottom: 1px solid var(--border); font-size: 1.02rem; }
+      section .summary { padding: 11px 17px 0; font-size: .88rem; }
+      ul { margin: 0; padding: 8px 17px 16px; list-style: none; }
+      li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #2d2d32; }
+      li:last-child { border-bottom: 0; }
+      input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--success); cursor: pointer; flex: 0 0 auto; }
+      label { flex: 1; line-height: 1.4; cursor: pointer; }
+      input[type="checkbox"]:checked + label { color: var(--muted); text-decoration: line-through; }
+      .badge { display: inline-block; margin-right: 6px; padding: 2px 7px; border-radius: 999px; font-size: .72rem; font-weight: 800; text-transform: uppercase; text-decoration: none; }
+      .critical { background: #4c0519; color: #fda4af; }
+      .high { background: #431407; color: #fdba74; }
+      .medium { background: #422006; color: #fde047; }
+      .low { background: #1e293b; color: #cbd5e1; }
+      .done { background: #052e26; color: #6ee7b7; }
+      footer { margin-top: 22px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+      @media (max-width: 850px) { header { flex-direction: column; } .score-grid, .grid { grid-template-columns: 1fr; } }
+      @media (max-width: 650px) { .schedule { overflow-x: auto; } .schedule table { min-width: 680px; } }
     </style>
   </head>
   <body>
     <main class="container">
       <header>
         <div>
-          <h1>Checklist Frontend Vue</h1>
-          <p>
-            Trilha para construir o frontend do Portal de Solicitação Interna
-            estudando Vue, PrimeVue e integração com a API.
-          </p>
+          <h1>Checklist do Portal</h1>
+          <p>Auditoria da API Spring Boot e do frontend Vue atualizada em 22/09/2026. Os itens marcados foram confirmados no código ou pelo build.</p>
         </div>
-
         <div class="actions">
           <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
-          <button id="clearButton" type="button">Limpar</button>
+          <button id="resetButton" type="button">Restaurar auditoria</button>
         </div>
       </header>
 
+      <div class="score-grid">
+        <div class="score"><span>API - nota geral</span><strong>41/100</strong></div>
+        <div class="score"><span>Frontend - nota geral</span><strong>58/100</strong></div>
+        <div class="score"><span>Build do frontend</span><strong>OK</strong></div>
+        <div class="score"><span>Testes automatizados do front</span><strong>0</strong></div>
+      </div>
+
+      <div class="priority-note">
+        <strong>Ordem recomendada:</strong> bloquear a criação pública de administradores; aplicar autorização por proprietário/setor na API; corrigir filtro de solicitações; alinhar o contrato de edição de usuário; depois implementar o módulo de Solicitações no Vue.
+      </div>
+
+      <section class="schedule">
+        <h2>Cronograma fechado — entrega técnica em 02/10/2026</h2>
+        <div class="scope-lock">
+          <strong>Escopo congelado:</strong> esta versão terá somente autenticação e sessão, dashboard, CRUD de tipos, administração de usuários, fluxo de solicitações, permissões por perfil, testes essenciais e documentação. Não entram recuperação de senha, anexos, notificações, gráficos, relatórios, chat, auditoria, tema novo ou qualquer outra funcionalidade não necessária para demonstrar os fluxos atuais.
+        </div>
+        <table>
+          <thead><tr><th>Data</th><th>Foco</th><th>Resultado obrigatório</th></tr></thead>
+          <tbody>
+            <tr><td>22/09</td><td>Congelar escopo e organizar execução</td><td>Usar este checklist como única fonte; nenhuma funcionalidade nova entra.</td></tr>
+            <tr><td>23–24/09</td><td>Segurança crítica da API</td><td>Fechar criação de ADMIN, aplicar proprietário/setor, limitar transições e bloquear usuário inativo.</td></tr>
+            <tr><td>25/09</td><td>Consultas e contratos da API</td><td>Corrigir filtros/ordenação, DTOs de usuário, status HTTP e expiração JWT.</td></tr>
+            <tr><td>26/09</td><td>Autorização no Vue</td><td>Guard por perfil, menu e ações condicionais, 401/403 corretos e interceptor estável.</td></tr>
+            <tr><td>27/09</td><td>Finalizar Usuários</td><td>Cadastro, edição e ativação/inativação funcionando com contratos alinhados.</td></tr>
+            <tr><td>28–29/09</td><td>Finalizar Solicitações</td><td>Listar, filtrar, criar, editar e executar transições permitidas para cada perfil.</td></tr>
+            <tr><td>30/09</td><td>Dashboard e acabamento</td><td>Escopo correto por perfil, botão funcional, estados vazio/erro/loading e responsividade básica.</td></tr>
+            <tr><td>01/10</td><td>Testes e integração</td><td>Testes essenciais da API e frontend; roteiro ADMIN/GESTOR/USUARIO sem erro no console.</td></tr>
+            <tr><td>02/10</td><td>Entrega de portfólio</td><td>Build final, README, Swagger, Postman, dados demo e roteiro de apresentação revisados.</td></tr>
+            <tr><td>03/10</td><td>Reserva</td><td>Somente corrigir defeitos encontrados. Proibido adicionar funcionalidade.</td></tr>
+            <tr><td>04/10</td><td>Prazo externo</td><td>Projeto já concluído; nenhuma alteração de última hora.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
       <div class="progress-card">
-        <div class="progress-info">
-          <span id="progressText">0 de 0 concluídos</span>
-          <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
+        <div class="progress-info"><span id="progressText">0 de 0 concluídos</span><span id="progressPercent">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       </div>
 
       <div class="grid" id="checklist"></div>
 
-      <div class="note">
-        <strong>Direção recomendada:</strong>
-        comece pelo Vue básico, depois layout, rotas, login, integração com API,
-        telas principais e tratamento de erros.
-      </div>
+      <footer>
+        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 22/09/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
+      </footer>
     </main>
 
     <script>
-      const storageKey = 'portal-frontend-vue-checklist'
+      const storageKey = 'portal-checklist-api-frontend-2026-09-22'
 
-      const phases = [
+      const groups = [
         {
-          title: 'Fase 1 - Fundamentos Vue',
+          area: 'API Spring Boot',
+          title: '1. Segurança e autorização',
+          summary: 'Primeira etapa. Há caminhos de elevação de privilégio e acesso horizontal indevido.',
           items: [
-            'Entender src/main.js e como o Vue monta o App.vue.',
-            'Estudar interpolação com {{ variavel }}.',
-            'Estudar v-if e v-for.',
-            'Estudar v-model em formulários.',
-            'Estudar eventos com @click e @submit.prevent.',
-            'Criar componentes simples em src/components.'
+            { priority: 'critical', text: 'Remover a possibilidade de uma pessoa não autenticada criar usuário com perfil ADMIN ou GESTOR.' },
+            { priority: 'critical', text: 'No cadastro público, ignorar o perfil recebido e sempre atribuir USUARIO; criar endpoint administrativo separado quando necessário.' },
+            { priority: 'critical', text: 'Fazer USUARIO criar solicitação para si mesmo usando o usuário autenticado, sem confiar em usuario.id enviado pelo cliente.' },
+            { priority: 'critical', text: 'Impedir USUARIO de consultar ou alterar solicitações de outras pessoas.' },
+            { priority: 'high', text: 'Limitar GESTOR às solicitações e usuários do próprio setor; manter acesso global somente para ADMIN.' },
+            { priority: 'high', text: 'Restringir transições de aprovação, rejeição e conclusão aos perfis autorizados.' },
+            { priority: 'high', text: 'Recusar tokens de usuários inativos verificando isEnabled() no filtro de segurança.' },
+            { priority: 'high', text: 'Remover o segredo JWT padrão my-secret-key e falhar a inicialização quando JWT_SECRET não estiver configurado.' },
+            { priority: 'medium', text: 'Padronizar respostas JSON para 401 e 403 com AuthenticationEntryPoint e AccessDeniedHandler.' },
+            { priority: 'medium', text: 'Desabilitar Swagger e API Docs no perfil de produção.' }
           ]
         },
         {
-          title: 'Fase 2 - Layout',
+          area: 'API Spring Boot',
+          title: '2. Solicitações e dashboard',
+          summary: 'Corrigir consulta, escopo e regras antes de terminar as telas do frontend.',
           items: [
-            'Criar layout base da aplicação.',
-            'Criar navbar ou sidebar.',
-            'Criar links visuais para Dashboard, Solicitações, Usuários e Tipos.',
-            'Estudar componentes do PrimeVue: Button, InputText, Password, Card, Tag e DataTable.',
-            'Deixar o layout responsivo para celular.'
+            { priority: 'critical', text: 'Corrigir root.get("") em SolicitacaoRepositoryImpl; atualmente filtros por status ou prioridade podem gerar erro 500.' },
+            { priority: 'high', text: 'Aplicar a ordenação recebida em Pageable na consulta customizada, com campos permitidos em lista branca.' },
+            { priority: 'high', text: 'Aplicar o escopo ADMIN/GESTOR/USUARIO também aos indicadores e à tabela do dashboard.' },
+            { priority: 'medium', text: 'Definir tamanho máximo de página para evitar consultas excessivas.' },
+            { priority: 'medium', text: 'Retornar 404 quando usuário, tipo ou solicitação não existir, sem converter o caso em erro de negócio 400.' },
+            { priority: 'medium', text: 'Adicionar limites de tamanho de título e descrição iguais aos limites do banco.' },
+            { priority: 'done', text: 'Manter paginação nos endpoints de listagem.', done: true },
+            { priority: 'done', text: 'Manter validação das transições possíveis de status.', done: true },
+            { priority: 'done', text: 'Manter os índices existentes para status, prioridade, usuário, tipo e setor.', done: true }
           ]
         },
         {
-          title: 'Fase 3 - Rotas',
+          area: 'API Spring Boot',
+          title: '3. Usuários, contratos e autenticação',
+          summary: 'Separar criação, edição administrativa e eventual alteração de senha.',
           items: [
-            'Instalar Vue Router com npm install vue-router.',
-            'Criar src/router/index.js.',
-            'Criar LoginView.vue.',
-            'Criar DashboardView.vue.',
-            'Criar SolicitacoesView.vue.',
-            'Criar UsuariosView.vue.',
-            'Criar TiposView.vue.',
-            'Proteger rotas que exigem login.'
+            { priority: 'high', text: 'Criar DTOs diferentes para cadastro e atualização de usuário; o PUT não deve exigir senha se não a altera.' },
+            { priority: 'high', text: 'Decidir e implementar explicitamente se o administrador pode alterar perfil; hoje o request aceita perfil, mas o service ignora.' },
+            { priority: 'high', text: 'Capturar DisabledException/AuthenticationException no login e retornar erro de credencial adequado, não 500.' },
+            { priority: 'medium', text: 'Adicionar @NotBlank ao e-mail e política mínima para senha.' },
+            { priority: 'medium', text: 'Corrigir @Value("2") para usar api.security.token.expiration-hours.' },
+            { priority: 'medium', text: 'Planejar troca de senha em fluxo separado e invalidar sessões antigas quando esse recurso existir.' },
+            { priority: 'low', text: 'Remover @CrossOrigin redundante do controller e manter CORS centralizado.' },
+            { priority: 'done', text: 'Manter Setor como enum e a migration de padronização.', done: true }
           ]
         },
         {
-          title: 'Fase 4 - Integração com API',
+          area: 'API Spring Boot',
+          title: '4. Banco, erros e testes',
+          summary: 'Os 2 testes atuais passam, mas não protegem as regras principais.',
           items: [
-            'Instalar Axios com npm install axios.',
-            'Criar src/services/api.js.',
-            'Configurar VITE_API_BASE_URL no .env.',
-            'Fazer login em /auth/login.',
-            'Salvar token JWT no localStorage.',
-            'Enviar Authorization: Bearer TOKEN nas requisições.'
+            { priority: 'high', text: 'Criar testes de segurança para cadastro público, perfis, proprietário, setor e usuário inativo.' },
+            { priority: 'high', text: 'Criar testes do repositório para filtros, ordenação e paginação de solicitações.' },
+            { priority: 'high', text: 'Testar migrations Flyway; o perfil de teste atual desativa Flyway e usa create-drop.' },
+            { priority: 'medium', text: 'Substituir a senha temporária inválida da V4 por uma nova migration segura para instalações já existentes.' },
+            { priority: 'medium', text: 'Registrar exceções inesperadas em log antes de devolver erro 500.' },
+            { priority: 'medium', text: 'Tratar validação no nível do objeto sem presumir fieldList.get(0).' },
+            { priority: 'medium', text: 'Desabilitar spring.jpa.open-in-view e ajustar carregamento/mapeamento dentro da transação.' },
+            { priority: 'medium', text: 'Usar fetch LAZY nas associações ManyToOne e verificar N+1 nas listagens.' },
+            { priority: 'low', text: 'Evitar Lombok @Data nas entidades JPA; definir equals/hashCode de forma segura.' },
+            { priority: 'done', text: 'Build e 2 testes atuais executados sem falhas.', done: true }
           ]
         },
         {
-          title: 'Fase 5 - Autenticação',
+          area: 'Frontend Vue',
+          title: '5. Base já concluída',
+          summary: 'Estrutura por funcionalidade está adequada e o TypeScript compila.',
           items: [
-            'Criar estado de autenticação.',
-            'Instalar Pinia com npm install pinia.',
-            'Criar src/stores/auth.js.',
-            'Implementar login.',
-            'Implementar logout.',
-            'Recuperar token salvo ao recarregar a página.',
-            'Redirecionar usuário não logado para /login.'
+            { priority: 'done', text: 'Vue 3, TypeScript, Vite, Pinia, Vue Router, PrimeVue e Tailwind configurados.', done: true },
+            { priority: 'done', text: 'Arquitetura organizada em modules, core, shared e router.', done: true },
+            { priority: 'done', text: 'Rotas carregadas por import dinâmico.', done: true },
+            { priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token implementados.', done: true },
+            { priority: 'done', text: 'Guard impede acesso às páginas privadas sem sessão.', done: true },
+            { priority: 'done', text: 'Dashboard possui indicadores e paginação lazy.', done: true },
+            { priority: 'done', text: 'CRUD de Tipos está separado em página, componentes, store, service e types.', done: true },
+            { priority: 'done', text: 'Listagem, cadastro e ativação/inativação de usuários estão estruturados.', done: true },
+            { priority: 'done', text: 'npm run build e vue-tsc executados com sucesso.', done: true },
+            { priority: 'done', text: 'npm audit --omit=dev encontrou 0 vulnerabilidades.', done: true },
+            { priority: 'done', text: 'Login validado visualmente em desktop e viewport de 375 px.', done: true }
           ]
         },
         {
-          title: 'Fase 6 - Solicitações',
+          area: 'Frontend Vue',
+          title: '6. Autenticação e permissões',
+          summary: 'A sessão funciona, mas falta autorização de interface por perfil.',
           items: [
-            'Criar listagem de solicitações.',
-            'Implementar filtro por status.',
-            'Implementar filtro por prioridade.',
-            'Entender a paginação retornada pela API.',
-            'Criar formulário de nova solicitação.',
-            'Criar edição de solicitação.',
-            'Implementar fluxo ABERTA -> EM_APROVACAO.',
-            'Implementar fluxo EM_APROVACAO -> APROVADA.',
-            'Implementar fluxo EM_APROVACAO -> REJEITADA.',
-            'Implementar fluxo APROVADA -> CONCLUIDA.'
+            { priority: 'high', text: 'Adicionar meta de perfis permitidos nas rotas e validar ADMIN, GESTOR e USUARIO no guard.' },
+            { priority: 'high', text: 'Ocultar Usuários e ações administrativas do menu para quem não possui permissão.' },
+            { priority: 'high', text: 'Não encerrar a sessão em todo erro 403; mostrar “sem permissão” e redirecionar para uma página permitida.' },
+            { priority: 'high', text: 'Corrigir interceptor para usar error.response?.status também no teste de 403; erro de rede hoje pode causar TypeError.' },
+            { priority: 'medium', text: 'Validar o JSON restaurado do sessionStorage antes de tratá-lo como SessaoUsuario.' },
+            { priority: 'medium', text: 'Criar página 403 e página 404, além da rota curinga.' },
+            { priority: 'medium', text: 'Transformar o login em form com submit para permitir Enter e melhorar acessibilidade.' },
+            { priority: 'low', text: 'Remover estado e componente de mensagem vazios no login ou preencher menssagemLogin corretamente.' }
           ]
         },
         {
-          title: 'Fase 7 - Usuários',
+          area: 'Frontend Vue',
+          title: '7. Corrigir CRUD de usuários',
+          summary: 'Há incompatibilidades entre o formulário Vue e o contrato atual da API.',
           items: [
-            'Criar listagem de usuários.',
-            'Criar filtro por setor.',
-            'Criar formulário de cadastro.',
-            'Criar edição de usuário.',
-            'Criar botão para PATCH /usuarios/status/{id}.',
-            'Mostrar badge Ativo ou Inativo.',
-            'Ocultar ações conforme perfil do usuário.'
+            { priority: 'critical', text: 'Alinhar a edição com a API: hoje o frontend envia senha vazia, mas UsuarioRequest do backend exige @NotBlank.' },
+            { priority: 'high', text: 'Enviar o código ADMIN, GESTOR ou USUARIO; o select usa descrições e “Administrador” não é aceito pelo backend.' },
+            { priority: 'high', text: 'Separar UsuarioCreateRequest e UsuarioUpdateRequest também no frontend.' },
+            { priority: 'high', text: 'Decidir se perfil será editável; não mostrar um campo que o backend ignora.' },
+            { priority: 'medium', text: 'Adicionar validação obrigatória de nome, e-mail, perfil, setor e senha antes de salvar.' },
+            { priority: 'medium', text: 'Tipar retornos de buscarPorId, salvar, atualizar e status como Usuario.' },
+            { priority: 'medium', text: 'Renomear a prop tipos da tabela de usuários para usuarios e usar Usuario[] no lugar de TipoSolicitacao[].' },
+            { priority: 'medium', text: 'Ligar o fechamento do Dialog a update:visible e evitar mutação direta de props.' },
+            { priority: 'low', text: 'Remover console.log de id e ativo no usuarioService.' },
+            { priority: 'low', text: 'Corrigir textos “Nào” e “Atencão”.' }
           ]
         },
         {
-          title: 'Fase 8 - Tipos de Solicitação',
+          area: 'Frontend Vue',
+          title: '8. Implementar Solicitações',
+          summary: 'O módulo existe, mas a página contém apenas o título.',
           items: [
-            'Criar listagem de tipos.',
-            'Criar cadastro de tipo.',
-            'Criar edição de tipo.',
-            'Criar exclusão de tipo.',
-            'Tratar erro quando o tipo estiver em uso.'
+            { priority: 'high', text: 'Criar types, service, store e componentes do módulo de Solicitações.' },
+            { priority: 'high', text: 'Criar listagem paginada com estados de loading, vazio e erro.' },
+            { priority: 'high', text: 'Criar formulário para nova solicitação sem permitir escolher outro usuário quando o perfil for USUARIO.' },
+            { priority: 'high', text: 'Implementar edição e ações de status conforme as permissões definidas na API.' },
+            { priority: 'medium', text: 'Adicionar filtros por status e prioridade sincronizados com a página atual.' },
+            { priority: 'medium', text: 'Mostrar data de criação, solicitante, tipo, prioridade e status.' },
+            { priority: 'medium', text: 'Criar confirmação para ações irreversíveis de fluxo.' }
           ]
         },
         {
-          title: 'Fase 9 - UX e Erros',
+          area: 'Frontend Vue',
+          title: '9. Dashboard, UX e responsividade',
+          summary: 'O dashboard está funcional como base, mas ainda possui ações e estados incompletos.',
           items: [
-            'Criar componente de loading.',
-            'Criar componente de alerta.',
-            'Criar confirmação antes de excluir.',
-            'Tratar erro 400 Bad Request.',
-            'Tratar erro 401 Unauthorized.',
-            'Tratar erro 403 Forbidden.',
-            'Tratar erro 404 Not Found.',
-            'Tratar erro 409 Conflict.',
-            'Tratar erro 500 Internal Server Error.'
+            { priority: 'high', text: 'Fazer o botão “Nova solicitação” navegar para o formulário ou abrir o dialog correto.' },
+            { priority: 'high', text: 'Não relançar erro em carregarSolicitacoes após preencher erroTabela; hoje isso pode gerar promise rejeitada sem tratamento.' },
+            { priority: 'medium', text: 'Implementar filtros de status e prioridade no dashboard depois de corrigir o endpoint da API.' },
+            { priority: 'medium', text: 'Adicionar estado vazio e botão “Tentar novamente” nas tabelas.' },
+            { priority: 'medium', text: 'Criar sidebar recolhível ou menu móvel; o aside fixo de 16rem prejudica telas pequenas.' },
+            { priority: 'medium', text: 'Validar tabelas e dialogs em celular, incluindo rolagem horizontal e largura máxima.' },
+            { priority: 'medium', text: 'Usar um único Toast global; atualmente Tipos renderiza Toast próprio e ContainerPage também.' },
+            { priority: 'low', text: 'Trocar o loading de tela cheia por loading local em tabelas e operações de dialog.' },
+            { priority: 'low', text: 'Remover “Ambiente dev” do card de usuários ativos fora do ambiente de desenvolvimento.' }
           ]
         },
         {
-          title: 'Fase 10 - Apresentação',
+          area: 'Frontend Vue',
+          title: '10. Qualidade, performance e entrega',
+          summary: 'O build passa, mas ainda não existe rede de segurança automatizada.',
           items: [
-            'Testar login como ADMIN.',
-            'Testar login como GESTOR.',
-            'Testar login como USUARIO.',
-            'Demonstrar criação de solicitação.',
-            'Demonstrar aprovação de solicitação.',
-            'Demonstrar ativação/desativação de usuário.',
-            'Conferir responsividade.',
-            'Conferir console do navegador sem erros.',
-            'Rodar npm run build.'
+            { priority: 'high', text: 'Adicionar Vitest e testes de auth store, guard, interceptor e stores principais.' },
+            { priority: 'high', text: 'Adicionar testes de componentes e um fluxo E2E de login, tipos, usuários e solicitações.' },
+            { priority: 'medium', text: 'Adicionar ESLint, regras para Vue/TypeScript e script npm run lint.' },
+            { priority: 'medium', text: 'Centralizar tratamento de erros; Tipos e Usuários ainda repetem lógica Axios diferente de obterMensagemErro.' },
+            { priority: 'medium', text: 'Importar componentes PrimeVue pelos módulos específicos em vez do barrel “primevue”; o chunk de ContainerPage chegou a aproximadamente 409 kB.' },
+            { priority: 'medium', text: 'Carregar Vue DevTools somente no modo development.' },
+            { priority: 'medium', text: 'Validar VITE_API_URL na inicialização e fornecer .env.example sem segredo.' },
+            { priority: 'medium', text: 'Atualizar o README: auth e dashboard usam interfaces, e tipos/usuários já possuem components, stores, services e types.' },
+            { priority: 'low', text: 'Padronizar nomes de arquivos e pastas: interfaces versus types, extensões .ts nos imports e nomes de stores.' },
+            { priority: 'low', text: 'Configurar CI para executar npm ci, build, lint e testes em cada push.' }
           ]
         }
       ]
@@ -350,91 +298,53 @@
       const progressText = document.querySelector('#progressText')
       const progressPercent = document.querySelector('#progressPercent')
       const progressFill = document.querySelector('#progressFill')
-      const clearButton = document.querySelector('#clearButton')
-      const markAllButton = document.querySelector('#markAllButton')
 
-      function getSavedState() {
-        return JSON.parse(localStorage.getItem(storageKey) || '{}')
-      }
+      function itemId(groupIndex, itemIndex) { return `group-${groupIndex}-item-${itemIndex}` }
+      function getSavedState() { try { return JSON.parse(localStorage.getItem(storageKey) || '{}') } catch { return {} } }
+      function saveState(state) { localStorage.setItem(storageKey, JSON.stringify(state)) }
 
-      function saveState(state) {
-        localStorage.setItem(storageKey, JSON.stringify(state))
-      }
-
-      function createItemId(phaseIndex, itemIndex) {
-        return `phase-${phaseIndex}-item-${itemIndex}`
-      }
-
-      function renderChecklist() {
+      function render() {
         const saved = getSavedState()
-
-        checklist.innerHTML = phases
-          .map((phase, phaseIndex) => {
-            const items = phase.items
-              .map((item, itemIndex) => {
-                const id = createItemId(phaseIndex, itemIndex)
-                const checked = saved[id] ? 'checked' : ''
-
-                return `
-                  <li>
-                    <input type="checkbox" id="${id}" data-id="${id}" ${checked}>
-                    <label for="${id}">${item}</label>
-                  </li>
-                `
-              })
-              .join('')
-
-            return `
-              <section>
-                <h2>${phase.title}</h2>
-                <ul>${items}</ul>
-              </section>
-            `
-          })
-          .join('')
-
+        let currentArea = ''
+        checklist.innerHTML = groups.map((group, groupIndex) => {
+          const areaHeading = group.area !== currentArea ? `<h2 class="area-title">${group.area}</h2>` : ''
+          currentArea = group.area
+          const items = group.items.map((item, itemIndex) => {
+            const id = itemId(groupIndex, itemIndex)
+            const checked = Object.hasOwn(saved, id) ? saved[id] : Boolean(item.done)
+            const label = item.priority === 'done' ? 'Concluído' : item.priority
+            return `<li><input type="checkbox" id="${id}" data-id="${id}" ${checked ? 'checked' : ''}><label for="${id}"><span class="badge ${item.priority}">${label}</span>${item.text}</label></li>`
+          }).join('')
+          return `${areaHeading}<section><h2>${group.title}</h2><p class="summary">${group.summary}</p><ul>${items}</ul></section>`
+        }).join('')
         updateProgress()
       }
 
       function updateProgress() {
-        const checks = Array.from(document.querySelectorAll('input[type="checkbox"]'))
-        const total = checks.length
-        const done = checks.filter((check) => check.checked).length
-        const percent = total === 0 ? 0 : Math.round((done / total) * 100)
-
-        progressText.textContent = `${done} de ${total} concluídos`
+        const checks = [...document.querySelectorAll('input[type="checkbox"]')]
+        const done = checks.filter(check => check.checked).length
+        const percent = checks.length ? Math.round(done / checks.length * 100) : 0
+        progressText.textContent = `${done} de ${checks.length} concluídos`
         progressPercent.textContent = `${percent}%`
         progressFill.style.width = `${percent}%`
       }
 
-      checklist.addEventListener('change', (event) => {
-        if (event.target.type !== 'checkbox') return
-
+      checklist.addEventListener('change', event => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'checkbox') return
         const saved = getSavedState()
         saved[event.target.dataset.id] = event.target.checked
         saveState(saved)
         updateProgress()
       })
 
-      clearButton.addEventListener('click', () => {
-        localStorage.removeItem(storageKey)
-        renderChecklist()
-      })
-
-      markAllButton.addEventListener('click', () => {
+      document.querySelector('#resetButton').addEventListener('click', () => { localStorage.removeItem(storageKey); render() })
+      document.querySelector('#markAllButton').addEventListener('click', () => {
         const saved = {}
-
-        phases.forEach((phase, phaseIndex) => {
-          phase.items.forEach((_, itemIndex) => {
-            saved[createItemId(phaseIndex, itemIndex)] = true
-          })
-        })
-
+        groups.forEach((group, groupIndex) => group.items.forEach((_, itemIndex) => { saved[itemId(groupIndex, itemIndex)] = true }))
         saveState(saved)
-        renderChecklist()
+        render()
       })
-
-      renderChecklist()
+      render()
     </script>
   </body>
 </html>

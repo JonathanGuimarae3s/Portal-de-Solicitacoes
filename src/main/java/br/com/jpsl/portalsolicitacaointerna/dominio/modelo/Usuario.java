@@ -2,9 +2,11 @@ package br.com.jpsl.portalsolicitacaointerna.dominio.modelo;
 
 
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.type.NumericBooleanConverter;
@@ -34,8 +36,10 @@ public class Usuario implements UserDetails {
     @NotBlank
     private String senha;
 
-    @NotBlank
-    private String setor;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private Setor setor;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -86,5 +90,18 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return isAtivo();
+    }
+
+    public boolean isAdimnGestor() {
+
+        return  isAdmin() || isGestor();
+    }
+
+    public boolean isAdmin() {
+        return perfil == PerfilUsuario.ADMIN;
+    }
+
+    public boolean isGestor() {
+        return perfil == PerfilUsuario.GESTOR;
     }
 }

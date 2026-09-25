@@ -1,6 +1,6 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.repositorio;
 
-import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
+import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +18,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Override
     Page<Usuario> findAll(Pageable pageable);
 
-    Page<Usuario> findAllBySetor(String cargo, Pageable pageable);
+    Page<Usuario> findAllBySetor(Setor setor, Pageable pageable);
 
     Long countByAtivoTrue();
+
+    Long countByAtivoTrueAndSetor(Setor setor);
 
 }

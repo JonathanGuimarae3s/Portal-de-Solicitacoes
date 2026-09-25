@@ -18,7 +18,7 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    @Value("2")
+    @Value("${api.security.token.expiration-hours}")
     private Long expirationHours;
 
 

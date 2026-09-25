@@ -5,6 +5,7 @@ import br.com.jpsl.portalsolicitacaointerna.auth.DTO.response.LoginResponse;
 import br.com.jpsl.portalsolicitacaointerna.auth.DTO.response.UsuarioAutenticadoResponse;
 import br.com.jpsl.portalsolicitacaointerna.auth.excecao.CredencialException;
 import br.com.jpsl.portalsolicitacaointerna.auth.service.TokenService;
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,15 +48,24 @@ public class AutenticacaoController {
                     usuario.getNome(),
                     usuario.getEmail(),
                     usuario.getPerfil().name(),
-                    usuario.getSetor()
+                    usuario.getSetor().name()
             );
 
             var expiresInMillis = tokenService.getExpiresInMillis();
 
             return ResponseEntity.ok(new LoginResponse(token, expiresInMillis, usuarioAutenticado));
-        } catch (BadCredentialsException e) {
-            throw new CredencialException("Credencias inválidas ou inexistente.");
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                throw new CredencialException("Credencias inválidas ou inexistente.");
+
+            }
+
+            if (e instanceof DisabledException) {
+                throw new NegocioException(e.getMessage());
+            }
         }
+
+        return null;
     }
 
 

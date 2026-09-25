@@ -53,16 +53,16 @@ public class ConfiguracaoSeguranca {
                                 .requestMatchers(HttpMethod.GET, "/dashboard", "/dashboard/**")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
 
-                                .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMIN", "GESTOR")
+                                .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/**")
+                                .hasAnyRole("ADMIN", "GESTOR")
                                 .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/solicitacoes", "/solicitacoes/**")
-
-
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+
                                 .requestMatchers(HttpMethod.POST, "/solicitacoes")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
                                 .requestMatchers(HttpMethod.PUT, "/solicitacoes/**")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+                                .hasAnyRole("ADMIN", "GESTOR")
 
                                 .requestMatchers(HttpMethod.PATCH, "/usuarios/**").hasRole("ADMIN")
 
@@ -79,7 +79,7 @@ public class ConfiguracaoSeguranca {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH" ));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);

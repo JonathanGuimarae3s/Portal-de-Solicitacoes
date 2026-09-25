@@ -21,7 +21,11 @@ export function configurarInterceptor(
     api.interceptors.response.use(
         response => response,
         error => {
-            if (error.response?.status === 401 || error.response.status === 403) {
+            if (error.response?.status === 401 ) {
+                tratarNaoAutorizado();
+            }
+
+            if ( error.response.status === 403 ) {
                 tratarNaoAutorizado();
             }
 

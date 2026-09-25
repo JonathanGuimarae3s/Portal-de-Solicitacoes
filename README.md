@@ -130,6 +130,7 @@ Quando o profile `dev` estiver ativo, o Flyway carrega dados mock em `db/dev/R__
 |---|---|---|
 | POST | `/usuarios` | Público |
 | GET | `/usuarios` | ADMIN, GESTOR |
+| GET | `/usuarios/{id}` | ADMIN, GESTOR |
 | PUT | `/usuarios/{id}` | ADMIN |
 | PATCH | `/usuarios/{id}/status` | ADMIN |
 
@@ -245,7 +246,8 @@ mvnw.cmd test
 
 O profile de teste usa H2 em memória para subir o contexto sem depender do Oracle local.
 
-Neste momento o projeto mantém apenas um teste de carga de contexto. Testes unitários e de controller ficaram como melhoria posterior.
+O projeto possui um teste de carga de contexto e um teste unitário do endpoint de busca de usuário por ID.
+Amplie essa cobertura conforme novas regras de negócio forem adicionadas.
 
 ## Próximos passos
 

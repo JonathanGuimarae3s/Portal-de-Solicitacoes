@@ -127,6 +127,7 @@ Response `201 Created`:
   "nome": "João Silva",
   "email": "joao.silva@empresa.com",
   "setor": "TI",
+  "perfil": "USUARIO",
   "ativo": true
 }
 ```
@@ -157,6 +158,7 @@ Response `200 OK`:
       "nome": "Administrador Demo",
       "email": "admin@empresa.com",
       "setor": "TI",
+      "perfil": "ADMIN",
       "ativo": true
     }
   ],
@@ -164,6 +166,25 @@ Response `200 OK`:
   "tamanho": 10,
   "totalDados": 1,
   "totalPaginas": 1
+}
+```
+
+### GET `/usuarios/{id}`
+
+Acesso: `ADMIN`, `GESTOR`.
+
+Retorna um usuário pelo ID.
+
+Response `200 OK`:
+
+```json
+{
+  "id": 1,
+  "nome": "Administrador Demo",
+  "email": "admin@empresa.com",
+  "setor": "TI",
+  "perfil": "ADMIN",
+  "ativo": true
 }
 ```
 
@@ -193,6 +214,7 @@ Response `200 OK`:
   "nome": "Administrador Demo",
   "email": "admin@empresa.com",
   "setor": "TI",
+  "perfil": "ADMIN",
   "ativo": true
 }
 ```
@@ -219,6 +241,7 @@ Response `200 OK`:
   "nome": "Administrador Demo",
   "email": "admin@empresa.com",
   "setor": "TI",
+  "perfil": "ADMIN",
   "ativo": false
 }
 ```

@@ -28,7 +28,8 @@ public final class ApiMapper {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSetor(),
+                usuario.getSetor().name(),
+                usuario.getPerfil().name(),
                 usuario.isAtivo()
         );
     }
@@ -38,7 +39,7 @@ public final class ApiMapper {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSetor()
+                usuario.getSetor().name()
         );
     }
 

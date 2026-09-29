@@ -13,6 +13,7 @@ import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.SolicitacaoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -36,7 +37,8 @@ public class SolicitacaoService {
 
     @Transactional(readOnly = true)
     public Solicitacao buscarPorId(Long id) {
-        return solicitacaoRepository.findById(id).orElseThrow(() -> new EntidadeNaoEncontradaException("Solicitacao não encontrado com id: " + id));
+        return solicitacaoRepository.findById(id).orElseThrow(() ->
+                new EntidadeNaoEncontradaException("Solicitação não encontrada com o ID: " + id));
     }
 
 
@@ -64,7 +66,7 @@ public class SolicitacaoService {
         }
 
         if (solicitacao == null) {
-            throw new EntidadeNaoEncontradaException("Solicitacao não encontrado com id: " + id);
+            throw new EntidadeNaoEncontradaException("Solicitação não encontrada com o ID: " + id);
         }
 
         return solicitacao;
@@ -88,7 +90,7 @@ public class SolicitacaoService {
 
             return solicitacaoRepository.filtrar(statusEnum, prioridadeEnum, usuario, setor, pageable);
         } catch (IllegalArgumentException e) {
-            throw new NegocioException("Status ou Prioridade inválidos. Valores válidos: " + "Status: " +
+            throw new NegocioException("Status ou prioridade inválidos. Valores válidos: " + "Status: " +
                     Arrays.toString(StatusSolicitacao.values()) + ", " + "Prioridade: " + Arrays.toString(PrioridadeSolicitacao.values()));
         }
     }
@@ -150,22 +152,22 @@ public class SolicitacaoService {
         validarPermissao(usuarioLogado, usuarioDestino, "criar");
 
         if (!usuario.isAtivo()) {
-            throw new NegocioException("Usúario inativo não pode abrir solicitacão!");
+            throw new NegocioException("Usuário inativo não pode abrir uma solicitação.");
         }
 
         Solicitacao solicitacao = new Solicitacao();
 
         if (!StringUtils.hasLength(request.titulo())) {
-            throw new NegocioException("O titulo é obrigatório.");
+            throw new NegocioException("O título é obrigatório.");
         }
 
         if (!StringUtils.hasLength(request.descricao())) {
-            throw new NegocioException("A descricao é obrigatória.");
+            throw new NegocioException("A descrição é obrigatória.");
         }
 
         if (StringUtils.hasLength(request.prioridade())) {
             PrioridadeSolicitacao prioridade = PrioridadeSolicitacao.fromString(request.prioridade())
-                    .orElseThrow(() -> new NegocioException("Prioridade inválido. Valores válidos: " +
+                    .orElseThrow(() -> new NegocioException("Prioridade inválida. Valores válidos: " +
                             "Prioridade: " + Arrays.toString(PrioridadeSolicitacao.values())));
 
             solicitacao.setPrioridade(prioridade);
@@ -194,7 +196,7 @@ public class SolicitacaoService {
 
 
         switch (usuarioLogado.getPerfil()) {
-            case USUARIO -> throw new NegocioException(
+            case USUARIO -> throw new AccessDeniedException(
                     "Usuário só pode criar solicitações para si mesmo."
             );
 
@@ -206,7 +208,7 @@ public class SolicitacaoService {
                         usuarioLogado.getSetor() == usuarioDestino.getSetor();
 
                 if (!destinoEhUsuario || !mesmoSetor) {
-                    throw new NegocioException(
+                    throw new AccessDeniedException(
                             "Gestor só pode criar solicitações para usuários do seu setor."
                     );
                 }
@@ -217,7 +219,7 @@ public class SolicitacaoService {
                         usuarioDestino.getPerfil() == PerfilUsuario.ADMIN;
 
                 if (destinoEhOutroAdmin) {
-                    throw new NegocioException(
+                    throw new AccessDeniedException(
                             "Administrador não pode criar solicitação para outro administrador."
                     );
                 }
@@ -250,7 +252,7 @@ public class SolicitacaoService {
 
 
         if (solicitacao.getStatus().equals(StatusSolicitacao.CONCLUIDA)) {
-            throw new NegocioException("Esta solicitação já está concluída. Não é possível atualiza-lá.");
+            throw new NegocioException("Esta solicitação já está concluída. Não é possível atualizá-la.");
         }
 
         if (request.tipo().id() != null && !request.tipo().id().equals(solicitacao.getTipo().getId())) {
@@ -274,7 +276,7 @@ public class SolicitacaoService {
 
         if (StringUtils.hasText(request.prioridade())) {
             PrioridadeSolicitacao prioridade = PrioridadeSolicitacao.fromString(request.prioridade())
-                    .orElseThrow(() -> new NegocioException("Prioridade inválido. Valores válidos: " +
+                    .orElseThrow(() -> new NegocioException("Prioridade inválida. Valores válidos: " +
                             "Prioridade: " + Arrays.toString(PrioridadeSolicitacao.values())));
 
             solicitacao.setPrioridade(prioridade);

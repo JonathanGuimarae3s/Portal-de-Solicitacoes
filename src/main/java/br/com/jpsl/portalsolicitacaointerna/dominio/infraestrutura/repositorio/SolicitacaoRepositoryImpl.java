@@ -3,26 +3,31 @@ package br.com.jpsl.portalsolicitacaointerna.dominio.infraestrutura.repositorio;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PrioridadeSolicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.StatusSolicitacao;
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.repositorio.SolicitacaoRepositoryQueries;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
+
+
+    private static final Set<String> camposPermitidos =
+            Set.of("id", "titulo", "status", "prioridade", "dataCriacao");
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -39,7 +44,8 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
 
         List<Predicate> predicates = criarPredicates(statusEnum, prioridadeEnum, setor, usuario, criteriaBuilder, root);
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
-        criteriaQuery.orderBy(criteriaBuilder.asc(root.get("status")));
+
+        verificaOrdenadores(pageable, criteriaBuilder, root, criteriaQuery);
 
         TypedQuery<Solicitacao> query = entityManager.createQuery(criteriaQuery);
 
@@ -52,6 +58,31 @@ public class SolicitacaoRepositoryImpl implements SolicitacaoRepositoryQueries {
         Long total = contarTotal(statusEnum, prioridadeEnum, criteriaBuilder, usuario, setor);
 
         return new PageImpl<>(resultado, pageable, total);
+    }
+
+    private static void verificaOrdenadores(Pageable pageable, CriteriaBuilder criteriaBuilder, Root<Solicitacao> root, CriteriaQuery<Solicitacao> criteriaQuery) {
+        Sort sort = pageable.getSort();
+        if (sort.isSorted()) {
+            List<Order> orders = sort.stream()
+                    .map(order -> {
+                        String propriedade = order.getProperty();
+
+                        if (!camposPermitidos.contains(propriedade)) {
+                            throw new NegocioException(
+                                    "Campo de ordenação inválido: " + propriedade
+                            );
+                        }
+
+                        return order.isAscending()
+                                ? criteriaBuilder.asc(root.get(propriedade))
+                                : criteriaBuilder.desc(root.get(propriedade));
+
+
+                    })
+                    .toList();
+
+            criteriaQuery.orderBy(orders);
+        }
     }
 
     private Long contarTotal(StatusSolicitacao statusEnum, PrioridadeSolicitacao prioridadeEnum,

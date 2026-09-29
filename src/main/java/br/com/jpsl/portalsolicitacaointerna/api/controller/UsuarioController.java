@@ -5,6 +5,7 @@ import br.com.jpsl.portalsolicitacaointerna.api.assembler.ApiMapper;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.PageResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioRequest;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioStatusRequest;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.request.UsuarioUpdateRequest;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResponse;
 import br.com.jpsl.portalsolicitacaointerna.dominio.component.UsuarioBean;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -43,25 +45,41 @@ public class UsuarioController {
     @GetMapping
     public PageResponse<UsuarioResponse> listarUsuarios(@RequestParam(value = "setor", required = false) String setor,
                                                         Pageable pageable) {
-        if (StringUtils.hasLength(setor)) {
-            Setor setorFiltro = usuarioService.converterSetor(setor);
-            return PageResponse.from(usuarioService.buscaPorSetor(setorFiltro, pageable)
-                    .map(ApiMapper::toResponse));
-        }
 
-        return PageResponse.from(usuarioService.listar(pageable)
-                .map(ApiMapper::toResponse));
+        Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
+
+
+        if (usuarioLogado.isAdmin() || usuarioLogado.isGestor()) {
+
+            if (StringUtils.hasLength(setor) || usuarioLogado.isGestor()) {
+
+                Setor setorFiltro = usuarioLogado.getSetor();
+
+                if (usuarioLogado.isAdmin()) {
+                    setorFiltro = Setor.converterSetorSTRING(setor);
+                }
+
+                return PageResponse.from(usuarioService.buscaPorSetor(setorFiltro, pageable)
+                        .map(ApiMapper::toResponse));
+            }
+
+            return PageResponse.from(usuarioService.listar(pageable)
+                    .map(ApiMapper::toResponse));
+        } else {
+            throw new AccessDeniedException("Você não possui permissão para realizar esta ação.");
+        }
     }
 
     @GetMapping("/{id}")
     public UsuarioResponse buscarPorId(@PathVariable Long id) {
-        return ApiMapper.toResponse(usuarioService.buscarPorId(id));
+        Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
+
+        return ApiMapper.toResponse(usuarioService.retornaUsuarioPorId(id, usuarioLogado.getSetor(), usuarioLogado.getPerfil(), usuarioLogado.getId()));
     }
 
-
     @PutMapping("/{id}")
-    public UsuarioResponse atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioRequest request) {
-        return ApiMapper.toResponse(usuarioService.atualizar(request, id));
+    public UsuarioResponse atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioUpdateRequest request) {
+        return ApiMapper.toResponse(usuarioService.atualizar(request, id, usuarioBean.getUsuarioLogado()));
     }
 
     @PostMapping
@@ -100,7 +118,7 @@ public class UsuarioController {
         }
 
         if (StringUtils.hasLength(request.setor())) {
-            usuario.setSetor(usuarioService.converterSetor(request.setor()));
+            usuario.setSetor(Setor.converterSetorSTRING(request.setor()));
         }
 
         if (StringUtils.hasLength(request.senha())) {
@@ -108,9 +126,9 @@ public class UsuarioController {
             usuario.setSenha(senhaHash);
         }
 
+        Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
 
-        if (StringUtils.hasLength(request.perfil()) && usuarioBean.getUsuarioLogado() != null) {
-            Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
+        if (StringUtils.hasLength(request.perfil()) && usuarioLogado != null) {
 
             PerfilUsuario perfilUsuario = PerfilUsuario.fromString(request.perfil())
                     .orElseThrow(() -> new NegocioException("Perfil de Usuário inválido. Valores válidos: " +

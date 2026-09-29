@@ -30,7 +30,9 @@ class UsuarioControllerTest {
         usuario.setPerfil(PerfilUsuario.ADMIN);
         usuario.setAtivo(true);
 
-        when(usuarioService.buscarPorId(1L)).thenReturn(usuario);
+        when(usuarioBean.getUsuarioLogado()).thenReturn(usuario);
+        when(usuarioService.retornaUsuarioPorId(1L, usuario.getSetor(), usuario.getPerfil(), usuario.getId()))
+                .thenReturn(usuario);
 
         UsuarioResponse response = controller.buscarPorId(1L);
 
@@ -42,6 +44,6 @@ class UsuarioControllerTest {
                 () -> assertEquals("ADMIN", response.perfil()),
                 () -> assertTrue(response.ativo())
         );
-        verify(usuarioService).buscarPorId(1L);
+        verify(usuarioService).retornaUsuarioPorId(1L, Setor.TI, PerfilUsuario.ADMIN, 1L);
     }
 }

@@ -53,8 +53,10 @@ public class ConfiguracaoSeguranca {
                                 .requestMatchers(HttpMethod.GET, "/dashboard", "/dashboard/**")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
 
-                                .requestMatchers(HttpMethod.GET, "/usuarios", "/usuarios/**")
+                                .requestMatchers(HttpMethod.GET, "/usuarios")
                                 .hasAnyRole("ADMIN", "GESTOR")
+                                .requestMatchers(HttpMethod.GET, "/usuarios/{id}")
+                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
                                 .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/solicitacoes", "/solicitacoes/**")
                                 .hasAnyRole("ADMIN", "GESTOR", "USUARIO")

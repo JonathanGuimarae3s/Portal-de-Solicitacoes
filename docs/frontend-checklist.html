@@ -72,7 +72,7 @@
       <header>
         <div>
           <h1>Checklist do Portal</h1>
-          <p>Auditoria da API Spring Boot e do frontend Vue atualizada em 22/09/2026. Os itens marcados foram confirmados no código ou pelo build.</p>
+          <p>Auditoria da API Spring Boot e do frontend Vue atualizada em 24/09/2026. Os itens marcados foram confirmados no código ou pelo build.</p>
         </div>
         <div class="actions">
           <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
@@ -81,14 +81,14 @@
       </header>
 
       <div class="score-grid">
-        <div class="score"><span>API - nota geral</span><strong>41/100</strong></div>
+        <div class="score"><span>API - nota geral</span><strong>68/100</strong></div>
         <div class="score"><span>Frontend - nota geral</span><strong>58/100</strong></div>
         <div class="score"><span>Build do frontend</span><strong>OK</strong></div>
         <div class="score"><span>Testes automatizados do front</span><strong>0</strong></div>
       </div>
 
       <div class="priority-note">
-        <strong>Ordem recomendada:</strong> bloquear a criação pública de administradores; aplicar autorização por proprietário/setor na API; corrigir filtro de solicitações; alinhar o contrato de edição de usuário; depois implementar o módulo de Solicitações no Vue.
+        <strong>Próxima etapa:</strong> implementar autorização por perfil no Vue: guard por perfil, menu e ações condicionais, tratamento de 401/403 e interceptor estável. Os testes automatizados da API ficam concentrados na etapa de testes e integração.
       </div>
 
       <section class="schedule">
@@ -100,8 +100,8 @@
           <thead><tr><th>Data</th><th>Foco</th><th>Resultado obrigatório</th></tr></thead>
           <tbody>
             <tr><td>22/09</td><td>Congelar escopo e organizar execução</td><td>Usar este checklist como única fonte; nenhuma funcionalidade nova entra.</td></tr>
-            <tr><td>23–24/09</td><td>Segurança crítica da API</td><td>Fechar criação de ADMIN, aplicar proprietário/setor, limitar transições e bloquear usuário inativo.</td></tr>
-            <tr><td>25/09</td><td>Consultas e contratos da API</td><td>Corrigir filtros/ordenação, DTOs de usuário, status HTTP e expiração JWT.</td></tr>
+            <tr><td>23–24/09</td><td>✅ Segurança crítica da API</td><td>Concluído: criação de perfis protegida, proprietário/setor aplicados, transições limitadas e usuário inativo bloqueado.</td></tr>
+            <tr><td>25/09</td><td>✅ Consultas e contratos da API</td><td>Concluído: filtros e ordenação segura, DTOs de usuário separados, status HTTP padronizados e expiração JWT configurável.</td></tr>
             <tr><td>26/09</td><td>Autorização no Vue</td><td>Guard por perfil, menu e ações condicionais, 401/403 corretos e interceptor estável.</td></tr>
             <tr><td>27/09</td><td>Finalizar Usuários</td><td>Cadastro, edição e ativação/inativação funcionando com contratos alinhados.</td></tr>
             <tr><td>28–29/09</td><td>Finalizar Solicitações</td><td>Listar, filtrar, criar, editar e executar transições permitidas para cada perfil.</td></tr>
@@ -122,27 +122,27 @@
       <div class="grid" id="checklist"></div>
 
       <footer>
-        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 22/09/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
+        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 24/09/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
       </footer>
     </main>
 
     <script>
-      const storageKey = 'portal-checklist-api-frontend-2026-09-22'
+      const storageKey = 'portal-checklist-api-frontend-2026-09-24'
 
       const groups = [
         {
           area: 'API Spring Boot',
           title: '1. Segurança e autorização',
-          summary: 'Primeira etapa. Há caminhos de elevação de privilégio e acesso horizontal indevido.',
+          summary: 'Etapa crítica concluída. Permanecem melhorias de integração da segurança e configuração de produção.',
           items: [
-            { priority: 'critical', text: 'Remover a possibilidade de uma pessoa não autenticada criar usuário com perfil ADMIN ou GESTOR.' },
-            { priority: 'critical', text: 'No cadastro público, ignorar o perfil recebido e sempre atribuir USUARIO; criar endpoint administrativo separado quando necessário.' },
-            { priority: 'critical', text: 'Fazer USUARIO criar solicitação para si mesmo usando o usuário autenticado, sem confiar em usuario.id enviado pelo cliente.' },
-            { priority: 'critical', text: 'Impedir USUARIO de consultar ou alterar solicitações de outras pessoas.' },
-            { priority: 'high', text: 'Limitar GESTOR às solicitações e usuários do próprio setor; manter acesso global somente para ADMIN.' },
-            { priority: 'high', text: 'Restringir transições de aprovação, rejeição e conclusão aos perfis autorizados.' },
-            { priority: 'high', text: 'Recusar tokens de usuários inativos verificando isEnabled() no filtro de segurança.' },
-            { priority: 'high', text: 'Remover o segredo JWT padrão my-secret-key e falhar a inicialização quando JWT_SECRET não estiver configurado.' },
+            { priority: 'done', text: 'Cadastro público sempre cria USUARIO e não permite elevação para ADMIN ou GESTOR.', done: true },
+            { priority: 'done', text: 'Validar no backend quem pode abrir solicitação para si ou para outro usuário conforme perfil e setor.', done: true },
+            { priority: 'done', text: 'Impedir USUARIO de consultar ou alterar solicitações de outras pessoas.', done: true },
+            { priority: 'done', text: 'Limitar GESTOR às solicitações do próprio setor e manter acesso global somente para ADMIN.', done: true },
+            { priority: 'done', text: 'Limitar também a listagem e consulta de usuários do GESTOR ao próprio setor.', done: true },
+            { priority: 'done', text: 'Restringir atualização e transições de solicitações aos perfis e entidades autorizados.', done: true },
+            { priority: 'done', text: 'Recusar tokens de usuários inativos verificando isEnabled() no filtro de segurança.', done: true },
+            { priority: 'done', text: 'Exigir JWT_SECRET externo, sem segredo padrão, mantendo dev.env fora do Git.', done: true },
             { priority: 'medium', text: 'Padronizar respostas JSON para 401 e 403 com AuthenticationEntryPoint e AccessDeniedHandler.' },
             { priority: 'medium', text: 'Desabilitar Swagger e API Docs no perfil de produção.' }
           ]
@@ -150,13 +150,13 @@
         {
           area: 'API Spring Boot',
           title: '2. Solicitações e dashboard',
-          summary: 'Corrigir consulta, escopo e regras antes de terminar as telas do frontend.',
+          summary: 'Escopo, filtros, ordenação segura e contratos HTTP principais corrigidos; permanecem limites preventivos.',
           items: [
-            { priority: 'critical', text: 'Corrigir root.get("") em SolicitacaoRepositoryImpl; atualmente filtros por status ou prioridade podem gerar erro 500.' },
-            { priority: 'high', text: 'Aplicar a ordenação recebida em Pageable na consulta customizada, com campos permitidos em lista branca.' },
-            { priority: 'high', text: 'Aplicar o escopo ADMIN/GESTOR/USUARIO também aos indicadores e à tabela do dashboard.' },
+            { priority: 'done', text: 'Corrigir o caminho de setor em SolicitacaoRepositoryImpl para evitar erro 500 nos filtros.', done: true },
+            { priority: 'done', text: 'Aplicar a ordenação recebida em Pageable na consulta customizada, com campos permitidos em lista branca.', done: true },
+            { priority: 'done', text: 'Aplicar o escopo ADMIN/GESTOR/USUARIO aos indicadores, tabela e consulta por ID do dashboard.', done: true },
             { priority: 'medium', text: 'Definir tamanho máximo de página para evitar consultas excessivas.' },
-            { priority: 'medium', text: 'Retornar 404 quando usuário, tipo ou solicitação não existir, sem converter o caso em erro de negócio 400.' },
+            { priority: 'done', text: 'Retornar 404 quando usuário, tipo ou solicitação não existir, sem converter o caso em erro de negócio 400.', done: true },
             { priority: 'medium', text: 'Adicionar limites de tamanho de título e descrição iguais aos limites do banco.' },
             { priority: 'done', text: 'Manter paginação nos endpoints de listagem.', done: true },
             { priority: 'done', text: 'Manter validação das transições possíveis de status.', done: true },
@@ -166,13 +166,14 @@
         {
           area: 'API Spring Boot',
           title: '3. Usuários, contratos e autenticação',
-          summary: 'Separar criação, edição administrativa e eventual alteração de senha.',
+          summary: 'DTOs de criação e atualização separados, edição administrativa definida e senha opcional no PUT.',
           items: [
-            { priority: 'high', text: 'Criar DTOs diferentes para cadastro e atualização de usuário; o PUT não deve exigir senha se não a altera.' },
-            { priority: 'high', text: 'Decidir e implementar explicitamente se o administrador pode alterar perfil; hoje o request aceita perfil, mas o service ignora.' },
-            { priority: 'high', text: 'Capturar DisabledException/AuthenticationException no login e retornar erro de credencial adequado, não 500.' },
-            { priority: 'medium', text: 'Adicionar @NotBlank ao e-mail e política mínima para senha.' },
-            { priority: 'medium', text: 'Corrigir @Value("2") para usar api.security.token.expiration-hours.' },
+            { priority: 'done', text: 'Criar DTOs diferentes para cadastro e atualização de usuário; o PUT não deve exigir senha se não a altera.', done: true },
+            { priority: 'done', text: 'Permitir explicitamente que o administrador altere perfil e setor na atualização de usuário.', done: true },
+            { priority: 'done', text: 'Capturar DisabledException no login e retornar erro controlado para usuário inativo.', done: true },
+            { priority: 'done', text: 'Adicionar @NotBlank ao e-mail dos DTOs de usuário.', done: true },
+            { priority: 'medium', text: 'Definir e aplicar uma política mínima para senha.' },
+            { priority: 'done', text: 'Configurar a expiração do JWT por api.security.token.expiration-hours.', done: true },
             { priority: 'medium', text: 'Planejar troca de senha em fluxo separado e invalidar sessões antigas quando esse recurso existir.' },
             { priority: 'low', text: 'Remover @CrossOrigin redundante do controller e manter CORS centralizado.' },
             { priority: 'done', text: 'Manter Setor como enum e a migration de padronização.', done: true }

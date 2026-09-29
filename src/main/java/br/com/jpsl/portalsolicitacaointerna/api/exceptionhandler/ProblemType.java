@@ -11,13 +11,14 @@ public enum ProblemType {
     ERRO_DE_SISTEMA("erro-de-sistema", "Erro de sistema"),
     DADOS_INVALIDOS("dados-invalidos", "Dados inválidos"),
     NEGOCIO("negocio", "Violação de regra de negócio"),
-    NAO_AUTORIZADO("nao-autorizado", "Usuário não autorizado "),;
+    NAO_AUTORIZADO("nao-autorizado", "Não autenticado"),
+    ACESSO_NEGADO("acesso-negado", "Acesso negado");
 
     private String title;
     private String uri;
 
     ProblemType(String path, String title) {
         this.title = title;
-        this.uri = "https://freecsfood.com.br/problems/" + path;
+        this.uri = "urn:portal-solicitacao-interna:problem:" + path;
     }
 }

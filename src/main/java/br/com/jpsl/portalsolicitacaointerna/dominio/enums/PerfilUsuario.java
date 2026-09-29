@@ -1,5 +1,7 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.enums;
 
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -16,6 +18,13 @@ public enum PerfilUsuario {
 
     public String getDescricao() {
         return descricao;
+    }
+
+
+    public static PerfilUsuario converterPerfilUsuarioSTRING(String setor) {
+        return  PerfilUsuario.fromString(setor)
+                .orElseThrow(() -> new NegocioException(
+                        "Perfil Usuário inválido. Valores válidos: " + java.util.Arrays.toString(PerfilUsuario.values())));
     }
 
     public static Optional<PerfilUsuario> fromString(String valor) {

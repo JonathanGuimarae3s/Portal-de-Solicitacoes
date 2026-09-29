@@ -15,6 +15,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     UserDetails findUserDetailsByEmail(String email);
 
+    Usuario findByIdAndSetor(Long id, Setor setor);
+
     @Override
     Page<Usuario> findAll(Pageable pageable);
 

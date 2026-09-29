@@ -7,8 +7,6 @@ import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.S
 import br.com.jpsl.portalsolicitacaointerna.dominio.component.UsuarioBean;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.PerfilUsuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.enums.Setor;
-import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.EntidadeNaoEncontradaException;
-import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Solicitacao;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import br.com.jpsl.portalsolicitacaointerna.dominio.service.SolicitacaoService;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/solicitacoes")
@@ -29,6 +28,8 @@ public class SolicitacaoController {
 
     private final UsuarioBean usuarioBean;
     private final SolicitacaoService solicitacaoService;
+
+
 
     public SolicitacaoController(SolicitacaoService solicitacaoService, UsuarioBean usuarioBean) {
         this.solicitacaoService = solicitacaoService;
@@ -64,36 +65,25 @@ public class SolicitacaoController {
 
     @PostMapping
     public ResponseEntity<SolicitacaoResponse> salvarSolicitacao(@RequestBody @Valid SolicitacaoRequest request) {
-        try {
+        Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
+        Solicitacao salva = solicitacaoService.salvar(request, usuarioLogado);
 
-            Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
-            Solicitacao salva = solicitacaoService.salvar(request, usuarioLogado);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(salva.getId())
+                .toUri();
 
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(salva.getId())
-                    .toUri();
-
-            return ResponseEntity.created(location)
-                    .body(ApiMapper.toResponse(salva));
-
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
-        }
+        return ResponseEntity.created(location)
+                .body(ApiMapper.toResponse(salva));
     }
 
     @PutMapping("/{id}")
     public SolicitacaoResponse atualizarSolicitacao(@PathVariable Long id,
                                                     @RequestBody @Valid SolicitacaoRequest request) {
 
-        try {
+        Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
 
-            Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
-
-            return ApiMapper.toResponse(solicitacaoService.atualizar(id, request, usuarioLogado));
-        } catch (EntidadeNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage());
-        }
+        return ApiMapper.toResponse(solicitacaoService.atualizar(id, request, usuarioLogado));
 
     }
 

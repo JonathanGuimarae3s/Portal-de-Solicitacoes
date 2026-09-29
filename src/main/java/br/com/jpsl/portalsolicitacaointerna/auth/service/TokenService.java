@@ -33,7 +33,7 @@ public class TokenService {
                     .sign(algorithm);
             return token;
         } catch (JWTCreationException exception) {
-            throw new AutenticacaoException("Error ao gerar o token de acesso.", exception);
+            throw new AutenticacaoException("Erro ao gerar o token de acesso.", exception);
         }
     }
 

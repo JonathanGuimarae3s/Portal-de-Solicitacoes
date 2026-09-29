@@ -18,7 +18,7 @@ public class OpenApiConfig {
     public OpenAPI portalSolicitacaoOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Portal de Solicitacao Interna API")
+                        .title("API do Portal de Solicitação Interna")
                         .description("API REST para abertura, aprovacao e acompanhamento de solicitacoes internas.")
                         .version("v1")
                         .contact(new Contact()

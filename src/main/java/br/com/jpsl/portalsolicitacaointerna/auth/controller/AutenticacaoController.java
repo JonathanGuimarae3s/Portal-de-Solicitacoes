@@ -5,7 +5,6 @@ import br.com.jpsl.portalsolicitacaointerna.auth.DTO.response.LoginResponse;
 import br.com.jpsl.portalsolicitacaointerna.auth.DTO.response.UsuarioAutenticadoResponse;
 import br.com.jpsl.portalsolicitacaointerna.auth.excecao.CredencialException;
 import br.com.jpsl.portalsolicitacaointerna.auth.service.TokenService;
-import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
 import br.com.jpsl.portalsolicitacaointerna.dominio.modelo.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
@@ -54,18 +53,11 @@ public class AutenticacaoController {
             var expiresInMillis = tokenService.getExpiresInMillis();
 
             return ResponseEntity.ok(new LoginResponse(token, expiresInMillis, usuarioAutenticado));
-        } catch (Exception e) {
-            if (e instanceof BadCredentialsException) {
-                throw new CredencialException("Credencias inválidas ou inexistente.");
-
-            }
-
-            if (e instanceof DisabledException) {
-                throw new NegocioException(e.getMessage());
-            }
+        } catch (DisabledException e) {
+            throw new CredencialException("Usuário inativo. Entre em contato com o administrador do sistema.");
+        } catch (BadCredentialsException e) {
+            throw new CredencialException("E-mail ou senha inválidos.");
         }
-
-        return null;
     }
 
 

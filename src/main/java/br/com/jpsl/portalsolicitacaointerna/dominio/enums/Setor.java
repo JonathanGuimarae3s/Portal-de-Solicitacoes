@@ -1,5 +1,7 @@
 package br.com.jpsl.portalsolicitacaointerna.dominio.enums;
 
+import br.com.jpsl.portalsolicitacaointerna.dominio.excecao.NegocioException;
+
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Locale;
@@ -24,6 +26,12 @@ public enum Setor {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public static Setor converterSetorSTRING(String setor) {
+       return  Setor.fromString(setor)
+                .orElseThrow(() -> new NegocioException(
+                        "Setor inválido. Valores válidos: " + java.util.Arrays.toString(Setor.values())));
     }
 
     public static Optional<Setor> fromString(String valor) {

@@ -1,4 +1,5 @@
 import type {RouteRecordRaw} from "vue-router";
+import {PerfilUsuario} from "@/enums/enums.ts";
 
 export const routes: RouteRecordRaw[] = [
     {
@@ -25,11 +26,22 @@ export const routes: RouteRecordRaw[] = [
                 name: "Usuarios",
                 path: "usuarios",
                 component: () => import("@/modules/usuarios/pages/UsuariosPage.vue"),
+                meta: {
+                    perfisPermitidos: [
+                        PerfilUsuario.ADMIN,
+                        PerfilUsuario.GESTOR,
+                    ]
+                }
             },
             {
                 name: "Tipos",
                 path: "tipos",
                 component: () => import("@/modules/tipos/pages/TiposPage.vue"),
+                meta: {
+                    perfisPermitidos: [
+                        PerfilUsuario.ADMIN,
+                    ]
+                }
             },
         ],
     },

@@ -140,7 +140,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario salvar(Usuario usuario) {
+    public Usuario salvar(Usuario usuario ) {
         Usuario usuarioExistente = buscarPorEmail(usuario.getEmail());
         if (usuarioExistente != null && !usuarioExistente.getId().equals(usuario.getId())) {
             throw new EntidadeEmUsoException("Já existe um usuário cadastrado com este e-mail.");

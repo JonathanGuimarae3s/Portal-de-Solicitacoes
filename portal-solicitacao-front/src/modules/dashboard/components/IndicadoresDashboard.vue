@@ -2,16 +2,18 @@
 import DashboardCard from "./DashboardCard.vue"
 import Loading from "@/shared/components/Loading.vue"
 import Message from "primevue/message"
-import {useDashboardStore} from "@/modules/dashboard/stores/dashboard.store.js";
-import {storeToRefs} from "pinia";
-import {onMounted} from "vue";
+import type {IndicadoresDashboard} from "@/modules/dashboard/interfaces/dashboard.types.ts";
 
-const dashboardStore = useDashboardStore();
-const {indicadores, erroIndicadores, isLoading,} = storeToRefs(dashboardStore);
+interface IndicadoresDashboardProps {
+  erroIndicadores: string;
+  indicadores: IndicadoresDashboard | null;
+  isLoading: boolean;
+  isAdmin: boolean;
 
-onMounted(() => {
-  dashboardStore.carregarDashboard()
-});
+}
+
+defineProps<IndicadoresDashboardProps>();
+
 </script>
 
 <template>
@@ -23,6 +25,7 @@ onMounted(() => {
     <DashboardCard titulo="Total" descricao="Solicitações cadastradas" :quantidade="indicadores?.total"/>
     <DashboardCard titulo="Em aprovação" descricao="Aguardando gestor" :quantidade="indicadores?.emAprovacao"/>
     <DashboardCard titulo="Aprovadas" descricao="Prontas para concluir" :quantidade="indicadores?.aprovadas"/>
-    <DashboardCard titulo="Usuários ativos" descricao="Ambiente dev" :quantidade="indicadores?.usuariosAtivos"/>
+    <DashboardCard titulo="Usuários ativos" descricao="Ambiente dev" :quantidade="indicadores?.usuariosAtivos"
+                   v-show="isAdmin"/>
   </div>
 </template>

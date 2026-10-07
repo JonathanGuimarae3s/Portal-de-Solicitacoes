@@ -72,7 +72,7 @@
       <header>
         <div>
           <h1>Checklist do Portal</h1>
-          <p>Auditoria da API Spring Boot e do frontend Vue atualizada em 24/09/2026. Os itens marcados foram confirmados no código ou pelo build.</p>
+          <p>Checklist fechado da API Spring Boot e do frontend Vue, revisado em 05/10/2026. O objetivo é concluir uma versão demonstrável e estável até 31/10/2026.</p>
         </div>
         <div class="actions">
           <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
@@ -81,35 +81,32 @@
       </header>
 
       <div class="score-grid">
-        <div class="score"><span>API - nota geral</span><strong>68/100</strong></div>
-        <div class="score"><span>Frontend - nota geral</span><strong>58/100</strong></div>
+        <div class="score"><span>API principal</span><strong>Avançada</strong></div>
+        <div class="score"><span>Frontend</span><strong>Em andamento</strong></div>
         <div class="score"><span>Build do frontend</span><strong>OK</strong></div>
-        <div class="score"><span>Testes automatizados do front</span><strong>0</strong></div>
+        <div class="score"><span>Prazo final</span><strong>31/10</strong></div>
       </div>
 
       <div class="priority-note">
-        <strong>Próxima etapa:</strong> implementar autorização por perfil no Vue: guard por perfil, menu e ações condicionais, tratamento de 401/403 e interceptor estável. Os testes automatizados da API ficam concentrados na etapa de testes e integração.
+        <strong>Próxima etapa obrigatória:</strong> fechar o contrato de cadastro de usuários para ADMIN e GESTOR e, em seguida, implementar o fluxo essencial de Solicitações. Nenhuma funcionalidade nova entra antes da entrega.
       </div>
 
       <section class="schedule">
-        <h2>Cronograma fechado — entrega técnica em 02/10/2026</h2>
+        <h2>Cronograma fechado — entrega final em 31/10/2026</h2>
         <div class="scope-lock">
           <strong>Escopo congelado:</strong> esta versão terá somente autenticação e sessão, dashboard, CRUD de tipos, administração de usuários, fluxo de solicitações, permissões por perfil, testes essenciais e documentação. Não entram recuperação de senha, anexos, notificações, gráficos, relatórios, chat, auditoria, tema novo ou qualquer outra funcionalidade não necessária para demonstrar os fluxos atuais.
         </div>
         <table>
           <thead><tr><th>Data</th><th>Foco</th><th>Resultado obrigatório</th></tr></thead>
           <tbody>
-            <tr><td>22/09</td><td>Congelar escopo e organizar execução</td><td>Usar este checklist como única fonte; nenhuma funcionalidade nova entra.</td></tr>
-            <tr><td>23–24/09</td><td>✅ Segurança crítica da API</td><td>Concluído: criação de perfis protegida, proprietário/setor aplicados, transições limitadas e usuário inativo bloqueado.</td></tr>
-            <tr><td>25/09</td><td>✅ Consultas e contratos da API</td><td>Concluído: filtros e ordenação segura, DTOs de usuário separados, status HTTP padronizados e expiração JWT configurável.</td></tr>
-            <tr><td>26/09</td><td>Autorização no Vue</td><td>Guard por perfil, menu e ações condicionais, 401/403 corretos e interceptor estável.</td></tr>
-            <tr><td>27/09</td><td>Finalizar Usuários</td><td>Cadastro, edição e ativação/inativação funcionando com contratos alinhados.</td></tr>
-            <tr><td>28–29/09</td><td>Finalizar Solicitações</td><td>Listar, filtrar, criar, editar e executar transições permitidas para cada perfil.</td></tr>
-            <tr><td>30/09</td><td>Dashboard e acabamento</td><td>Escopo correto por perfil, botão funcional, estados vazio/erro/loading e responsividade básica.</td></tr>
-            <tr><td>01/10</td><td>Testes e integração</td><td>Testes essenciais da API e frontend; roteiro ADMIN/GESTOR/USUARIO sem erro no console.</td></tr>
-            <tr><td>02/10</td><td>Entrega de portfólio</td><td>Build final, README, Swagger, Postman, dados demo e roteiro de apresentação revisados.</td></tr>
-            <tr><td>03/10</td><td>Reserva</td><td>Somente corrigir defeitos encontrados. Proibido adicionar funcionalidade.</td></tr>
-            <tr><td>04/10</td><td>Prazo externo</td><td>Projeto já concluído; nenhuma alteração de última hora.</td></tr>
+            <tr><td>05–07/10</td><td>Fechar Usuários e permissões</td><td>Cadastro ADMIN/GESTOR protegido, fluxos dos três perfis conferidos e somente defeitos corrigidos.</td></tr>
+            <tr><td>08–18/10</td><td>Implementar Solicitações</td><td>Listar, filtrar, criar, editar e executar as transições já definidas pela API.</td></tr>
+            <tr><td>19–21/10</td><td>Fechar Dashboard</td><td>Botão de nova solicitação funcional e estados de carregamento, vazio e erro consistentes.</td></tr>
+            <tr><td>22–24/10</td><td>Integração por perfil</td><td>Roteiro completo de ADMIN, GESTOR e USUARIO executado sem falhas de permissão.</td></tr>
+            <tr><td>25–27/10</td><td>Testes essenciais</td><td>Regras críticas da API e fluxos principais do frontend protegidos por testes.</td></tr>
+            <tr><td>28–29/10</td><td>Documentação</td><td>README, Swagger e Postman alinhados ao comportamento final.</td></tr>
+            <tr><td>30/10</td><td>Build e apresentação</td><td>Build final, dados de demonstração e roteiro de apresentação validados.</td></tr>
+            <tr><td>31/10</td><td>Reserva final</td><td>Somente corrigir defeitos bloqueadores. Proibido adicionar funcionalidade.</td></tr>
           </tbody>
         </table>
       </section>
@@ -122,175 +119,101 @@
       <div class="grid" id="checklist"></div>
 
       <footer>
-        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 24/09/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
+        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 05/10/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
       </footer>
     </main>
 
     <script>
-      const storageKey = 'portal-checklist-api-frontend-2026-09-24'
+      const storageKey = 'portal-checklist-api-frontend-2026-10-05'
 
       const groups = [
         {
-          area: 'API Spring Boot',
-          title: '1. Segurança e autorização',
-          summary: 'Etapa crítica concluída. Permanecem melhorias de integração da segurança e configuração de produção.',
+          area: 'Concluído',
+          title: '1. API Spring Boot',
+          summary: 'A base de segurança, contratos e consultas necessária para o frontend está implementada.',
           items: [
-            { priority: 'done', text: 'Cadastro público sempre cria USUARIO e não permite elevação para ADMIN ou GESTOR.', done: true },
-            { priority: 'done', text: 'Validar no backend quem pode abrir solicitação para si ou para outro usuário conforme perfil e setor.', done: true },
-            { priority: 'done', text: 'Impedir USUARIO de consultar ou alterar solicitações de outras pessoas.', done: true },
-            { priority: 'done', text: 'Limitar GESTOR às solicitações do próprio setor e manter acesso global somente para ADMIN.', done: true },
-            { priority: 'done', text: 'Limitar também a listagem e consulta de usuários do GESTOR ao próprio setor.', done: true },
-            { priority: 'done', text: 'Restringir atualização e transições de solicitações aos perfis e entidades autorizados.', done: true },
-            { priority: 'done', text: 'Recusar tokens de usuários inativos verificando isEnabled() no filtro de segurança.', done: true },
-            { priority: 'done', text: 'Exigir JWT_SECRET externo, sem segredo padrão, mantendo dev.env fora do Git.', done: true },
-            { priority: 'medium', text: 'Padronizar respostas JSON para 401 e 403 com AuthenticationEntryPoint e AccessDeniedHandler.' },
-            { priority: 'medium', text: 'Desabilitar Swagger e API Docs no perfil de produção.' }
+            { priority: 'done', text: 'Autenticação JWT, expiração configurável e bloqueio de usuário inativo.', done: true },
+            { priority: 'done', text: 'Escopo de solicitações e dashboard por ADMIN, GESTOR e USUARIO.', done: true },
+            { priority: 'done', text: 'Filtros, paginação e ordenação segura de solicitações.', done: true },
+            { priority: 'done', text: 'DTOs separados para criação e atualização de usuários, com senha opcional no PUT.', done: true },
+            { priority: 'done', text: 'Status HTTP principais e respostas de erro de negócio padronizados.', done: true },
+            { priority: 'done', text: 'Gestor limitado aos usuários e solicitações do próprio setor.', done: true },
+            { priority: 'done', text: 'Gestor cadastra somente USUARIO no próprio setor; ADMIN define perfil e setor.', done: true },
+            { priority: 'done', text: 'Build da API executado com sucesso.', done: true }
           ]
         },
         {
-          area: 'API Spring Boot',
-          title: '2. Solicitações e dashboard',
-          summary: 'Escopo, filtros, ordenação segura e contratos HTTP principais corrigidos; permanecem limites preventivos.',
+          area: 'Concluído',
+          title: '2. Frontend Vue',
+          summary: 'Autenticação, dashboard, Tipos e a base de Usuários estão funcionais.',
           items: [
-            { priority: 'done', text: 'Corrigir o caminho de setor em SolicitacaoRepositoryImpl para evitar erro 500 nos filtros.', done: true },
-            { priority: 'done', text: 'Aplicar a ordenação recebida em Pageable na consulta customizada, com campos permitidos em lista branca.', done: true },
-            { priority: 'done', text: 'Aplicar o escopo ADMIN/GESTOR/USUARIO aos indicadores, tabela e consulta por ID do dashboard.', done: true },
-            { priority: 'medium', text: 'Definir tamanho máximo de página para evitar consultas excessivas.' },
-            { priority: 'done', text: 'Retornar 404 quando usuário, tipo ou solicitação não existir, sem converter o caso em erro de negócio 400.', done: true },
-            { priority: 'medium', text: 'Adicionar limites de tamanho de título e descrição iguais aos limites do banco.' },
-            { priority: 'done', text: 'Manter paginação nos endpoints de listagem.', done: true },
-            { priority: 'done', text: 'Manter validação das transições possíveis de status.', done: true },
-            { priority: 'done', text: 'Manter os índices existentes para status, prioridade, usuário, tipo e setor.', done: true }
+            { priority: 'done', text: 'Arquitetura por funcionalidades com Vue 3, TypeScript, Pinia, Router e PrimeVue.', done: true },
+            { priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token.', done: true },
+            { priority: 'done', text: 'Guard de autenticação e autorização por perfil.', done: true },
+            { priority: 'done', text: 'Menu e rotas condicionados para ADMIN, GESTOR e USUARIO.', done: true },
+            { priority: 'done', text: 'Ações administrativas de Tipos e Usuários ocultadas conforme a permissão.', done: true },
+            { priority: 'done', text: 'Dashboard com indicadores por perfil e tabela paginada lazy.', done: true },
+            { priority: 'done', text: 'CRUD de Tipos concluído.', done: true },
+            { priority: 'done', text: 'Usuários com listagem, cadastro, edição e ativação/inativação estruturados.', done: true },
+            { priority: 'done', text: 'Build do frontend e verificação TypeScript executados com sucesso.', done: true }
           ]
         },
         {
-          area: 'API Spring Boot',
-          title: '3. Usuários, contratos e autenticação',
-          summary: 'DTOs de criação e atualização separados, edição administrativa definida e senha opcional no PUT.',
+          area: 'Obrigatório para entrega',
+          title: '3. Fechar Usuários e permissões',
+          summary: 'Somente alinhar o comportamento final e corrigir defeitos encontrados.',
           items: [
-            { priority: 'done', text: 'Criar DTOs diferentes para cadastro e atualização de usuário; o PUT não deve exigir senha se não a altera.', done: true },
-            { priority: 'done', text: 'Permitir explicitamente que o administrador altere perfil e setor na atualização de usuário.', done: true },
-            { priority: 'done', text: 'Capturar DisabledException no login e retornar erro controlado para usuário inativo.', done: true },
-            { priority: 'done', text: 'Adicionar @NotBlank ao e-mail dos DTOs de usuário.', done: true },
-            { priority: 'medium', text: 'Definir e aplicar uma política mínima para senha.' },
-            { priority: 'done', text: 'Configurar a expiração do JWT por api.security.token.expiration-hours.', done: true },
-            { priority: 'medium', text: 'Planejar troca de senha em fluxo separado e invalidar sessões antigas quando esse recurso existir.' },
-            { priority: 'low', text: 'Remover @CrossOrigin redundante do controller e manter CORS centralizado.' },
-            { priority: 'done', text: 'Manter Setor como enum e a migration de padronização.', done: true }
+            { priority: 'high', text: 'Restringir POST /usuarios na configuração de segurança para ADMIN e GESTOR.' },
+            { priority: 'high', text: 'Remover do Swagger a indicação de cadastro de usuário público.' },
+            { priority: 'high', text: 'Validar manualmente cadastro e consulta de usuários com ADMIN, GESTOR e USUARIO.' },
+            { priority: 'medium', text: 'Validar os campos obrigatórios do formulário de usuários e exibir os erros retornados pela API.' }
           ]
         },
         {
-          area: 'API Spring Boot',
-          title: '4. Banco, erros e testes',
-          summary: 'Os 2 testes atuais passam, mas não protegem as regras principais.',
+          area: 'Obrigatório para entrega',
+          title: '4. Implementar Solicitações',
+          summary: 'Este é o maior bloco ainda não implementado no frontend.',
           items: [
-            { priority: 'high', text: 'Criar testes de segurança para cadastro público, perfis, proprietário, setor e usuário inativo.' },
-            { priority: 'high', text: 'Criar testes do repositório para filtros, ordenação e paginação de solicitações.' },
-            { priority: 'high', text: 'Testar migrations Flyway; o perfil de teste atual desativa Flyway e usa create-drop.' },
-            { priority: 'medium', text: 'Substituir a senha temporária inválida da V4 por uma nova migration segura para instalações já existentes.' },
-            { priority: 'medium', text: 'Registrar exceções inesperadas em log antes de devolver erro 500.' },
-            { priority: 'medium', text: 'Tratar validação no nível do objeto sem presumir fieldList.get(0).' },
-            { priority: 'medium', text: 'Desabilitar spring.jpa.open-in-view e ajustar carregamento/mapeamento dentro da transação.' },
-            { priority: 'medium', text: 'Usar fetch LAZY nas associações ManyToOne e verificar N+1 nas listagens.' },
-            { priority: 'low', text: 'Evitar Lombok @Data nas entidades JPA; definir equals/hashCode de forma segura.' },
-            { priority: 'done', text: 'Build e 2 testes atuais executados sem falhas.', done: true }
+            { priority: 'critical', text: 'Criar types, service, store e componentes do módulo de Solicitações.' },
+            { priority: 'critical', text: 'Implementar listagem paginada com loading, vazio e erro.' },
+            { priority: 'critical', text: 'Implementar filtros por status e prioridade.' },
+            { priority: 'critical', text: 'Implementar cadastro respeitando as regras de solicitante por perfil.' },
+            { priority: 'critical', text: 'Implementar edição e transições de status permitidas pela API.' },
+            { priority: 'high', text: 'Exibir ID, título, solicitante, tipo, prioridade, status e data de criação.' }
           ]
         },
         {
-          area: 'Frontend Vue',
-          title: '5. Base já concluída',
-          summary: 'Estrutura por funcionalidade está adequada e o TypeScript compila.',
+          area: 'Obrigatório para entrega',
+          title: '5. Fechar Dashboard e interface',
+          summary: 'Completar somente os comportamentos que já fazem parte do fluxo principal.',
           items: [
-            { priority: 'done', text: 'Vue 3, TypeScript, Vite, Pinia, Vue Router, PrimeVue e Tailwind configurados.', done: true },
-            { priority: 'done', text: 'Arquitetura organizada em modules, core, shared e router.', done: true },
-            { priority: 'done', text: 'Rotas carregadas por import dinâmico.', done: true },
-            { priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token implementados.', done: true },
-            { priority: 'done', text: 'Guard impede acesso às páginas privadas sem sessão.', done: true },
-            { priority: 'done', text: 'Dashboard possui indicadores e paginação lazy.', done: true },
-            { priority: 'done', text: 'CRUD de Tipos está separado em página, componentes, store, service e types.', done: true },
-            { priority: 'done', text: 'Listagem, cadastro e ativação/inativação de usuários estão estruturados.', done: true },
-            { priority: 'done', text: 'npm run build e vue-tsc executados com sucesso.', done: true },
-            { priority: 'done', text: 'npm audit --omit=dev encontrou 0 vulnerabilidades.', done: true },
-            { priority: 'done', text: 'Login validado visualmente em desktop e viewport de 375 px.', done: true }
+            { priority: 'high', text: 'Ligar o botão Nova solicitação ao fluxo de cadastro.' },
+            { priority: 'high', text: 'Eliminar a rejeição não tratada ao falhar o carregamento da tabela do dashboard.' },
+            { priority: 'medium', text: 'Padronizar estados de loading, vazio e erro nas tabelas principais.' },
+            { priority: 'medium', text: 'Validar as telas principais em desktop e celular e corrigir somente quebras de uso.' }
           ]
         },
         {
-          area: 'Frontend Vue',
-          title: '6. Autenticação e permissões',
-          summary: 'A sessão funciona, mas falta autorização de interface por perfil.',
+          area: 'Obrigatório para entrega',
+          title: '6. Testes e integração',
+          summary: 'Executar depois que os fluxos de Usuários e Solicitações estiverem fechados.',
           items: [
-            { priority: 'high', text: 'Adicionar meta de perfis permitidos nas rotas e validar ADMIN, GESTOR e USUARIO no guard.' },
-            { priority: 'high', text: 'Ocultar Usuários e ações administrativas do menu para quem não possui permissão.' },
-            { priority: 'high', text: 'Não encerrar a sessão em todo erro 403; mostrar “sem permissão” e redirecionar para uma página permitida.' },
-            { priority: 'high', text: 'Corrigir interceptor para usar error.response?.status também no teste de 403; erro de rede hoje pode causar TypeError.' },
-            { priority: 'medium', text: 'Validar o JSON restaurado do sessionStorage antes de tratá-lo como SessaoUsuario.' },
-            { priority: 'medium', text: 'Criar página 403 e página 404, além da rota curinga.' },
-            { priority: 'medium', text: 'Transformar o login em form com submit para permitir Enter e melhorar acessibilidade.' },
-            { priority: 'low', text: 'Remover estado e componente de mensagem vazios no login ou preencher menssagemLogin corretamente.' }
+            { priority: 'high', text: 'Cobrir as regras críticas de perfil, setor, proprietário e transição de status na API.' },
+            { priority: 'high', text: 'Cobrir guard, sessão e os stores dos fluxos principais no frontend.' },
+            { priority: 'high', text: 'Executar roteiro manual completo com ADMIN, GESTOR e USUARIO.' },
+            { priority: 'high', text: 'Corrigir somente defeitos encontrados no roteiro e nos testes.' }
           ]
         },
         {
-          area: 'Frontend Vue',
-          title: '7. Corrigir CRUD de usuários',
-          summary: 'Há incompatibilidades entre o formulário Vue e o contrato atual da API.',
+          area: 'Obrigatório para entrega',
+          title: '7. Documentação e apresentação',
+          summary: 'Fechar o material necessário para demonstrar o projeto em entrevista.',
           items: [
-            { priority: 'critical', text: 'Alinhar a edição com a API: hoje o frontend envia senha vazia, mas UsuarioRequest do backend exige @NotBlank.' },
-            { priority: 'high', text: 'Enviar o código ADMIN, GESTOR ou USUARIO; o select usa descrições e “Administrador” não é aceito pelo backend.' },
-            { priority: 'high', text: 'Separar UsuarioCreateRequest e UsuarioUpdateRequest também no frontend.' },
-            { priority: 'high', text: 'Decidir se perfil será editável; não mostrar um campo que o backend ignora.' },
-            { priority: 'medium', text: 'Adicionar validação obrigatória de nome, e-mail, perfil, setor e senha antes de salvar.' },
-            { priority: 'medium', text: 'Tipar retornos de buscarPorId, salvar, atualizar e status como Usuario.' },
-            { priority: 'medium', text: 'Renomear a prop tipos da tabela de usuários para usuarios e usar Usuario[] no lugar de TipoSolicitacao[].' },
-            { priority: 'medium', text: 'Ligar o fechamento do Dialog a update:visible e evitar mutação direta de props.' },
-            { priority: 'low', text: 'Remover console.log de id e ativo no usuarioService.' },
-            { priority: 'low', text: 'Corrigir textos “Nào” e “Atencão”.' }
-          ]
-        },
-        {
-          area: 'Frontend Vue',
-          title: '8. Implementar Solicitações',
-          summary: 'O módulo existe, mas a página contém apenas o título.',
-          items: [
-            { priority: 'high', text: 'Criar types, service, store e componentes do módulo de Solicitações.' },
-            { priority: 'high', text: 'Criar listagem paginada com estados de loading, vazio e erro.' },
-            { priority: 'high', text: 'Criar formulário para nova solicitação sem permitir escolher outro usuário quando o perfil for USUARIO.' },
-            { priority: 'high', text: 'Implementar edição e ações de status conforme as permissões definidas na API.' },
-            { priority: 'medium', text: 'Adicionar filtros por status e prioridade sincronizados com a página atual.' },
-            { priority: 'medium', text: 'Mostrar data de criação, solicitante, tipo, prioridade e status.' },
-            { priority: 'medium', text: 'Criar confirmação para ações irreversíveis de fluxo.' }
-          ]
-        },
-        {
-          area: 'Frontend Vue',
-          title: '9. Dashboard, UX e responsividade',
-          summary: 'O dashboard está funcional como base, mas ainda possui ações e estados incompletos.',
-          items: [
-            { priority: 'high', text: 'Fazer o botão “Nova solicitação” navegar para o formulário ou abrir o dialog correto.' },
-            { priority: 'high', text: 'Não relançar erro em carregarSolicitacoes após preencher erroTabela; hoje isso pode gerar promise rejeitada sem tratamento.' },
-            { priority: 'medium', text: 'Implementar filtros de status e prioridade no dashboard depois de corrigir o endpoint da API.' },
-            { priority: 'medium', text: 'Adicionar estado vazio e botão “Tentar novamente” nas tabelas.' },
-            { priority: 'medium', text: 'Criar sidebar recolhível ou menu móvel; o aside fixo de 16rem prejudica telas pequenas.' },
-            { priority: 'medium', text: 'Validar tabelas e dialogs em celular, incluindo rolagem horizontal e largura máxima.' },
-            { priority: 'medium', text: 'Usar um único Toast global; atualmente Tipos renderiza Toast próprio e ContainerPage também.' },
-            { priority: 'low', text: 'Trocar o loading de tela cheia por loading local em tabelas e operações de dialog.' },
-            { priority: 'low', text: 'Remover “Ambiente dev” do card de usuários ativos fora do ambiente de desenvolvimento.' }
-          ]
-        },
-        {
-          area: 'Frontend Vue',
-          title: '10. Qualidade, performance e entrega',
-          summary: 'O build passa, mas ainda não existe rede de segurança automatizada.',
-          items: [
-            { priority: 'high', text: 'Adicionar Vitest e testes de auth store, guard, interceptor e stores principais.' },
-            { priority: 'high', text: 'Adicionar testes de componentes e um fluxo E2E de login, tipos, usuários e solicitações.' },
-            { priority: 'medium', text: 'Adicionar ESLint, regras para Vue/TypeScript e script npm run lint.' },
-            { priority: 'medium', text: 'Centralizar tratamento de erros; Tipos e Usuários ainda repetem lógica Axios diferente de obterMensagemErro.' },
-            { priority: 'medium', text: 'Importar componentes PrimeVue pelos módulos específicos em vez do barrel “primevue”; o chunk de ContainerPage chegou a aproximadamente 409 kB.' },
-            { priority: 'medium', text: 'Carregar Vue DevTools somente no modo development.' },
-            { priority: 'medium', text: 'Validar VITE_API_URL na inicialização e fornecer .env.example sem segredo.' },
-            { priority: 'medium', text: 'Atualizar o README: auth e dashboard usam interfaces, e tipos/usuários já possuem components, stores, services e types.' },
-            { priority: 'low', text: 'Padronizar nomes de arquivos e pastas: interfaces versus types, extensões .ts nos imports e nomes de stores.' },
-            { priority: 'low', text: 'Configurar CI para executar npm ci, build, lint e testes em cada push.' }
+            { priority: 'high', text: 'Atualizar README da API e do frontend com arquitetura, execução, perfis e funcionalidades finais.' },
+            { priority: 'high', text: 'Revisar Swagger e collection do Postman contra os endpoints finais.' },
+            { priority: 'high', text: 'Preparar dados de demonstração para ADMIN, GESTOR e USUARIO.' },
+            { priority: 'high', text: 'Executar build final da API e do frontend sem erro.' },
+            { priority: 'high', text: 'Preparar e ensaiar um roteiro curto de apresentação do problema, arquitetura e fluxos.' }
           ]
         }
       ]

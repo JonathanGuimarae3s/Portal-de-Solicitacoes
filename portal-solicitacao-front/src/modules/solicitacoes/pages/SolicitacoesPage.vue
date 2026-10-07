@@ -7,4 +7,7 @@ import Titulo from "@/shared/components/Titulo.vue";
     text="Solicitações"
     subtext="Consulte e acompanhe as solicitações internas."
   />
+
+
+
 </template>

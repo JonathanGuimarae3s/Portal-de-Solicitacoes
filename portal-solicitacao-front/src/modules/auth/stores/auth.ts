@@ -3,6 +3,7 @@ import {computed, ref} from "vue";
 import {settaAuthToken} from "@/core/http/api";
 import {login} from "../services/auth.service";
 import type {SessaoUsuario} from "@/modules/auth/interfaces/SessaoUsuario.ts";
+import {PerfilUsuario} from "@/enums/enums.ts";
 
 export const useAuthStore = defineStore("auth", () => {
     const isLoading = ref(false);
@@ -10,6 +11,23 @@ export const useAuthStore = defineStore("auth", () => {
     const userSession = ref<SessaoUsuario | null>(null);
 
     const isAuthenticated = computed(() => !!userSession.value);
+
+    const perfil = computed(
+        () => userSession.value?.usuarioAutenticado.perfil
+    );
+
+    const isAdmin = computed(
+        () => perfil.value === PerfilUsuario.ADMIN
+    );
+
+    const isGestor = computed(
+        () => perfil.value === PerfilUsuario.GESTOR
+    );
+
+    const isUsuario = computed(
+        () => perfil.value === PerfilUsuario.USUARIO
+    );
+
 
     async function autenticar(email: string, password: string) {
 
@@ -83,6 +101,11 @@ export const useAuthStore = defineStore("auth", () => {
         isLoading,
         userSession,
         isAuthenticated,
+        perfil,
+        isAdmin,
+        isGestor,
+        isUsuario,
+
         autenticar,
         logout,
         restaurarSessao,

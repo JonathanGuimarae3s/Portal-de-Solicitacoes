@@ -25,9 +25,7 @@ export function configurarInterceptor(
                 tratarNaoAutorizado();
             }
 
-            if ( error.response.status === 403 ) {
-                tratarNaoAutorizado();
-            }
+
 
 
             return Promise.reject(error);

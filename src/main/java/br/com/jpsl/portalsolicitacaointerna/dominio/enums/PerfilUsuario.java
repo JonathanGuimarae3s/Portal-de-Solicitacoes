@@ -21,8 +21,8 @@ public enum PerfilUsuario {
     }
 
 
-    public static PerfilUsuario converterPerfilUsuarioSTRING(String setor) {
-        return  PerfilUsuario.fromString(setor)
+    public static PerfilUsuario converterPerfilUsuarioSTRING(String perfil) {
+        return  PerfilUsuario.fromString(perfil)
                 .orElseThrow(() -> new NegocioException(
                         "Perfil Usuário inválido. Valores válidos: " + java.util.Arrays.toString(PerfilUsuario.values())));
     }

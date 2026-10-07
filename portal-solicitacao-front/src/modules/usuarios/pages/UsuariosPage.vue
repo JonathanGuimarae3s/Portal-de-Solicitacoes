@@ -13,9 +13,17 @@ import Loading from "@/shared/components/Loading.vue";
 import {Button, ConfirmDialog, useConfirm} from "primevue";
 import Titulo from "@/shared/components/Titulo.vue";
 import UsuarioFormDialog from "@/modules/usuarios/components/UsuarioFormDialog.vue";
-import {obterMensagemErro} from "@/utils/mensagem.store.ts";
 import type {UsuarioRequest} from "@/modules/usuarios/types/usuario.types.ts";
 import {PerfilUsuario, Setor} from "@/enums/enums.ts";
+import {useAuthStore} from "@/modules/auth/stores/auth.ts";
+import {obterMensagemErro} from "@/shared/utils/store/mensagem.store.ts";
+
+
+const authStore = useAuthStore();
+const {userSession, isAdmin, isGestor} = storeToRefs(authStore);
+
+const usuarioAutenticado = userSession.value?.usuarioAutenticado;
+const setorUsuarioAutenticado = ref(usuarioAutenticado!.setor)
 
 const {toastError, toastSuccess} = useCustomToast();
 
@@ -83,16 +91,29 @@ const usuario = ref<UsuarioRequest>({
 
   nome: "",
   email: "",
-  setor: Setor.ATENDIMENTO,
+  setor: setorUsuarioAutenticado.value,
   senha: "",
   perfil: PerfilUsuario.USUARIO,
 
 })
 
+
+const listaPerfisUsuario = ref<PerfilUsuario[] | []>([]);
+const listaSetores = ref<Setor[] | []>([]);
+
 const preparaDialog = (modoDialog: "cadastro" | "edicao") => {
 
   modo.value = modoDialog
   visible.value = true;
+
+  if (isAdmin.value) {
+    listaPerfisUsuario.value = Object.values(PerfilUsuario);
+    listaSetores.value = Object.values(Setor);
+  } else {
+    listaPerfisUsuario.value = [PerfilUsuario.USUARIO];
+    listaSetores.value = [setorUsuarioAutenticado.value];
+  }
+
 }
 
 const fecharDialog = () => {
@@ -100,7 +121,7 @@ const fecharDialog = () => {
   usuario.value = {
     nome: "",
     email: "",
-    setor: Setor.ATENDIMENTO,
+    setor: usuarioAutenticado!.setor,
     senha: "",
     perfil: PerfilUsuario.USUARIO,
 
@@ -112,21 +133,24 @@ const fecharDialog = () => {
 
 //salvar
 
-const salvar = async (modo: "cadastro" | "edicao") => {
+const salvar = async (modo: "cadastro" | "edicao", dados: UsuarioRequest) => {
 
   try {
 
     if (modo === "cadastro") {
-      await usuarioStore.criarUsuario(usuario.value)
+
+      await usuarioStore.criarUsuario(dados)
 
       toastSuccess("Criado com sucesso");
+
     } else {
+
       if (idSelecionado.value === null) {
         toastError("Registro não selecionado.")
         return
       }
 
-      await usuarioStore.atualizarUsuario(idSelecionado.value, usuario.value)
+      await usuarioStore.atualizarUsuario(idSelecionado.value, dados)
 
       toastSuccess("Atualizado com sucesso");
 
@@ -167,7 +191,6 @@ const abrirEdicao = async (id: number) => {
     }
 
 
-
     idSelecionado.value = id
     preparaDialog("edicao")
 
@@ -192,7 +215,7 @@ const inativarAtivar = (id: number, nome: String, ativo: boolean) => {
 
   confirm.require({
     message: message,
-    header: 'Atencão!',
+    header: 'Atenção!',
     icon: 'pi pi-info-circle',
     rejectLabel: 'Cancelar',
     acceptLabel: acceptLabel,
@@ -242,7 +265,7 @@ onMounted(() => {
             text="Usuários"
             subtext="Gerencie perfis, setores e status de acesso."
         />
-        <Button label="Novo Usuário" @click="preparaDialog('cadastro')"/>
+        <Button v-if="isAdmin || isGestor" label="Novo Usuário" @click="preparaDialog('cadastro')"/>
       </div>
 
 
@@ -253,20 +276,21 @@ onMounted(() => {
       </Message>
 
       <TabelaUsuarios v-else
-                      :tipos="usuarios?.dados?? []"
+                      :usuarios="usuarios?.dados?? []"
                       :totalRegistros="usuarios?.totalDados??0"
                       :lazyParams="lazyParams"
                       :paginar="onPage"
                       :ordenar="onSort"
                       :editar="abrirEdicao"
-                      :inativarAtivar="inativarAtivar"/>
+                      :inativarAtivar="inativarAtivar"
+                      :podeGerenciar="isAdmin"/>
 
 
-      <UsuarioFormDialog :fechar-dialog="fecharDialog" :salvar="salvar" :usuario="usuario"
-                         :visible="visible" :modo="modo"/>
+      <UsuarioFormDialog :fechar-dialog="fecharDialog" :salvar="salvar" :usuario="usuario" :isAdmin="isAdmin"
+                         :visible="visible" :modo="modo" :perfisUsuario="listaPerfisUsuario" :setores="listaSetores"/>
 
 
-      <ConfirmDialog/>
+      <ConfirmDialog :closable="false"/>
 
 
     </template>

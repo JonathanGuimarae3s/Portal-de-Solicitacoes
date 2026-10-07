@@ -186,9 +186,6 @@
               "path": [
                 "usuarios"
               ]
-            },
-            "auth": {
-              "type": "noauth"
             }
           },
           "event": [
@@ -369,7 +366,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Usuario Postman Atualizado\",\n  \"email\": \"{{novoUsuarioEmail}}\",\n  \"senha\": \"password\",\n  \"perfil\": \"USUARIO\",\n  \"setor\": \"RH\"\n}"
+              "raw": "{\n  \"nome\": \"Usuario Postman Atualizado\",\n  \"email\": \"{{novoUsuarioEmail}}\",\n  \"perfil\": \"USUARIO\",\n  \"setor\": \"RH\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/usuarios/{{novoUsuarioId}}",
@@ -381,7 +378,7 @@
                 "{{novoUsuarioId}}"
               ]
             },
-            "description": "Atualiza nome, email e setor do usuário criado pela collection. A senha permanece no body porque o DTO atual da API a exige, embora o serviço não a altere."
+            "description": "Atualiza nome, email, perfil e setor do usuário criado pela collection. A senha é opcional e, quando omitida, permanece inalterada."
           },
           "event": [
             {
@@ -912,7 +909,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titulo\": \"Acesso ao portal interno\",\n  \"descricao\": \"Solicito acesso ao portal interno para executar minhas atividades.\",\n  \"prioridade\": \"MEDIA\",\n  \"usuario\": {\n    \"id\": 3\n  },\n  \"tipo\": {\n    \"id\": 1\n  }\n}"
+              "raw": "{\n  \"titulo\": \"Acesso ao portal interno\",\n  \"descricao\": \"Solicito acesso ao portal interno para executar minhas atividades.\",\n  \"prioridade\": \"MEDIA\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/solicitacoes",
@@ -956,7 +953,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titulo\": \"Acesso ao sistema negado\",\n  \"descricao\": \"Usuario nao consegue fazer login no sistema corporativo.\",\n  \"prioridade\": \"MEDIA\",\n  \"status\": \"EM_APROVACAO\",\n  \"usuario\": {\n    \"id\": 1\n  },\n  \"tipo\": {\n    \"id\": 1\n  }\n}"
+              "raw": "{\n  \"titulo\": \"Acesso ao sistema negado\",\n  \"descricao\": \"Usuario nao consegue fazer login no sistema corporativo.\",\n  \"prioridade\": \"MEDIA\",\n  \"status\": \"EM_APROVACAO\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/solicitacoes/{{novaSolicitacaoId}}",
@@ -999,7 +996,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"titulo\": \"Instalacao de software\",\n  \"descricao\": \"Solicito a instalacao de ferramenta de trabalho.\",\n  \"prioridade\": \"BAIXA\",\n  \"status\": \"APROVADA\",\n  \"usuario\": {\n    \"id\": 2\n  },\n  \"tipo\": {\n    \"id\": 2\n  }\n}"
+              "raw": "{\n  \"titulo\": \"Instalacao de software\",\n  \"descricao\": \"Solicito a instalacao de ferramenta de trabalho.\",\n  \"prioridade\": \"BAIXA\",\n  \"status\": \"APROVADA\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/solicitacoes/{{solicitacaoEmAprovacaoId}}",

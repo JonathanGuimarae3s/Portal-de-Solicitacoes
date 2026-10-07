@@ -6,7 +6,9 @@ import ButtonGroup from "primevue/buttongroup";
 
 import IconComponent from "@/shared/components/IconComponent.vue";
 import type {LazyParams} from "@/interfaces/interfaces.ts";
-import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
+import type {Usuario} from "@/modules/usuarios/types/usuario.types.ts";
+import {formatarPerfilUsuario} from "@/shared/utils/mappers/PerfilUsuarioUtils.ts";
+import {formatarSetor} from "@/shared/utils/mappers/SetorUtils.ts";
 
 
 interface iProps {
@@ -14,9 +16,10 @@ interface iProps {
   ordenar: (event: DataTableSortEvent) => void;
   editar: (id: number) => void;
   inativarAtivar: (id: number, nome: string, ativo: boolean) => void;
-  tipos: TipoSolicitacao[] | [],
+  usuarios: Usuario[] | [],
   totalRegistros: number;
   lazyParams: LazyParams;
+  podeGerenciar: boolean
 }
 
 defineProps<iProps>();
@@ -27,7 +30,7 @@ defineProps<iProps>();
 
 
   <DataTable
-      :value="tipos"
+      :value="usuarios"
       lazy
       paginator
       dataKey="id"
@@ -45,7 +48,22 @@ defineProps<iProps>();
     <Column field="id" header="Código" sortable/>
     <Column field="nome" header="Nome" sortable/>
     <Column field="email" header="Email"/>
-    <Column field="setor" header="Setor" sortable/>
+    <Column  header="Setor" sortable>
+
+      <template #body="slotProps">
+
+        {{formatarSetor(slotProps.data.setor)}}
+      </template>
+    </Column>
+
+    <Column  header="Perfil" sortable>
+
+      <template #body="slotProps">
+
+        {{ formatarPerfilUsuario(slotProps.data.perfil)}}
+      </template>
+    </Column>
+
 
     <Column header="Ativo?" sortable sortField="ativo">
       <template #body="slotProps">
@@ -59,7 +77,7 @@ defineProps<iProps>();
       </template>
     </Column>
 
-    <Column>
+    <Column v-if="podeGerenciar ">
       <template #body="slotProps">
 
         <ButtonGroup>

@@ -5,7 +5,6 @@ export enum StatusSolicitacao {
     REJEITADA = "Rejeitada",
     CONCLUIDA = "Concluído"
 }
-
 export enum PrioridadeSolicitacao {
     BAIXA = "Baixa",
     MEDIA = "Média",
@@ -14,19 +13,20 @@ export enum PrioridadeSolicitacao {
 
 
 export enum PerfilUsuario {
-    ADMIN = "Administrador",
-    GESTOR = "Gestor",
-    USUARIO = "Usuario"
+    ADMIN = "ADMIN",
+    GESTOR = "GESTOR",
+    USUARIO = "USUARIO"
 }
 
 export enum Setor {
-    ATENDIMENTO="Atendimento",
-    COMERCIAL="Comercial",
-    COMPRAS="Compras",
-    FINANCEIRO="Financeiro",
-    JURIDICO="Jurídico",
-    MARKETING="Marketing",
-    OPERACOES="Operações",
-    RH="Recursos Humanos",
-    TI="Tecnologia da Informação"
+    ATENDIMENTO = "ATENDIMENTO",
+    COMERCIAL = "COMERCIAL",
+    COMPRAS = "COMPRAS",
+    FINANCEIRO = "FINANCEIRO",
+    JURIDICO = "JURIDICO",
+    MARKETING = "MARKETING",
+    OPERACOES = "OPERACOES",
+    RH = "RH",
+    TI = "TI"
 }
+

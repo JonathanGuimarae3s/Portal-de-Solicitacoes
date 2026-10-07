@@ -5,9 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 
 
 public record UsuarioRequest(@NotBlank String nome,
-                            @NotBlank @Email String email,
+                             @NotBlank @Email String email,
                              @NotBlank String senha,
-                              String perfil,
-                             @NotBlank String setor) {
+                             String perfil,
+                             String setor) {
 }
 

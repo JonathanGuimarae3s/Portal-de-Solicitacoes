@@ -8,7 +8,7 @@ import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
 export const useDashboardStore = defineStore("dashboard", () => {
     const isLoading = ref(false);
 
-    const erroIndicadores = ref<string | null>(null);
+    const erroIndicadores = ref<string>("");
     const indicadores = ref<IndicadoresDashboard | null>(null);
 
 
@@ -18,7 +18,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
         try {
             isLoading.value = true;
 
-            erroIndicadores.value = null;
+            erroIndicadores.value = "";
 
             indicadores.value = await buscarIndicadoresDashboard()
 

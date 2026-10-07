@@ -22,6 +22,11 @@ import java.util.Arrays;
 @EnableWebSecurity
 public class ConfiguracaoSeguranca {
 
+    public static final String[] USER_ADMIN_GESTOR = {"ADMIN", "GESTOR", "USUARIO"};
+    public static final String[] GESTOR_ADMIN = {"ADMIN", "GESTOR"};
+    public static final String USUARIO = "USUARIO";
+    public static final String GESTOR = "GESTOR";
+    public static final String ADMIN = "ADMIN";
     private final FiltroSeguranca filtroSeguranca;
 
     public ConfiguracaoSeguranca(FiltroSeguranca filtroSeguranca) {
@@ -29,7 +34,7 @@ public class ConfiguracaoSeguranca {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)  {
 
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -40,33 +45,42 @@ public class ConfiguracaoSeguranca {
                 )
                 .authorizeHttpRequests(
                         authorize -> authorize.
-                                requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                requestMatchers(HttpMethod.POST, "/auth/login")
+                                .permitAll()
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                                .permitAll()
+
+                                .requestMatchers(HttpMethod.POST, "/usuarios")
+                                .hasAnyRole(GESTOR_ADMIN)
 
                                 .requestMatchers(HttpMethod.GET, "/tipos", "/tipos/**")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
-                                .requestMatchers(HttpMethod.POST, "/tipos").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/tipos/**").hasRole("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/tipos/**").hasRole("ADMIN")
+                                .hasAnyRole(USER_ADMIN_GESTOR)
+                                .requestMatchers(HttpMethod.POST, "/tipos")
+                                .hasRole(ADMIN)
+                                .requestMatchers(HttpMethod.PUT, "/tipos/**")
+                                .hasRole(ADMIN)
+                                .requestMatchers(HttpMethod.DELETE, "/tipos/**")
+                                .hasRole(ADMIN)
 
                                 .requestMatchers(HttpMethod.GET, "/dashboard", "/dashboard/**")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+                                .hasAnyRole(USER_ADMIN_GESTOR)
 
                                 .requestMatchers(HttpMethod.GET, "/usuarios")
-                                .hasAnyRole("ADMIN", "GESTOR")
+                                .hasAnyRole(GESTOR_ADMIN)
                                 .requestMatchers(HttpMethod.GET, "/usuarios/{id}")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
-                                .requestMatchers(HttpMethod.PUT, "/usuarios/**").hasRole("ADMIN")
+                                .hasAnyRole(USER_ADMIN_GESTOR)
+                                .requestMatchers(HttpMethod.PUT, "/usuarios/**")
+                                .hasRole(ADMIN)
                                 .requestMatchers(HttpMethod.GET, "/solicitacoes", "/solicitacoes/**")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+                                .hasAnyRole(USER_ADMIN_GESTOR)
 
                                 .requestMatchers(HttpMethod.POST, "/solicitacoes")
-                                .hasAnyRole("ADMIN", "GESTOR", "USUARIO")
+                                .hasAnyRole(USER_ADMIN_GESTOR)
                                 .requestMatchers(HttpMethod.PUT, "/solicitacoes/**")
-                                .hasAnyRole("ADMIN", "GESTOR")
+                                .hasAnyRole(GESTOR_ADMIN)
 
-                                .requestMatchers(HttpMethod.PATCH, "/usuarios/**").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.PATCH, "/usuarios/**")
+                                .hasRole(ADMIN)
 
                                 .anyRequest().authenticated()
                 )

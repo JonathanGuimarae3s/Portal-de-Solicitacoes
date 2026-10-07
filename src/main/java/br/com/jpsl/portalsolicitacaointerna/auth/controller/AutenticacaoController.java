@@ -33,7 +33,6 @@ public class AutenticacaoController {
 
     @PostMapping("/login")
     @Operation(summary = "Autenticar usuário")
-    @SecurityRequirements
     public ResponseEntity<?> autenticar(@RequestBody @Valid LoginRequest request) {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.senha());

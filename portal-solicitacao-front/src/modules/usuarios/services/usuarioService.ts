@@ -40,9 +40,6 @@ export async function buscarPorId(id: number) {
 
 export async function ativarInativarUsuario(id: number, ativo: boolean) {
 
-    console.log(id);
-    console.log(ativo);
-
     const usuarioStatusRequest = {"ativo": !ativo};
 
     const response = await api.patch(
@@ -68,7 +65,6 @@ export async function atualizar(id: number, UsuarioRequest: UsuarioRequest) {
 }
 
 export async function salvar(UsuarioRequest: UsuarioRequest) {
-
 
     const response = await api.post<UsuarioRequest>(
         ENDPOINT, UsuarioRequest

@@ -16,7 +16,8 @@ import Message from "primevue/message";
 import Loading from "@/shared/components/Loading.vue";
 import type {TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
 import Toast from "primevue/toast";
-import {obterMensagemErro} from "@/utils/mensagem.store.ts";
+import {obterMensagemErro} from "@/shared/utils/store/mensagem.store.ts";
+
 
 const {toastError, toastSuccess} = useCustomToast();
 

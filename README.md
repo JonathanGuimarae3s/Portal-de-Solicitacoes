@@ -56,6 +56,12 @@ OpenAPI JSON:
 http://localhost:8080/v3/api-docs
 ```
 
+Collection Postman:
+
+```text
+postman/portal-solicitacao-interna.postman_collection.json
+```
+
 ## Autenticação
 
 O login retorna um token JWT.
@@ -77,7 +83,14 @@ Resposta:
 
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiJ9..."
+  "token": "eyJhbGciOiJIUzI1NiJ9...",
+  "expiresInMillis": 7200000,
+  "usuarioAutenticado": {
+    "nome": "Administrador Demo",
+    "email": "admin@empresa.com",
+    "perfil": "ADMIN",
+    "setor": "TI"
+  }
 }
 ```
 
@@ -117,6 +130,7 @@ Quando o profile `dev` estiver ativo, o Flyway carrega dados mock em `db/dev/R__
 |---|---|---|
 | POST | `/usuarios` | Público |
 | GET | `/usuarios` | ADMIN, GESTOR |
+| GET | `/usuarios/{id}` | ADMIN, GESTOR |
 | PUT | `/usuarios/{id}` | ADMIN |
 | PATCH | `/usuarios/{id}/status` | ADMIN |
 
@@ -146,6 +160,22 @@ Body planejado para ativar/desativar usuário:
 | GET | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
 | POST | `/solicitacoes` | ADMIN, GESTOR, USUARIO |
 | PUT | `/solicitacoes/{id}` | ADMIN, GESTOR, USUARIO |
+
+### Dashboard
+
+| Método | Rota | Acesso |
+|---|---|---|
+| GET | `/dashboard/solicitacoes` | ADMIN, GESTOR, USUARIO |
+| GET | `/dashboard/indicadores` | ADMIN, GESTOR, USUARIO |
+
+Os endpoints de listagem aceitam paginação com `page`, `size` e `sort`. Tanto `/solicitacoes` quanto
+`/dashboard/solicitacoes` aceitam os filtros opcionais `status` e `prioridade`. A listagem do dashboard
+retorna apenas `id`, `titulo`, `status` e `prioridade`. `/dashboard/indicadores` retorna as quantidades
+de solicitações e a quantidade real de usuários ativos do sistema.
+
+Nas respostas detalhadas de solicitações, `dataCriacao` é preenchida automaticamente pela API no
+momento do cadastro e retornada no formato ISO-8601, por exemplo `2026-08-08T10:30:00`. Esse campo
+não deve ser enviado nos requests de criação ou atualização.
 
 ## Regras de negócio
 
@@ -216,3 +246,10 @@ mvnw.cmd test
 
 O profile de teste usa H2 em memória para subir o contexto sem depender do Oracle local.
 
+O projeto possui um teste de carga de contexto e um teste unitário do endpoint de busca de usuário por ID.
+Amplie essa cobertura conforme novas regras de negócio forem adicionadas.
+
+## Próximos passos
+
+- Implementar regra fina de segurança por dono/setor da solicitação.
+- Criar testes unitários e de controller quando essa etapa entrar no escopo.

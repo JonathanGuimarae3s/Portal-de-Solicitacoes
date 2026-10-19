@@ -24,7 +24,7 @@ public class TipoSolicitacaoService {
     @Transactional(readOnly = true)
     public TipoSolicitacao buscarPorId(Long id) {
         return tipoSolicitacaoRepositorio.findById(id).orElseThrow(
-                () -> new EntidadeNaoEncontradaException("Tipo de Solicitacao não encontrado com id: " + id)
+                () -> new EntidadeNaoEncontradaException("Tipo de solicitação não encontrado com o ID: " + id)
         );
     }
 
@@ -32,7 +32,7 @@ public class TipoSolicitacaoService {
     public TipoSolicitacao salvarSolicitacao(TipoSolicitacao tipoSolicitacao) {
 
         if (!StringUtils.hasLength(tipoSolicitacao.getNome())) {
-            throw new NegocioException("O nome da solicitacao é obrigatório.");
+            throw new NegocioException("O nome do tipo de solicitação é obrigatório.");
         }
 
         return tipoSolicitacaoRepositorio.save(tipoSolicitacao);
@@ -50,7 +50,7 @@ public class TipoSolicitacaoService {
             tipoSolicitacaoRepositorio.delete(tipoSolicitacao);
             tipoSolicitacaoRepositorio.flush();
         } catch (DataIntegrityViolationException exception) {
-            throw new EntidadeEmUsoException("Tipo de Solicitação de código %d está em uso".formatted(id));
+            throw new EntidadeEmUsoException("O tipo de solicitação de código %d está em uso.".formatted(id));
         }
     }
 }

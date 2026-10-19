@@ -1,7 +1,9 @@
 package br.com.jpsl.portalsolicitacaointerna.api.assembler;
 
 
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.dashboard.response.DashboardIndicadoresResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResponse;
+import br.com.jpsl.portalsolicitacaointerna.api.model.dto.solicitacao.response.SolicitacaoResumoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.tipoSolicitacao.response.TipoSolicitacaoResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResponse;
 import br.com.jpsl.portalsolicitacaointerna.api.model.dto.usuario.response.UsuarioResumoResponse;
@@ -26,7 +28,8 @@ public final class ApiMapper {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSetor(),
+                usuario.getSetor().name(),
+                usuario.getPerfil().name(),
                 usuario.isAtivo()
         );
     }
@@ -36,7 +39,7 @@ public final class ApiMapper {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSetor()
+                usuario.getSetor().name()
         );
     }
 
@@ -47,10 +50,31 @@ public final class ApiMapper {
                 solicitacao.getDescricao(),
                 solicitacao.getPrioridade(),
                 solicitacao.getStatus(),
+                solicitacao.getDataCriacao(),
                 toResumeResponse(solicitacao.getUsuario()),
                 toResponse(solicitacao.getTipo())
         );
     }
+
+    public static SolicitacaoResumoResponse toResumoResponse(Solicitacao solicitacao) {
+        return new SolicitacaoResumoResponse(
+                solicitacao.getId(),
+                solicitacao.getTitulo(),
+                solicitacao.getStatus(),
+                solicitacao.getPrioridade()
+        );
+    }
+
+    public static DashboardIndicadoresResponse toDashboardIndicadoresResponse(
+            Long total, Long emAprovacao, Long aprovadas, Long usuariosAtivos) {
+        return new DashboardIndicadoresResponse(
+                total,
+                emAprovacao,
+                aprovadas,
+                usuariosAtivos
+        );
+    }
+
 
 }
 

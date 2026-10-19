@@ -1,0 +1,51 @@
+export interface PageResponse<T> {
+    dados: T[];
+    pagina: number;
+    tamanho: number;
+    totalDados: number;
+    totalPaginas: number;
+}
+
+export interface Consulta {
+    pagina: number;
+    tamanho: number;
+    ordenarPor: string;
+    direcao: "asc" | "desc";
+
+}
+
+export interface ConsultaTabelaSolicitacao {
+    pagina: number;
+    tamanho: number;
+    ordenarPor: string;
+    direcao: "asc" | "desc";
+    status?: string
+    prioridade?: string
+
+}
+
+export interface ErrorResponse {
+    detail: string
+    status: number;
+    timestamp: string;
+    title: string;
+    type: string;
+    "userMessage": string | null;
+    "fields": [
+        {
+            "field": string,
+            "userMessage": string
+        }
+    ] | null;
+
+
+}
+
+type SortOrder = 1 | -1;
+
+export interface LazyParams {
+    first: number;
+    rows: number;
+    sortField: string;
+    sortOrder: SortOrder;
+}

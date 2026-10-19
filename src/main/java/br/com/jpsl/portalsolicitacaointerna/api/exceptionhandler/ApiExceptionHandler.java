@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -31,10 +32,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     public static final String MENSAGEM_ERRO_GENERICO_USUARIO = "Ocorreu um erro interno inesperado no sistema. " +
-            "Tente novamente e se o problema persistir, entre " +
+            "Tente novamente e, se o problema persistir, entre " +
             "em contato com o administrador do sistema.";
 
     //INICIO DAS EXCECOES CUSTOMIZADAS
@@ -84,6 +85,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        ProblemType problemType = ProblemType.ACESSO_NEGADO;
+        String message = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, message)
+                .userMessage(message)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     @ExceptionHandler(AutenticacaoException.class)
     public ResponseEntity<?> handleAutenticacaoException(AutenticacaoException ex, WebRequest request) {
 
@@ -102,7 +116,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<?> handleCredencialException(CredencialException ex, WebRequest request) {
 
         HttpStatus status = HttpStatus.UNAUTHORIZED;
-        ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+        ProblemType problemType = ProblemType.NAO_AUTORIZADO;
         String message = ex.getMessage();
 
 
@@ -136,7 +150,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
         HttpStatus status = HttpStatus.CONFLICT;
         ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
 
-        String message = "Operacao nao permitida por violar uma restricao do banco de dados.";
+        String message = "Operação não permitida por violar uma restrição do banco de dados.";
 
         Problem problem = createProblemBuilder(status, problemType, message)
                 .userMessage(message)
@@ -146,7 +160,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     }
 
     @Autowired
-    private MessageSource messageSouce;
+    private MessageSource messageSource;
 
     @Override
     protected @Nullable ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers,
@@ -160,7 +174,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
         final String simpleName = ex.getRequiredType().getSimpleName();
 
-        String message = String.format("O parametro de url '%s' recebeu o valor '%s' que é de um tipo inválido." +
+        String message = String.format("O parâmetro da URL '%s' recebeu o valor '%s', que é de um tipo inválido." +
                         " Corrija e informe um valor compatível com o tipo %s.",
                 propertyName, value, simpleName);
 
@@ -185,7 +199,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
                 .getFieldErrors()
                 .stream()
                 .map(fieldError -> {
-                            String message = messageSouce.getMessage(fieldError, LocaleContextHolder.getLocale());
+                            String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
 
                             return Field.builder()
                                     .field(fieldError.getField())
@@ -197,13 +211,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
         HttpStatus status = HttpStatus.resolve(statusCode.value());
 
+        String userMessage = fieldList.get(0).getField() + " " + fieldList.get(0).getUserMessage();
+        userMessage = userMessage.substring(0, 1).toUpperCase() + userMessage.substring(1);
+
+
         Problem problem = createProblemBuilder(status, problemType, messageApi)
-                .userMessage(messageApi)
+                .userMessage(userMessage)
                 .fields(fieldList)
                 .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+
 
     @Override
     protected @Nullable ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
@@ -214,7 +233,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
         String propertyName = request.getContextPath() + request.getDescription(false)
                 .replace("uri=", "");
 
-        String message = String.format("O recurso '%s, que voce tentou acessar, é inexistente.",
+        String message = String.format("O recurso '%s', que você tentou acessar, não existe.",
                 propertyName);
 
         HttpStatus status = HttpStatus.resolve(statusCode.value());
@@ -243,7 +262,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
         ProblemType problemType = ProblemType.CORPO_MAL_FORMATADO;
 
-        String message = "O corpo da requisição está inválido. Verifique erro de sintaxe.";
+        String message = "O corpo da requisição está inválido. Verifique se há erros de sintaxe.";
 
 
         Problem problem = createProblemBuilder(status, problemType, message)
@@ -265,7 +284,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
                 .map(ref -> ref.getFieldName())
                 .collect(Collectors.joining("."));
 
-        String message = String.format("A propiedade '%s' recebeu o valor '%s', que é de um tipo inválido. " +
+        String message = String.format("A propriedade '%s' recebeu o valor '%s', que é de um tipo inválido. " +
                 "Corrija e informe um valor compatível com o tipo %s.", path, value, simpleName);
 
 
@@ -285,7 +304,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
                 .map(ref -> ref.getFieldName())
                 .collect(Collectors.joining("."));
 
-        String message = String.format("A propiedade '%s' não existe no corpo da requisição. Corrija ou remova essa" +
+        String message = String.format("A propriedade '%s' não existe no corpo da requisição. Corrija ou remova essa" +
                         " propriedade e tente novamente.",
                 path);
 

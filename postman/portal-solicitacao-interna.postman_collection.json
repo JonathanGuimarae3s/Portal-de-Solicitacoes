@@ -1,0 +1,1121 @@
+{
+  "info": {
+    "_postman_id": "8c317e64-2b69-4f9c-8b1c-f8f1e6e2e9ab",
+    "name": "Portal Solicitacao Interna",
+    "description": "Collection para testar a API Portal de Solicitacao Interna. Execute um dos logins para definir o token ativo. O último login realizado (ADMIN, GESTOR ou USUARIO) será usado nas próximas requisições. Requisições sem permissão para o perfil ativo devem retornar 403. A collection também cria recursos temporários para os fluxos encadeados.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login - ADMIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta de autenticação válida\", function () {",
+                  "    pm.expect(body.token).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
+                  "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"ADMIN\");",
+                  "});",
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"adminToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"ADMIN\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@empresa.com\",\n  \"senha\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login - GESTOR",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta de autenticação válida\", function () {",
+                  "    pm.expect(body.token).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
+                  "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"GESTOR\");",
+                  "});",
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"gestorToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"GESTOR\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"gestor@empresa.com\",\n  \"senha\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login - USUARIO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta de autenticação válida\", function () {",
+                  "    pm.expect(body.token).to.be.a(\"string\").and.not.empty;",
+                  "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
+                  "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"USUARIO\");",
+                  "});",
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"usuarioToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"USUARIO\");",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@empresa.com\",\n  \"senha\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Criar usuario",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Usuario Postman\",\n  \"email\": \"{{novoUsuarioEmail}}\",\n  \"senha\": \"password\",\n  \"perfil\": \"USUARIO\",\n  \"setor\": \"TI\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"novoUsuarioEmail\", `usuario.postman.${Date.now()}@empresa.com`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta possui id\", function () {",
+                  "    pm.expect(body.id).to.be.a(\"number\");",
+                  "});",
+                  "if (body.id) pm.collectionVariables.set(\"novoUsuarioId\", body.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios?page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar usuarios por setor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios?setor=TI&page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ],
+              "query": [
+                {
+                  "key": "setor",
+                  "value": "TI"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{novoUsuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{novoUsuarioId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta contém os dados do usuário\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.id).to.eql(Number(pm.collectionVariables.get(\"novoUsuarioId\")));",
+                  "    pm.expect(body).to.have.property(\"perfil\");",
+                  "    pm.expect(body).to.have.property(\"setor\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Usuario Postman Atualizado\",\n  \"email\": \"{{novoUsuarioEmail}}\",\n  \"perfil\": \"USUARIO\",\n  \"setor\": \"RH\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{novoUsuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{novoUsuarioId}}"
+              ]
+            },
+            "description": "Atualiza nome, email, perfil e setor do usuário criado pela collection. A senha é opcional e, quando omitida, permanece inalterada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ativar ou desativar usuario",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ativo\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{novoUsuarioId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{novoUsuarioId}}",
+                "status"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Usuário está ativo\", function () {",
+                  "    pm.expect(pm.response.json().ativo).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Tipos de solicitacao",
+      "item": [
+        {
+          "name": "Listar tipos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tipos?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar tipo por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tipos/{{tipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos",
+                "{{tipoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar tipo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"{{novoTipoNome}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tipos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"novoTipoNome\", `Acesso Temporario ${Date.now()}`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta possui id\", function () {",
+                  "    pm.expect(body.id).to.be.a(\"number\");",
+                  "});",
+                  "if (body.id) pm.collectionVariables.set(\"novoTipoId\", body.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar tipo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"{{tipoAtualizadoNome}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tipos/{{novoTipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos",
+                "{{novoTipoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"tipoAtualizadoNome\", `Acesso Sistema Atualizado ${Date.now()}`);"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Remover tipo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tipos/{{novoTipoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tipos",
+                "{{novoTipoId}}"
+              ]
+            },
+            "description": "Remove o tipo temporário criado pela própria collection, evitando conflito com tipos em uso."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Dashboard - listar solicitacoes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/solicitacoes?page=0&size=10&sort=id,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "solicitacoes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "id,desc"
+                },
+                {
+                  "key": "status",
+                  "value": "ABERTA",
+                  "disabled": true
+                },
+                {
+                  "key": "prioridade",
+                  "value": "MEDIA",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Lista id, titulo, status e prioridade. Habilite status e prioridade para filtrar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dashboard - consultar indicadores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/indicadores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "indicadores"
+              ]
+            },
+            "description": "Retorna total, emAprovacao, aprovadas e usuariosAtivos para o dashboard."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Indicadores válidos\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body).to.have.all.keys(\"total\", \"emAprovacao\", \"aprovadas\", \"usuariosAtivos\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Solicitacoes",
+      "item": [
+        {
+          "name": "Listar solicitacoes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes?page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Filtrar solicitacoes por status e prioridade",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes?status=ABERTA&prioridade=MEDIA&page=0&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "ABERTA"
+                },
+                {
+                  "key": "prioridade",
+                  "value": "MEDIA"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Resposta paginada válida\", function () {",
+                  "    const body = pm.response.json();",
+                  "    pm.expect(body.dados).to.be.an(\"array\");",
+                  "    pm.expect(body).to.have.property(\"pagina\");",
+                  "    pm.expect(body).to.have.property(\"tamanho\");",
+                  "    pm.expect(body).to.have.property(\"totalDados\");",
+                  "    pm.expect(body).to.have.property(\"totalPaginas\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Buscar solicitacao por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes/{{solicitacaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "{{solicitacaoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Criar solicitacao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Acesso ao portal interno\",\n  \"descricao\": \"Solicito acesso ao portal interno para executar minhas atividades.\",\n  \"prioridade\": \"MEDIA\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Resposta possui id\", function () {",
+                  "    pm.expect(body.id).to.be.a(\"number\");",
+                  "});",
+                  "if (body.id) pm.collectionVariables.set(\"novaSolicitacaoId\", body.id);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar solicitacao - ABERTA para EM_APROVACAO",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Acesso ao sistema negado\",\n  \"descricao\": \"Usuario nao consegue fazer login no sistema corporativo.\",\n  \"prioridade\": \"MEDIA\",\n  \"status\": \"EM_APROVACAO\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes/{{novaSolicitacaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "{{novaSolicitacaoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Status alterado para EM_APROVACAO\", function () {",
+                  "    pm.expect(pm.response.json().status).to.eql(\"EM_APROVACAO\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Atualizar solicitacao - EM_APROVACAO para APROVADA",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Instalacao de software\",\n  \"descricao\": \"Solicito a instalacao de ferramenta de trabalho.\",\n  \"prioridade\": \"BAIXA\",\n  \"status\": \"APROVADA\",\n  \"usuario\": {\n    \"id\": {{usuarioId}}\n  },\n  \"tipo\": {\n    \"id\": {{tipoId}}\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/solicitacoes/{{solicitacaoEmAprovacaoId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "solicitacoes",
+                "{{solicitacaoEmAprovacaoId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Status alterado para APROVADA\", function () {",
+                  "    pm.expect(pm.response.json().status).to.eql(\"APROVADA\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "perfilAtivo",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "gestorToken",
+      "value": ""
+    },
+    {
+      "key": "usuarioToken",
+      "value": ""
+    },
+    {
+      "key": "usuarioId",
+      "value": "1"
+    },
+    {
+      "key": "tipoId",
+      "value": "1"
+    },
+    {
+      "key": "solicitacaoId",
+      "value": "1"
+    },
+    {
+      "key": "solicitacaoEmAprovacaoId",
+      "value": "2"
+    },
+    {
+      "key": "novoUsuarioId",
+      "value": ""
+    },
+    {
+      "key": "novoUsuarioEmail",
+      "value": ""
+    },
+    {
+      "key": "novoTipoId",
+      "value": ""
+    },
+    {
+      "key": "novoTipoNome",
+      "value": ""
+    },
+    {
+      "key": "tipoAtualizadoNome",
+      "value": ""
+    },
+    {
+      "key": "novaSolicitacaoId",
+      "value": ""
+    }
+  ]
+}

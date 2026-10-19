@@ -8,6 +8,8 @@ import {storeToRefs} from "pinia";
 import Message from "primevue/message";
 import Loading from "@/shared/components/Loading.vue";
 import Tag from 'primevue/tag';
+import {formatarStatusEnum, formatarStatusSolicitacao} from "@/shared/utils/mappers/StatusUtils.ts";
+import {formatarPrioridade} from "@/shared/utils/mappers/PrioridadeSolicitacaoUtils.ts";
 
 const dashboardStore = useDashboardStore();
 const {solicitacoes, erroTabela} = storeToRefs(dashboardStore);
@@ -145,7 +147,7 @@ onMounted(() => {
             <span>
             </span>
         <Tag rounded :severity="getSeverityStatus(slotProps.data.status)">
-          {{ StatusSolicitacao[slotProps.data.status as keyof typeof StatusSolicitacao] }}
+          {{ formatarStatusSolicitacao(slotProps.data.status) }}
         </Tag>
       </template>
     </Column>
@@ -153,7 +155,7 @@ onMounted(() => {
       <template #body="slotProps">
 
         <Tag rounded :severity="getSeverityPrioridade(slotProps.data.prioridade)">
-          {{ PrioridadeSolicitacao[slotProps.data.prioridade as keyof typeof PrioridadeSolicitacao] }}
+          {{ formatarPrioridade(slotProps.data.prioridade) }}
         </Tag>
 
       </template>

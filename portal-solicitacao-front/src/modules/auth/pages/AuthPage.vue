@@ -43,9 +43,8 @@ async function handleLogin() {
     errorLogin.value = true;
 
 
-    let erro = obterMensagemErro(e)
+    menssagemLogin.value = obterMensagemErro(e)
 
-    toastError(erro)
 
   }
 }

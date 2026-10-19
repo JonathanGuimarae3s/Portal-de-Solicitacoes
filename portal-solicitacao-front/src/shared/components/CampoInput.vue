@@ -6,29 +6,29 @@ import InputText from "primevue/inputtext";
 
 interface iProps {
   label: string;
-  type: string;
+  type?: string;
   campo: string;
   message: string;
-  invalid: boolean | undefined;
+  invalid?: boolean | undefined;
+  disabled?: boolean
 }
 
 defineProps<iProps>();
-
 </script>
 
 <template>
 
 
   <div class="mb-3">
-    <label :for="campo" class="font-semibold w-6rem">{{ label }} </label>
+    <label :for="campo" class="font-semibold w-full ">{{ label }} </label>
     <slot name="input">
 
-      <InputText :id="campo" :name="campo" :type="type" fluid/>
+      <InputText :id="campo" :name="campo" :type="type" :disabled="disabled"  class="mt-2" fluid/>
 
     </slot>
 
 
-    <Message v-if="invalid" severity="error" size="small"  class="mt-2"  >
+    <Message v-if="invalid" severity="error" size="small" class="mt-2">
       {{ message }}
     </Message>
   </div>

@@ -14,6 +14,16 @@ export interface Consulta {
 
 }
 
+export interface ConsultaTabelaSolicitacao {
+    pagina: number;
+    tamanho: number;
+    ordenarPor: string;
+    direcao: "asc" | "desc";
+    status?: string
+    prioridade?: string
+
+}
+
 export interface ErrorResponse {
     detail: string
     status: number;

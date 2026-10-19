@@ -72,7 +72,7 @@
       <header>
         <div>
           <h1>Checklist do Portal</h1>
-          <p>Checklist fechado da API Spring Boot e do frontend Vue, revisado em 05/10/2026. O objetivo é concluir uma versão demonstrável e estável até 31/10/2026.</p>
+          <p>Checklist fechado da API Spring Boot e do frontend Vue, revisado em 18/10/2026. O objetivo é concluir uma versão demonstrável e estável até 31/10/2026.</p>
         </div>
         <div class="actions">
           <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
@@ -88,7 +88,7 @@
       </div>
 
       <div class="priority-note">
-        <strong>Próxima etapa obrigatória:</strong> fechar o contrato de cadastro de usuários para ADMIN e GESTOR e, em seguida, implementar o fluxo essencial de Solicitações. Nenhuma funcionalidade nova entra antes da entrega.
+        <strong>Próxima etapa obrigatória:</strong> fechar o Dashboard entre 19 e 21/10, ligando o botão de nova solicitação e padronizando os estados de carregamento, vazio e erro. Nenhuma funcionalidade nova entra antes da entrega.
       </div>
 
       <section class="schedule">
@@ -119,12 +119,12 @@
       <div class="grid" id="checklist"></div>
 
       <footer>
-        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 05/10/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
+        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 18/10/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
       </footer>
     </main>
 
     <script>
-      const storageKey = 'portal-checklist-api-frontend-2026-10-05'
+      const storageKey = 'portal-checklist-api-frontend-2026-10-18'
 
       const groups = [
         {
@@ -145,7 +145,7 @@
         {
           area: 'Concluído',
           title: '2. Frontend Vue',
-          summary: 'Autenticação, dashboard, Tipos e a base de Usuários estão funcionais.',
+          summary: 'Autenticação, dashboard, Tipos e a implementação de Usuários estão funcionais.',
           items: [
             { priority: 'done', text: 'Arquitetura por funcionalidades com Vue 3, TypeScript, Pinia, Router e PrimeVue.', done: true },
             { priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token.', done: true },
@@ -154,32 +154,32 @@
             { priority: 'done', text: 'Ações administrativas de Tipos e Usuários ocultadas conforme a permissão.', done: true },
             { priority: 'done', text: 'Dashboard com indicadores por perfil e tabela paginada lazy.', done: true },
             { priority: 'done', text: 'CRUD de Tipos concluído.', done: true },
-            { priority: 'done', text: 'Usuários com listagem, cadastro, edição e ativação/inativação estruturados.', done: true },
+            { priority: 'done', text: 'Usuários com listagem, cadastro, edição, ativação/inativação e validação de formulário concluídos.', done: true },
             { priority: 'done', text: 'Build do frontend e verificação TypeScript executados com sucesso.', done: true }
           ]
         },
         {
           area: 'Obrigatório para entrega',
-          title: '3. Fechar Usuários e permissões',
-          summary: 'Somente alinhar o comportamento final e corrigir defeitos encontrados.',
+          title: '3. Validar Usuários e permissões',
+          summary: 'Implementação concluída; falta somente executar o roteiro manual dos três perfis.',
           items: [
-            { priority: 'high', text: 'Restringir POST /usuarios na configuração de segurança para ADMIN e GESTOR.' },
-            { priority: 'high', text: 'Remover do Swagger a indicação de cadastro de usuário público.' },
+            { priority: 'done', text: 'POST /usuarios restrito a ADMIN e GESTOR na configuração de segurança.', done: true },
+            { priority: 'done', text: 'Swagger alinhado para não indicar o cadastro de usuário como público.', done: true },
             { priority: 'high', text: 'Validar manualmente cadastro e consulta de usuários com ADMIN, GESTOR e USUARIO.' },
-            { priority: 'medium', text: 'Validar os campos obrigatórios do formulário de usuários e exibir os erros retornados pela API.' }
+            { priority: 'done', text: 'Campos obrigatórios do formulário de usuários validados e erros da API exibidos.', done: true }
           ]
         },
         {
           area: 'Obrigatório para entrega',
-          title: '4. Implementar Solicitações',
-          summary: 'Este é o maior bloco ainda não implementado no frontend.',
+          title: '4. Solicitações',
+          summary: 'Listagem, filtros, cadastro, edição e transições da API foram implementados; a validação completa por perfil permanece na etapa de integração.',
           items: [
-            { priority: 'critical', text: 'Criar types, service, store e componentes do módulo de Solicitações.' },
-            { priority: 'critical', text: 'Implementar listagem paginada com loading, vazio e erro.' },
-            { priority: 'critical', text: 'Implementar filtros por status e prioridade.' },
-            { priority: 'critical', text: 'Implementar cadastro respeitando as regras de solicitante por perfil.' },
-            { priority: 'critical', text: 'Implementar edição e transições de status permitidas pela API.' },
-            { priority: 'high', text: 'Exibir ID, título, solicitante, tipo, prioridade, status e data de criação.' }
+            { priority: 'done', text: 'Types, service, store e componentes do módulo de Solicitações criados.', done: true },
+            { priority: 'done', text: 'Listagem paginada com loading, vazio e erro implementada.', done: true },
+            { priority: 'done', text: 'Filtros por status e prioridade implementados.', done: true },
+            { priority: 'done', text: 'Cadastro implementado respeitando as regras de solicitante por perfil.', done: true },
+            { priority: 'done', text: 'Edição e transições de status permitidas pela API implementadas.', done: true },
+            { priority: 'done', text: 'Tabela exibe ID, título, solicitante, tipo, prioridade, status e data de criação.', done: true }
           ]
         },
         {

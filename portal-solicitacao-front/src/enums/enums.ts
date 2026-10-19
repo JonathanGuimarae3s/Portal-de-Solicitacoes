@@ -1,14 +1,15 @@
 export enum StatusSolicitacao {
-    ABERTA = "Aberta",
-    EM_APROVACAO = "Em aprovação",
-    APROVADA = "Aprovada",
-    REJEITADA = "Rejeitada",
-    CONCLUIDA = "Concluído"
+    ABERTA = "ABERTA",
+    EM_APROVACAO = "EM_APROVACAO",
+    APROVADA = "APROVADA",
+    REJEITADA = "REJEITADA",
+    CONCLUIDA = "CONCLUIDA"
 }
+
 export enum PrioridadeSolicitacao {
-    BAIXA = "Baixa",
-    MEDIA = "Média",
-    ALTA = "Alta"
+    BAIXA = "BAIXA",
+    MEDIA = "MEDIA",
+    ALTA = "ALTA"
 }
 
 

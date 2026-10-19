@@ -1,4 +1,5 @@
 import {type PerfilUsuario, Setor} from "@/enums/enums.ts";
+import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
 
 export interface Usuario {
     id: number
@@ -15,4 +16,11 @@ export interface UsuarioRequest {
     senha: string,
     perfil: PerfilUsuario,
     setor: Setor
+}
+
+export interface UsuarioResumido {
+    "id": number,
+    "nome": string,
+    "email": string,
+    "setor": TipoSolicitacao
 }

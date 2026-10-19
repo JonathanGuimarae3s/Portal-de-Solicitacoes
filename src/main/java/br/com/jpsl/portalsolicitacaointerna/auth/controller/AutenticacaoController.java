@@ -43,6 +43,7 @@ public class AutenticacaoController {
             var token = tokenService.gerarToken(usuario);
 
             var usuarioAutenticado = new UsuarioAutenticadoResponse(
+                    usuario.getId(),
                     usuario.getNome(),
                     usuario.getEmail(),
                     usuario.getPerfil().name(),

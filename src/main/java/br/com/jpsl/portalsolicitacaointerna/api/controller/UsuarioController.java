@@ -40,7 +40,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar usuario de acordo com o perfil um usuário")
+    @Operation(summary = "Listar usuario de acordo com o perfil do usuário")
     public PageResponse<UsuarioResponse> listarUsuarios(@RequestParam(value = "setor", required = false) String setor,
                                                         Pageable pageable) {
 
@@ -69,7 +69,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Listar um usuário")
+    @Operation(summary = "Listar um  usuário por id")
     public UsuarioResponse buscarPorId(@PathVariable Long id) {
         Usuario usuarioLogado = usuarioBean.getUsuarioLogado();
 

@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "8c317e64-2b69-4f9c-8b1c-f8f1e6e2e9ab",
     "name": "Portal Solicitacao Interna",
-    "description": "Collection para testar a API Portal de Solicitacao Interna. Os logins salvam tokens separados por perfil; as demais pastas usam adminToken por padrão e criam recursos temporários para os fluxos encadeados.",
+    "description": "Collection para testar a API Portal de Solicitacao Interna. Execute um dos logins para definir o token ativo. O último login realizado (ADMIN, GESTOR ou USUARIO) será usado nas próximas requisições. Requisições sem permissão para o perfil ativo devem retornar 403. A collection também cria recursos temporários para os fluxos encadeados.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -26,7 +26,11 @@
                   "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
                   "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"ADMIN\");",
                   "});",
-                  "if (body.token) pm.collectionVariables.set(\"adminToken\", body.token);"
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"adminToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"ADMIN\");",
+                  "}"
                 ],
                 "type": "text/javascript"
               }
@@ -76,7 +80,11 @@
                   "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
                   "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"GESTOR\");",
                   "});",
-                  "if (body.token) pm.collectionVariables.set(\"gestorToken\", body.token);"
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"gestorToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"GESTOR\");",
+                  "}"
                 ],
                 "type": "text/javascript"
               }
@@ -126,7 +134,11 @@
                   "    pm.expect(body.usuarioAutenticado).to.be.an(\"object\");",
                   "    pm.expect(body.usuarioAutenticado.perfil).to.eql(\"USUARIO\");",
                   "});",
-                  "if (body.token) pm.collectionVariables.set(\"usuarioToken\", body.token);"
+                  "if (body.token) {",
+                  "    pm.collectionVariables.set(\"usuarioToken\", body.token);",
+                  "    pm.collectionVariables.set(\"authToken\", body.token);",
+                  "    pm.collectionVariables.set(\"perfilAtivo\", \"USUARIO\");",
+                  "}"
                 ],
                 "type": "text/javascript"
               }
@@ -1035,7 +1047,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "{{adminToken}}",
+        "value": "{{authToken}}",
         "type": "string"
       }
     ]
@@ -1044,6 +1056,14 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:8080"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    },
+    {
+      "key": "perfilAtivo",
+      "value": ""
     },
     {
       "key": "adminToken",

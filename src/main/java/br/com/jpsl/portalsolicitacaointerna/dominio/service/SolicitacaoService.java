@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -181,6 +182,7 @@ public class SolicitacaoService {
         solicitacao.setDescricao(request.descricao());
         solicitacao.setTipo(tipoSolicitacao);
         solicitacao.setUsuario(usuario);
+        solicitacao.setDataCriacao(LocalDateTime.now());
 
         return solicitacaoRepository.saveAndFlush(solicitacao);
     }
@@ -253,6 +255,10 @@ public class SolicitacaoService {
 
         if (solicitacao.getStatus().equals(StatusSolicitacao.CONCLUIDA)) {
             throw new NegocioException("Esta solicitação já está concluída. Não é possível atualizá-la.");
+        }
+
+        if (solicitacao.getStatus().equals(StatusSolicitacao.REJEITADA)) {
+            throw new NegocioException("Esta solicitação já está rejeitada. Não é possível atualizá-la.");
         }
 
         if (request.tipo().id() != null && !request.tipo().id().equals(solicitacao.getTipo().getId())) {

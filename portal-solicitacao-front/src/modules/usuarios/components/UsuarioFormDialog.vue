@@ -6,9 +6,9 @@ import {PerfilUsuario, Setor} from "@/enums/enums.ts";
 import {Select} from "primevue";
 import {computed} from 'vue';
 import {Form, type FormSubmitEvent} from "@primevue/forms";
-import CampoForm from "@/shared/components/CampoForm.vue";
+import CampoInput from "@/shared/components/CampoInput.vue";
 
-import type {ErrosFormulario} from "@/modules/usuarios/types/errosFormulario.types.ts";
+import type {ErrosFormulario} from "@/modules/usuarios/types/errosFormularioUsuario.types.ts";
 import {formatarPerfilUsuario} from "@/shared/utils/mappers/PerfilUsuarioUtils.ts";
 import {formatarSetor} from "@/shared/utils/mappers/SetorUtils.ts";
 
@@ -97,14 +97,14 @@ const enviar = (event: FormSubmitEvent) => {
 
       <Form v-slot="$form" :initialValues :resolver @submit="enviar">
 
-        <CampoForm label="Nome" type="text" campo="nome" :message="$form.nome?.error?.message ?? ''"
+        <CampoInput label="Nome" type="text" campo="nome" :message="$form.nome?.error?.message ?? ''"
                    :invalid="$form.nome?.invalid ?? false"/>
 
 
-        <CampoForm label="E-mail" type="email" campo="email" :message="$form.email?.error?.message ?? ''"
+        <CampoInput label="E-mail" type="email" campo="email" :message="$form.email?.error?.message ?? ''"
                    :invalid="$form.email?.invalid ?? false"/>
 
-        <CampoForm label="Perfil" type="" campo="perfil" :message="$form.perfil?.error?.message ?? ''"
+        <CampoInput label="Perfil" type="" campo="perfil" :message="$form.perfil?.error?.message ?? ''"
                    :invalid="$form.perfil?.invalid ?? false">
 
           <template #input>
@@ -116,10 +116,10 @@ const enviar = (event: FormSubmitEvent) => {
 
           </template>
 
-        </CampoForm>
+        </CampoInput>
 
 
-        <CampoForm label="Setor" type="" campo="setor" :message="$form.setor?.error?.message ?? ''"
+        <CampoInput label="Setor" type="" campo="setor" :message="$form.setor?.error?.message ?? ''"
                    :invalid="$form.setor?.invalid ?? false">
           <template #input>
 
@@ -131,10 +131,10 @@ const enviar = (event: FormSubmitEvent) => {
 
           </template>
 
-        </CampoForm>
+        </CampoInput>
 
 
-        <CampoForm label="Senha" type="password" campo="senha" :message="$form.senha?.error?.message ?? ''"
+        <CampoInput label="Senha" type="password" campo="senha" :message="$form.senha?.error?.message ?? ''"
                    :invalid="$form.senha?.invalid ?? false"/>
 
 

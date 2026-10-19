@@ -3,6 +3,7 @@ import Column from "primevue/column"
 import DataTable, {type DataTablePageEvent, type DataTableSortEvent} from "primevue/datatable"
 import Button from "primevue/button";
 import ButtonGroup from "primevue/buttongroup";
+import Tag from "primevue/tag";
 
 import IconComponent from "@/shared/components/IconComponent.vue";
 import type {LazyParams} from "@/interfaces/interfaces.ts";
@@ -48,32 +49,32 @@ defineProps<iProps>();
     <Column field="id" header="Código" sortable/>
     <Column field="nome" header="Nome" sortable/>
     <Column field="email" header="Email"/>
-    <Column  header="Setor" sortable>
+    <Column header="Setor" sortable>
 
       <template #body="slotProps">
-
-        {{formatarSetor(slotProps.data.setor)}}
+        {{ formatarSetor(slotProps.data.setor) }}
       </template>
+
     </Column>
 
-    <Column  header="Perfil" sortable>
+    <Column header="Perfil" sortable>
 
       <template #body="slotProps">
-
-        {{ formatarPerfilUsuario(slotProps.data.perfil)}}
+        {{ formatarPerfilUsuario(slotProps.data.perfil) }}
       </template>
+
     </Column>
 
 
     <Column header="Ativo?" sortable sortField="ativo">
       <template #body="slotProps">
-        <Button v-if="slotProps.data.ativo" severity="success">
+        <Tag rounded v-if="slotProps.data.ativo" severity="success">
           <p class="font-bold">Sim</p>
-        </Button>
+        </Tag>
 
-        <Button v-else severity="danger">
+        <Tag rounded v-else severity="danger">
           <p class="font-bold">Nào</p>
-        </Button>
+        </Tag>
       </template>
     </Column>
 

@@ -1,22 +1,20 @@
 <script setup lang="ts">
 
 import Loading from '@/shared/components/Loading.vue';
-import {Button, InputText, Panel, Password} from 'primevue';
+import {Panel} from 'primevue';
 import {ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
-import type {UserLogin} from '@/modules/auth/interfaces/UserLogin';
+import type {UserLogin} from '@/modules/auth/types/UserLogin';
 import {useAuthStore} from '../stores/auth';
-import Message from "primevue/message";
-import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 import {obterMensagemErro} from "@/shared/utils/store/mensagem.store.ts";
+import LoginFormDialog from "@/modules/auth/components/LoginFormDialog.vue";
 
-const {toastError, toastSuccess} = useCustomToast();
 
 const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 
-const userLogin = ref<UserLogin>({
+const userLoginRequest = ref<UserLogin>({
   email: "",
   password: ""
 });
@@ -27,25 +25,26 @@ let errorLogin = ref(false);
 
 let menssagemLogin = ref("")
 
-async function handleLogin() {
+const handleLogin = async (userLogin: UserLogin) => {
+  errorLogin.value = false;
+  menssagemLogin.value = "";
 
-  if (!userLogin.value.email || !userLogin.value.password) {
+  if (!userLogin.email || !userLogin.password) {
     emailInvalido.value = true;
     senhaInvalida.value = true;
+
+    userLoginRequest.value.email = "";
+    userLoginRequest.value.password = "";
+
     return;
   }
 
   try {
-    await authStore.autenticar(userLogin.value.email, userLogin.value.password);
+    await authStore.autenticar(userLogin);
     await redirect();
   } catch (e) {
-
     errorLogin.value = true;
-
-
     menssagemLogin.value = obterMensagemErro(e)
-
-
   }
 }
 
@@ -55,6 +54,7 @@ async function redirect() {
   const redirect = typeof query === "string" && query.startsWith("/") ? query : "/";
   await router.replace(redirect)
 }
+
 
 </script>
 
@@ -70,26 +70,12 @@ async function redirect() {
 
       <div class="flex flex-col  gap-4 ">
 
-        <div>
-          <label for="email">Email</label>
-          <InputText id="email" v-model="userLogin.email" fluid :invalid="emailInvalido || errorLogin"/>
-          <p v-if="emailInvalido" class="text-red-500 text-sm">Email é obrigatório</p>
-        </div>
 
-        <div>
-          <label for="password">Senha</label>
-          <Password v-model="userLogin.password" inputId="password" :feedback="false" toggleMask fluid
-                    :invalid="senhaInvalida || errorLogin"/>
-          <p v-if="senhaInvalida" class="text-red-500 text-sm">Senha é obrigatória</p>
-        </div>
-
-        <Message v-if="errorLogin" severity="error" :closable="false">
-          {{ menssagemLogin }}
-        </Message>
+        <LoginFormDialog :auttenticar="handleLogin" :usuarioLogin="userLoginRequest" :errorLogin="errorLogin"
+                         :menssagemLogin="menssagemLogin"/>
 
       </div>
 
-      <Button label="Login" class="mt-3" @click="handleLogin" fluid/>
 
     </Panel>
 

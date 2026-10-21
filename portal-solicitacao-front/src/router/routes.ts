@@ -20,6 +20,7 @@ export const routes: RouteRecordRaw[] = [
             {
                 name: "Solicitacoes",
                 path: "solicitacoes",
+                props: route => ({query: route.query.novaSolicitacao}),
                 component: () => import("@/modules/solicitacoes/pages/SolicitacoesPage.vue"),
             },
             {

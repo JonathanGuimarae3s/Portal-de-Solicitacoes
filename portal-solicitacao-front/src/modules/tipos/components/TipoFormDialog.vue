@@ -2,7 +2,7 @@
 import Button from "primevue/button"
 import Dialog from "primevue/dialog"
 import InputText from "primevue/inputtext"
-import type {TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
+import type {TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.ts";
 
 
 interface iProps {

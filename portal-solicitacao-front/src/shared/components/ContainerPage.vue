@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {Panel, Toast} from "primevue";
+import {Toast} from "primevue";
 </script>
 <template>
   <Toast/>
 
-  <Panel class="flex flex-col items-center justify-content-center ">
+  <div class="flex flex-col  gap-5 ">
     <slot name="conteudo"/>
-  </Panel>
+  </div>
 </template>
 

@@ -1,6 +1,6 @@
 import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.ts";
-import type {Usuario, UsuarioResumido} from "@/modules/usuarios/types/usuario.types.ts";
-import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
+import type {Usuario, UsuarioResumido} from "@/modules/usuarios/types/usuario.ts";
+import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.ts";
 
 
 

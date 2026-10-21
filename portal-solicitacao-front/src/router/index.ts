@@ -1,10 +1,7 @@
-import {
-    createRouter,
-    createWebHistory
-} from "vue-router";
+import {createRouter, createWebHistory} from "vue-router";
 
-import { useAuthStore } from "@/modules/auth/stores/auth";
-import { routes } from "./routes";
+import {useAuthStore} from "@/modules/auth/stores/auth";
+import {routes} from "./routes";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,7 +11,6 @@ const router = createRouter({
 router.beforeEach((to) => {
     const authStore = useAuthStore();
 
-    // 1. Proteção por autenticação
     if (
         to.name !== "Login" &&
         to.meta.requiresAuth &&
@@ -22,11 +18,10 @@ router.beforeEach((to) => {
     ) {
         return {
             name: "Login",
-            query: { redirect: to.fullPath }
+            query: {redirect: to.fullPath}
         };
     }
 
-    // 2. Proteção por perfil
     const perfisPermitidos = to.meta.perfisPermitidos;
     const perfilUsuario = authStore.perfil;
 
@@ -37,16 +32,15 @@ router.beforeEach((to) => {
     ) {
         return {
             name: "Dashboard",
-            query: { acessoNegado: "true" }
+            query: {acessoNegado: "true"}
         };
     }
 
-    // 3. Usuário autenticado não retorna ao login
     if (
         authStore.isAuthenticated &&
         to.name === "Login"
     ) {
-        return { name: "Dashboard" };
+        return {name: "Dashboard"};
     }
 
 

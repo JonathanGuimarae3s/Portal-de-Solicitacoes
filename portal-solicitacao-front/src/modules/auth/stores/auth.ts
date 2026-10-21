@@ -2,8 +2,9 @@ import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import {settaAuthToken} from "@/core/http/api";
 import {login} from "../services/auth.service";
-import type {SessaoUsuario} from "@/modules/auth/interfaces/SessaoUsuario.ts";
+import type {SessaoUsuario} from "@/modules/auth/types/SessaoUsuario.ts";
 import {PerfilUsuario} from "@/enums/enums.ts";
+import type {UserLogin} from "@/modules/auth/types/UserLogin.ts";
 
 export const useAuthStore = defineStore("auth", () => {
     const isLoading = ref(false);
@@ -29,12 +30,12 @@ export const useAuthStore = defineStore("auth", () => {
     );
 
 
-    async function autenticar(email: string, password: string) {
+    async function autenticar(userLogin: UserLogin) {
 
         try {
             isLoading.value = true;
 
-            const session = await login({email, password});
+            const session = await login(userLogin);
             userSession.value = session;
 
             calculaExpiracao(userSession.value);

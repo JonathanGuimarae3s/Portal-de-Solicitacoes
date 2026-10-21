@@ -1,9 +1,9 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import type {Consulta, ConsultaTabelaSolicitacao, PageResponse} from "@/interfaces/interfaces.ts";
+import type {Consulta, ConsultaTabelaSolicitacao, PageResponse} from "@/types/interfaces.ts";
 
 import * as solicitacaoService from "@/modules/solicitacoes/services/solicitacaoService.ts"
-import type {Solicitacao, SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.types.ts";
+import type {Solicitacao, SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.ts";
 
 export const useSolicitacaoStore = defineStore("solicitacao", () => {
     const solicitacoes = ref<PageResponse<Solicitacao> | null>(null);

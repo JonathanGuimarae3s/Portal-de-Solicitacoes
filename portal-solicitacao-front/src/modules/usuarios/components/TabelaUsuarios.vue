@@ -6,10 +6,12 @@ import ButtonGroup from "primevue/buttongroup";
 import Tag from "primevue/tag";
 
 import IconComponent from "@/shared/components/IconComponent.vue";
-import type {LazyParams} from "@/interfaces/interfaces.ts";
-import type {Usuario} from "@/modules/usuarios/types/usuario.types.ts";
+import type {LazyParams} from "@/types/interfaces.ts";
+import type {Usuario} from "@/modules/usuarios/types/usuario.ts";
 import {formatarPerfilUsuario} from "@/shared/utils/mappers/PerfilUsuarioUtils.ts";
 import {formatarSetor} from "@/shared/utils/mappers/SetorUtils.ts";
+import Skeleton from "primevue/skeleton";
+import {computed} from "vue";
 
 
 interface iProps {
@@ -21,9 +23,18 @@ interface iProps {
   totalRegistros: number;
   lazyParams: LazyParams;
   podeGerenciar: boolean
+  isLoading: boolean;
 }
 
-defineProps<iProps>();
+const props = defineProps<iProps>();
+
+const linhasTabela = computed(() => {
+  if (!props.isLoading) {
+    return props.usuarios;
+  }
+
+  return Array.from({length: 5}, (_, index) => ({id: -(index + 1)}));
+});
 
 </script>
 
@@ -31,7 +42,7 @@ defineProps<iProps>();
 
 
   <DataTable
-      :value="usuarios"
+      :value="linhasTabela"
       lazy
       paginator
       dataKey="id"
@@ -44,44 +55,74 @@ defineProps<iProps>();
       :totalRecords="totalRegistros"
       @page="paginar"
       @sort="ordenar"
+      :stripedRows="true"
+      :showGridlines="true"
   >
 
-    <Column field="id" header="Código" sortable/>
-    <Column field="nome" header="Nome" sortable/>
-    <Column field="email" header="Email"/>
-    <Column header="Setor" sortable>
+    <template #empty>
+      <div class="text-center p-4">
+        Nenhum registro foi encontrado.
+      </div>
+    </template>
+
+    <Column field="id" header="Código" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="4rem"/>
+        <span v-else>{{ slotProps.data.id }}</span>
+      </template>
+    </Column>
+
+    <Column field="nome" header="Nome" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="70%"/>
+        <span v-else>{{ slotProps.data.nome }}</span>
+      </template>
+    </Column>
+
+    <Column field="email" header="Email">
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="80%"/>
+        <span v-else>{{ slotProps.data.email }}</span>
+      </template>
+    </Column>
+    <Column header="Setor" field="setor" sortable>
 
       <template #body="slotProps">
-        {{ formatarSetor(slotProps.data.setor) }}
+        <Skeleton v-if="isLoading" width="7rem"/>
+        <span v-else>{{ formatarSetor(slotProps.data.setor) }}</span>
       </template>
 
     </Column>
 
-    <Column header="Perfil" sortable>
+    <Column header="Perfil" field="perfil" sortable>
 
       <template #body="slotProps">
-        {{ formatarPerfilUsuario(slotProps.data.perfil) }}
+        <Skeleton v-if="isLoading" width="6rem"/>
+        <span v-else>{{ formatarPerfilUsuario(slotProps.data.perfil) }}</span>
       </template>
 
     </Column>
 
 
-    <Column header="Ativo?" sortable sortField="ativo">
+    <Column header="Ativo?" field="ativo" sortable sortField="ativo">
       <template #body="slotProps">
-        <Tag rounded v-if="slotProps.data.ativo" severity="success">
-          <p class="font-bold">Sim</p>
-        </Tag>
+        <Skeleton v-if="isLoading" width="4rem" borderRadius="1rem"/>
+        <template v-else>
+          <Tag rounded v-if="slotProps.data.ativo" severity="success">
+            <p class="font-bold">Sim</p>
+          </Tag>
 
-        <Tag rounded v-else severity="danger">
-          <p class="font-bold">Nào</p>
-        </Tag>
+          <Tag rounded v-else severity="danger">
+            <p class="font-bold">Nào</p>
+          </Tag>
+        </template>
       </template>
     </Column>
 
     <Column v-if="podeGerenciar ">
       <template #body="slotProps">
-
-        <ButtonGroup>
+        <Skeleton v-if="isLoading" width="6rem" height="2.5rem"/>
+        <ButtonGroup v-else>
 
           <Button severity="info" @click="editar(slotProps.data.id)">
             <IconComponent icon="pi pi-pencil" :estilo="{fontWeight: 'bold'}"/>

@@ -2,8 +2,8 @@ import api from "@/core/http/api";
 import type {
     IndicadoresDashboard,
     SolicitacaoResumo,
-} from "@/modules/dashboard/interfaces/dashboard.types";
-import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
+} from "@/modules/dashboard/interfaces/dashboard.ts";
+import type {Consulta, PageResponse} from "@/types/interfaces.ts";
 
 export async function buscarIndicadoresDashboard(): Promise<IndicadoresDashboard> {
     const response = await api.get<IndicadoresDashboard>(

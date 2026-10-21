@@ -1,7 +1,7 @@
-import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
+import type {Consulta, PageResponse} from "@/types/interfaces.ts";
 
 import api from "@/core/http/api.ts";
-import type {Usuario, UsuarioRequest} from "@/modules/usuarios/types/usuario.types.ts";
+import type {Usuario, UsuarioRequest} from "@/modules/usuarios/types/usuario.ts";
 
 const ENDPOINT = "/usuarios";
 

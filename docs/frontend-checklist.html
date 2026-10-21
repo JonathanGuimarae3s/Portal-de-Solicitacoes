@@ -1,274 +1,943 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Checklist do Portal - API e Frontend</title>
     <style>
-      :root {
-        color-scheme: dark;
-        --bg: #09090b;
-        --card: #18181b;
-        --text: #f4f4f5;
-        --muted: #a1a1aa;
-        --border: #3f3f46;
-        --primary: #38bdf8;
-        --success: #34d399;
-        --critical: #fb7185;
-      }
+        :root {
+            color-scheme: dark;
+            --bg: #09090b;
+            --card: #18181b;
+            --text: #f4f4f5;
+            --muted: #a1a1aa;
+            --border: #3f3f46;
+            --primary: #38bdf8;
+            --success: #34d399;
+            --critical: #fb7185;
+        }
 
-      * { box-sizing: border-box; }
-      body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-      .container { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 56px; }
-      header { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
-      h1 { margin: 0 0 8px; font-size: clamp(1.65rem, 4vw, 2.4rem); }
-      p { margin: 0; color: var(--muted); line-height: 1.55; }
-      .actions { display: flex; gap: 8px; flex-wrap: wrap; }
-      button { min-height: 40px; border: 1px solid var(--border); border-radius: 9px; background: var(--card); color: var(--text); cursor: pointer; font-weight: 700; padding: 8px 13px; }
-      button:hover { border-color: var(--primary); }
-      button.primary { border-color: var(--primary); background: var(--primary); color: #082f49; }
-      .score-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
-      .score { padding: 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
-      .score strong { display: block; margin-top: 6px; font-size: 1.7rem; }
-      .score span { color: var(--muted); font-size: .88rem; }
-      .progress-card, .priority-note { margin-bottom: 18px; padding: 17px; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
-      .progress-info { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; font-weight: 700; }
-      .progress-bar { height: 11px; overflow: hidden; border-radius: 999px; background: #3f3f46; }
-      .progress-fill { width: 0; height: 100%; border-radius: inherit; background: var(--success); transition: width .2s ease; }
-      .priority-note { border-left: 4px solid var(--critical); }
-      .priority-note strong { color: var(--critical); }
-      .schedule { margin-bottom: 18px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
-      .schedule h2 { margin: 0; padding: 16px 17px; border-bottom: 1px solid var(--border); font-size: 1.1rem; }
-      .schedule table { width: 100%; border-collapse: collapse; }
-      .schedule th, .schedule td { padding: 11px 14px; border-bottom: 1px solid #2d2d32; text-align: left; vertical-align: top; }
-      .schedule th { color: var(--muted); font-size: .78rem; text-transform: uppercase; }
-      .schedule tr:last-child td { border-bottom: 0; }
-      .scope-lock { margin: 0 17px 16px; padding: 14px; border-radius: 8px; background: #111827; color: var(--muted); line-height: 1.55; }
-      .scope-lock strong { color: var(--primary); }
-      .area-title { grid-column: 1 / -1; margin: 18px 0 0; padding: 12px 0 4px; border-bottom: 1px solid var(--border); font-size: 1.35rem; }
-      .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
-      section { border: 1px solid var(--border); border-radius: 10px; background: var(--card); overflow: hidden; }
-      section h2 { margin: 0; padding: 15px 17px; border-bottom: 1px solid var(--border); font-size: 1.02rem; }
-      section .summary { padding: 11px 17px 0; font-size: .88rem; }
-      ul { margin: 0; padding: 8px 17px 16px; list-style: none; }
-      li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #2d2d32; }
-      li:last-child { border-bottom: 0; }
-      input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--success); cursor: pointer; flex: 0 0 auto; }
-      label { flex: 1; line-height: 1.4; cursor: pointer; }
-      input[type="checkbox"]:checked + label { color: var(--muted); text-decoration: line-through; }
-      .badge { display: inline-block; margin-right: 6px; padding: 2px 7px; border-radius: 999px; font-size: .72rem; font-weight: 800; text-transform: uppercase; text-decoration: none; }
-      .critical { background: #4c0519; color: #fda4af; }
-      .high { background: #431407; color: #fdba74; }
-      .medium { background: #422006; color: #fde047; }
-      .low { background: #1e293b; color: #cbd5e1; }
-      .done { background: #052e26; color: #6ee7b7; }
-      footer { margin-top: 22px; color: var(--muted); font-size: .88rem; line-height: 1.6; }
-      @media (max-width: 850px) { header { flex-direction: column; } .score-grid, .grid { grid-template-columns: 1fr; } }
-      @media (max-width: 650px) { .schedule { overflow-x: auto; } .schedule table { min-width: 680px; } }
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        }
+
+        .container {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 32px 0 56px;
+        }
+
+        header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.65rem, 4vw, 2.4rem);
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            min-height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 700;
+            padding: 8px 13px;
+        }
+
+        button:hover {
+            border-color: var(--primary);
+        }
+
+        button.primary {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #082f49;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-button {
+            border: 0;
+            border-bottom: 3px solid transparent;
+            border-radius: 8px 8px 0 0;
+            background: transparent;
+            color: var(--muted);
+        }
+
+        .tab-button.active {
+            border-bottom-color: var(--primary);
+            color: var(--text);
+        }
+
+        .tab-panel[hidden] {
+            display: none;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .score {
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+        .score strong {
+            display: block;
+            margin-top: 6px;
+            font-size: 1.7rem;
+        }
+
+        .score span {
+            color: var(--muted);
+            font-size: .88rem;
+        }
+
+        .progress-card, .priority-note {
+            margin-bottom: 18px;
+            padding: 17px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            height: 11px;
+            overflow: hidden;
+            border-radius: 999px;
+            background: #3f3f46;
+        }
+
+        .progress-fill {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--success);
+            transition: width .2s ease;
+        }
+
+        .priority-note {
+            border-left: 4px solid var(--critical);
+        }
+
+        .priority-note strong {
+            color: var(--critical);
+        }
+
+        .schedule {
+            margin-bottom: 18px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+        }
+
+        .schedule h2 {
+            margin: 0;
+            padding: 16px 17px;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.1rem;
+        }
+
+        .schedule table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule th, .schedule td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #2d2d32;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .schedule th {
+            color: var(--muted);
+            font-size: .78rem;
+            text-transform: uppercase;
+        }
+
+        .schedule tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .scope-lock {
+            margin: 0 17px 16px;
+            padding: 14px;
+            border-radius: 8px;
+            background: #111827;
+            color: var(--muted);
+            line-height: 1.55;
+        }
+
+        .scope-lock strong {
+            color: var(--primary);
+        }
+
+        .area-title {
+            grid-column: 1 / -1;
+            margin: 18px 0 0;
+            padding: 12px 0 4px;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.35rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        section {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+            overflow: hidden;
+        }
+
+        section h2 {
+            margin: 0;
+            padding: 15px 17px;
+            border-bottom: 1px solid var(--border);
+            font-size: 1.02rem;
+        }
+
+        section .summary {
+            padding: 11px 17px 0;
+            font-size: .88rem;
+        }
+
+        ul {
+            margin: 0;
+            padding: 8px 17px 16px;
+            list-style: none;
+        }
+
+        li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #2d2d32;
+        }
+
+        li:last-child {
+            border-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            accent-color: var(--success);
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        label {
+            flex: 1;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        input[type="checkbox"]:checked + label {
+            color: var(--muted);
+            text-decoration: line-through;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-right: 6px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            font-size: .72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        .critical {
+            background: #4c0519;
+            color: #fda4af;
+        }
+
+        .high {
+            background: #431407;
+            color: #fdba74;
+        }
+
+        .medium {
+            background: #422006;
+            color: #fde047;
+        }
+
+        .low {
+            background: #1e293b;
+            color: #cbd5e1;
+        }
+
+        .done {
+            background: #052e26;
+            color: #6ee7b7;
+        }
+
+        footer {
+            margin-top: 22px;
+            color: var(--muted);
+            font-size: .88rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 850px) {
+            header {
+                flex-direction: column;
+            }
+
+            .score-grid, .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .schedule {
+                overflow-x: auto;
+            }
+
+            .schedule table {
+                min-width: 680px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <main class="container">
-      <header>
+</head>
+<body>
+<main class="container">
+    <header>
         <div>
-          <h1>Checklist do Portal</h1>
-          <p>Checklist fechado da API Spring Boot e do frontend Vue, revisado em 18/10/2026. O objetivo é concluir uma versão demonstrável e estável até 31/10/2026.</p>
+            <h1>Checklist do Portal</h1>
+            <p>Checklist fechado da API Spring Boot e do frontend Vue, revisado em 20/10/2026. O objetivo é concluir uma
+                versão demonstrável e estável até 31/10/2026.</p>
         </div>
         <div class="actions">
-          <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
-          <button id="resetButton" type="button">Restaurar auditoria</button>
+            <button class="primary" id="markAllButton" type="button">Marcar tudo</button>
+            <button id="resetButton" type="button">Restaurar auditoria</button>
         </div>
-      </header>
+    </header>
 
-      <div class="score-grid">
+    <nav class="tabs" aria-label="Seções do checklist">
+        <button class="tab-button active" type="button" data-tab="planningTab">Cronograma e checklist</button>
+        <button class="tab-button" type="button" data-tab="checkupTab">Check-up 20/10</button>
+    </nav>
+
+    <div class="tab-panel" id="planningTab">
+
+    <div class="score-grid">
         <div class="score"><span>API principal</span><strong>Avançada</strong></div>
         <div class="score"><span>Frontend</span><strong>Em andamento</strong></div>
         <div class="score"><span>Build do frontend</span><strong>OK</strong></div>
         <div class="score"><span>Prazo final</span><strong>31/10</strong></div>
-      </div>
+    </div>
 
-      <div class="priority-note">
-        <strong>Próxima etapa obrigatória:</strong> fechar o Dashboard entre 19 e 21/10, ligando o botão de nova solicitação e padronizando os estados de carregamento, vazio e erro. Nenhuma funcionalidade nova entra antes da entrega.
-      </div>
+    <div class="priority-note">
+        <strong>Próxima etapa obrigatória:</strong> concluir o check-up técnico iniciado em 20/10, começando pela
+        autorização de campos na atualização de solicitações. Depois disso, executar a integração dos três perfis.
+        Nenhuma funcionalidade nova entra antes da entrega.
+    </div>
 
-      <section class="schedule">
+    <section class="schedule">
         <h2>Cronograma fechado — entrega final em 31/10/2026</h2>
         <div class="scope-lock">
-          <strong>Escopo congelado:</strong> esta versão terá somente autenticação e sessão, dashboard, CRUD de tipos, administração de usuários, fluxo de solicitações, permissões por perfil, testes essenciais e documentação. Não entram recuperação de senha, anexos, notificações, gráficos, relatórios, chat, auditoria, tema novo ou qualquer outra funcionalidade não necessária para demonstrar os fluxos atuais.
+            <strong>Escopo congelado:</strong> esta versão terá somente autenticação e sessão, dashboard, CRUD de tipos,
+            administração de usuários, fluxo de solicitações, permissões por perfil, testes essenciais e documentação.
+            Não entram recuperação de senha, anexos, notificações, gráficos, relatórios, chat, auditoria, tema novo ou
+            qualquer outra funcionalidade não necessária para demonstrar os fluxos atuais.
         </div>
         <table>
-          <thead><tr><th>Data</th><th>Foco</th><th>Resultado obrigatório</th></tr></thead>
-          <tbody>
-            <tr><td>05–07/10</td><td>Fechar Usuários e permissões</td><td>Cadastro ADMIN/GESTOR protegido, fluxos dos três perfis conferidos e somente defeitos corrigidos.</td></tr>
-            <tr><td>08–18/10</td><td>Implementar Solicitações</td><td>Listar, filtrar, criar, editar e executar as transições já definidas pela API.</td></tr>
-            <tr><td>19–21/10</td><td>Fechar Dashboard</td><td>Botão de nova solicitação funcional e estados de carregamento, vazio e erro consistentes.</td></tr>
-            <tr><td>22–24/10</td><td>Integração por perfil</td><td>Roteiro completo de ADMIN, GESTOR e USUARIO executado sem falhas de permissão.</td></tr>
-            <tr><td>25–27/10</td><td>Testes essenciais</td><td>Regras críticas da API e fluxos principais do frontend protegidos por testes.</td></tr>
-            <tr><td>28–29/10</td><td>Documentação</td><td>README, Swagger e Postman alinhados ao comportamento final.</td></tr>
-            <tr><td>30/10</td><td>Build e apresentação</td><td>Build final, dados de demonstração e roteiro de apresentação validados.</td></tr>
-            <tr><td>31/10</td><td>Reserva final</td><td>Somente corrigir defeitos bloqueadores. Proibido adicionar funcionalidade.</td></tr>
-          </tbody>
+            <thead>
+            <tr>
+                <th>Data</th>
+                <th>Foco</th>
+                <th>Resultado obrigatório</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>05–07/10</td>
+                <td>Fechar Usuários e permissões</td>
+                <td>Cadastro ADMIN/GESTOR protegido, fluxos dos três perfis conferidos e somente defeitos corrigidos.
+                </td>
+            </tr>
+            <tr>
+                <td>08–18/10</td>
+                <td>Implementar Solicitações</td>
+                <td>Listar, filtrar, criar, editar e executar as transições já definidas pela API.</td>
+            </tr>
+            <tr>
+                <td>19–21/10</td>
+                <td>Fechar Dashboard</td>
+                <td>Botão de nova solicitação funcional e estados de carregamento, vazio e erro consistentes.</td>
+            </tr>
+            <tr>
+                <td>22–24/10</td>
+                <td>Integração por perfil</td>
+                <td>Roteiro completo de ADMIN, GESTOR e USUARIO executado sem falhas de permissão.</td>
+            </tr>
+            <tr>
+                <td>25–27/10</td>
+                <td>Testes essenciais</td>
+                <td>Regras críticas da API e fluxos principais do frontend protegidos por testes.</td>
+            </tr>
+            <tr>
+                <td>28–29/10</td>
+                <td>Documentação</td>
+                <td>README, Swagger e Postman alinhados ao comportamento final.</td>
+            </tr>
+            <tr>
+                <td>30/10</td>
+                <td>Build e apresentação</td>
+                <td>Build final, dados de demonstração e roteiro de apresentação validados.</td>
+            </tr>
+            <tr>
+                <td>31/10</td>
+                <td>Reserva final</td>
+                <td>Somente corrigir defeitos bloqueadores. Proibido adicionar funcionalidade.</td>
+            </tr>
+            </tbody>
         </table>
-      </section>
+    </section>
 
-      <div class="progress-card">
-        <div class="progress-info"><span id="progressText">0 de 0 concluídos</span><span id="progressPercent">0%</span></div>
-        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      </div>
+    <div class="progress-card">
+        <div class="progress-info"><span id="progressText">0 de 0 concluídos</span><span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
 
-      <div class="grid" id="checklist"></div>
+    <div class="grid" id="checklist"></div>
+    </div>
 
-      <footer>
-        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em 18/10/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas a permissão precisa ser validada no backend.
-      </footer>
-    </main>
+    <div class="tab-panel" id="checkupTab" hidden>
+        <div class="score-grid">
+            <div class="score"><span>Nota geral</span><strong>67/100</strong></div>
+            <div class="score"><span>Performance</span><strong>78/100</strong></div>
+            <div class="score"><span>Segurança</span><strong>55/100</strong></div>
+            <div class="score"><span>Qualidade</span><strong>67/100</strong></div>
+        </div>
 
-    <script>
-      const storageKey = 'portal-checklist-api-frontend-2026-10-18'
+        <div class="priority-note">
+            <strong>Bloqueador atual:</strong> a API controla quais solicitações podem ser consultadas, mas ainda não
+            controla quais campos cada perfil pode alterar. Corrigir isso antes da validação integrada dos três perfis.
+        </div>
 
-      const groups = [
+        <div class="progress-card">
+            <div class="progress-info"><span id="checkupProgressText">0 de 0 concluídos</span><span
+                    id="checkupProgressPercent">0%</span></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="checkupProgressFill"></div>
+            </div>
+        </div>
+
+        <div class="grid" id="checkupChecklist"></div>
+    </div>
+
+    <footer>
+        O checklist usa o armazenamento local do navegador. “Restaurar auditoria” retorna ao estado verificado em
+        20/10/2026. Itens de interface não substituem a autorização na API: ocultar um botão melhora a experiência, mas
+        a permissão precisa ser validada no backend.
+    </footer>
+</main>
+
+<script>
+    const storageKey = 'portal-checklist-api-frontend-2026-10-18'
+    const checkupStorageKey = 'portal-checkup-2026-10-20'
+
+    const groups = [
         {
-          area: 'Concluído',
-          title: '1. API Spring Boot',
-          summary: 'A base de segurança, contratos e consultas necessária para o frontend está implementada.',
-          items: [
-            { priority: 'done', text: 'Autenticação JWT, expiração configurável e bloqueio de usuário inativo.', done: true },
-            { priority: 'done', text: 'Escopo de solicitações e dashboard por ADMIN, GESTOR e USUARIO.', done: true },
-            { priority: 'done', text: 'Filtros, paginação e ordenação segura de solicitações.', done: true },
-            { priority: 'done', text: 'DTOs separados para criação e atualização de usuários, com senha opcional no PUT.', done: true },
-            { priority: 'done', text: 'Status HTTP principais e respostas de erro de negócio padronizados.', done: true },
-            { priority: 'done', text: 'Gestor limitado aos usuários e solicitações do próprio setor.', done: true },
-            { priority: 'done', text: 'Gestor cadastra somente USUARIO no próprio setor; ADMIN define perfil e setor.', done: true },
-            { priority: 'done', text: 'Build da API executado com sucesso.', done: true }
-          ]
+            area: 'Concluído',
+            title: '1. API Spring Boot',
+            summary: 'A base de segurança, contratos e consultas necessária para o frontend está implementada.',
+            items: [
+                {
+                    priority: 'done',
+                    text: 'Autenticação JWT, expiração configurável e bloqueio de usuário inativo.',
+                    done: true
+                },
+                {priority: 'done', text: 'Escopo de solicitações e dashboard por ADMIN, GESTOR e USUARIO.', done: true},
+                {priority: 'done', text: 'Filtros, paginação e ordenação segura de solicitações.', done: true},
+                {
+                    priority: 'done',
+                    text: 'DTOs separados para criação e atualização de usuários, com senha opcional no PUT.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Status HTTP principais e respostas de erro de negócio padronizados.',
+                    done: true
+                },
+                {priority: 'done', text: 'Gestor limitado aos usuários e solicitações do próprio setor.', done: true},
+                {
+                    priority: 'done',
+                    text: 'Gestor cadastra somente USUARIO no próprio setor; ADMIN define perfil e setor.',
+                    done: true
+                },
+                {priority: 'done', text: 'Build da API executado com sucesso.', done: true}
+            ]
         },
         {
-          area: 'Concluído',
-          title: '2. Frontend Vue',
-          summary: 'Autenticação, dashboard, Tipos e a implementação de Usuários estão funcionais.',
-          items: [
-            { priority: 'done', text: 'Arquitetura por funcionalidades com Vue 3, TypeScript, Pinia, Router e PrimeVue.', done: true },
-            { priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token.', done: true },
-            { priority: 'done', text: 'Guard de autenticação e autorização por perfil.', done: true },
-            { priority: 'done', text: 'Menu e rotas condicionados para ADMIN, GESTOR e USUARIO.', done: true },
-            { priority: 'done', text: 'Ações administrativas de Tipos e Usuários ocultadas conforme a permissão.', done: true },
-            { priority: 'done', text: 'Dashboard com indicadores por perfil e tabela paginada lazy.', done: true },
-            { priority: 'done', text: 'CRUD de Tipos concluído.', done: true },
-            { priority: 'done', text: 'Usuários com listagem, cadastro, edição, ativação/inativação e validação de formulário concluídos.', done: true },
-            { priority: 'done', text: 'Build do frontend e verificação TypeScript executados com sucesso.', done: true }
-          ]
+            area: 'Concluído',
+            title: '2. Frontend Vue',
+            summary: 'Autenticação, dashboard, Tipos e a implementação de Usuários estão funcionais.',
+            items: [
+                {
+                    priority: 'done',
+                    text: 'Arquitetura por funcionalidades com Vue 3, TypeScript, Pinia, Router e PrimeVue.',
+                    done: true
+                },
+                {priority: 'done', text: 'Login, logout, restauração da sessão e envio do Bearer token.', done: true},
+                {priority: 'done', text: 'Guard de autenticação e autorização por perfil.', done: true},
+                {priority: 'done', text: 'Menu e rotas condicionados para ADMIN, GESTOR e USUARIO.', done: true},
+                {
+                    priority: 'done',
+                    text: 'Ações administrativas de Tipos e Usuários ocultadas conforme a permissão.',
+                    done: true
+                },
+                {priority: 'done', text: 'Dashboard com indicadores por perfil e tabela paginada lazy.', done: true},
+                {priority: 'done', text: 'CRUD de Tipos concluído.', done: true},
+                {
+                    priority: 'done',
+                    text: 'Usuários com listagem, cadastro, edição, ativação/inativação e validação de formulário concluídos.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Build do frontend e verificação TypeScript executados com sucesso.',
+                    done: true
+                }
+            ]
         },
         {
-          area: 'Obrigatório para entrega',
-          title: '3. Validar Usuários e permissões',
-          summary: 'Implementação concluída; falta somente executar o roteiro manual dos três perfis.',
-          items: [
-            { priority: 'done', text: 'POST /usuarios restrito a ADMIN e GESTOR na configuração de segurança.', done: true },
-            { priority: 'done', text: 'Swagger alinhado para não indicar o cadastro de usuário como público.', done: true },
-            { priority: 'high', text: 'Validar manualmente cadastro e consulta de usuários com ADMIN, GESTOR e USUARIO.' },
-            { priority: 'done', text: 'Campos obrigatórios do formulário de usuários validados e erros da API exibidos.', done: true }
-          ]
+            area: 'Obrigatório para entrega',
+            title: '3. Validar Usuários e permissões',
+            summary: 'Implementação concluída; falta somente executar o roteiro manual dos três perfis.',
+            items: [
+                {
+                    priority: 'done',
+                    text: 'POST /usuarios restrito a ADMIN e GESTOR na configuração de segurança.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Swagger alinhado para não indicar o cadastro de usuário como público.',
+                    done: true
+                },
+                {
+                    priority: 'high',
+                    text: 'Validar manualmente cadastro e consulta de usuários com ADMIN, GESTOR e USUARIO.'
+                },
+                {
+                    priority: 'done',
+                    text: 'Campos obrigatórios do formulário de usuários validados e erros da API exibidos.',
+                    done: true
+                }
+            ]
         },
         {
-          area: 'Obrigatório para entrega',
-          title: '4. Solicitações',
-          summary: 'Listagem, filtros, cadastro, edição e transições da API foram implementados; a validação completa por perfil permanece na etapa de integração.',
-          items: [
-            { priority: 'done', text: 'Types, service, store e componentes do módulo de Solicitações criados.', done: true },
-            { priority: 'done', text: 'Listagem paginada com loading, vazio e erro implementada.', done: true },
-            { priority: 'done', text: 'Filtros por status e prioridade implementados.', done: true },
-            { priority: 'done', text: 'Cadastro implementado respeitando as regras de solicitante por perfil.', done: true },
-            { priority: 'done', text: 'Edição e transições de status permitidas pela API implementadas.', done: true },
-            { priority: 'done', text: 'Tabela exibe ID, título, solicitante, tipo, prioridade, status e data de criação.', done: true }
-          ]
+            area: 'Obrigatório para entrega',
+            title: '4. Solicitações',
+            summary: 'Listagem, filtros, cadastro, edição e transições da API foram implementados; a validação completa por perfil permanece na etapa de integração.',
+            items: [
+                {
+                    priority: 'done',
+                    text: 'Types, service, store e componentes do módulo de Solicitações criados.',
+                    done: true
+                },
+                {priority: 'done', text: 'Listagem paginada com loading, vazio e erro implementada.', done: true},
+                {priority: 'done', text: 'Filtros por status e prioridade implementados.', done: true},
+                {
+                    priority: 'done',
+                    text: 'Cadastro implementado respeitando as regras de solicitante por perfil.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Edição e transições de status permitidas pela API implementadas.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Tabela exibe ID, título, solicitante, tipo, prioridade, status e data de criação.',
+                    done: true
+                }
+            ]
         },
         {
-          area: 'Obrigatório para entrega',
-          title: '5. Fechar Dashboard e interface',
-          summary: 'Completar somente os comportamentos que já fazem parte do fluxo principal.',
-          items: [
-            { priority: 'high', text: 'Ligar o botão Nova solicitação ao fluxo de cadastro.' },
-            { priority: 'high', text: 'Eliminar a rejeição não tratada ao falhar o carregamento da tabela do dashboard.' },
-            { priority: 'medium', text: 'Padronizar estados de loading, vazio e erro nas tabelas principais.' },
-            { priority: 'medium', text: 'Validar as telas principais em desktop e celular e corrigir somente quebras de uso.' }
-          ]
+            area: 'Obrigatório para entrega',
+            title: '5. Fechar Dashboard e interface',
+            summary: 'Fluxo principal do Dashboard concluído; permanece a validação responsiva.',
+            items: [
+                {priority: 'done', text: 'Ligar o botão Nova solicitação ao fluxo de cadastro.', done: true},
+                {
+                    priority: 'done',
+                    text: 'Eliminar a rejeição não tratada ao falhar o carregamento da tabela do dashboard.',
+                    done: true
+                },
+                {
+                    priority: 'done',
+                    text: 'Padronizar estados de loading, vazio e erro nas tabelas principais.',
+                    done: true
+                },
+                {
+                    priority: 'medium',
+                    text: 'Validar as telas principais em desktop e celular e corrigir somente quebras de uso.'
+                }
+            ]
         },
         {
-          area: 'Obrigatório para entrega',
-          title: '6. Testes e integração',
-          summary: 'Executar depois que os fluxos de Usuários e Solicitações estiverem fechados.',
-          items: [
-            { priority: 'high', text: 'Cobrir as regras críticas de perfil, setor, proprietário e transição de status na API.' },
-            { priority: 'high', text: 'Cobrir guard, sessão e os stores dos fluxos principais no frontend.' },
-            { priority: 'high', text: 'Executar roteiro manual completo com ADMIN, GESTOR e USUARIO.' },
-            { priority: 'high', text: 'Corrigir somente defeitos encontrados no roteiro e nos testes.' }
-          ]
+            area: 'Obrigatório para entrega',
+            title: '6. Testes e integração',
+            summary: 'Executar depois que os fluxos de Usuários e Solicitações estiverem fechados.',
+            items: [
+                {
+                    priority: 'high',
+                    text: 'Cobrir as regras críticas de perfil, setor, proprietário e transição de status na API.'
+                },
+                {priority: 'high', text: 'Cobrir guard, sessão e os stores dos fluxos principais no frontend.'},
+                {priority: 'high', text: 'Executar roteiro manual completo com ADMIN, GESTOR e USUARIO.'},
+                {priority: 'high', text: 'Corrigir somente defeitos encontrados no roteiro e nos testes.'}
+            ]
         },
         {
-          area: 'Obrigatório para entrega',
-          title: '7. Documentação e apresentação',
-          summary: 'Fechar o material necessário para demonstrar o projeto em entrevista.',
-          items: [
-            { priority: 'high', text: 'Atualizar README da API e do frontend com arquitetura, execução, perfis e funcionalidades finais.' },
-            { priority: 'high', text: 'Revisar Swagger e collection do Postman contra os endpoints finais.' },
-            { priority: 'high', text: 'Preparar dados de demonstração para ADMIN, GESTOR e USUARIO.' },
-            { priority: 'high', text: 'Executar build final da API e do frontend sem erro.' },
-            { priority: 'high', text: 'Preparar e ensaiar um roteiro curto de apresentação do problema, arquitetura e fluxos.' }
-          ]
+            area: 'Obrigatório para entrega',
+            title: '7. Documentação e apresentação',
+            summary: 'Fechar o material necessário para demonstrar o projeto em entrevista.',
+            items: [
+                {
+                    priority: 'high',
+                    text: 'Atualizar README da API e do frontend com arquitetura, execução, perfis e funcionalidades finais.'
+                },
+                {priority: 'high', text: 'Revisar Swagger e collection do Postman contra os endpoints finais.'},
+                {priority: 'high', text: 'Preparar dados de demonstração para ADMIN, GESTOR e USUARIO.'},
+                {priority: 'high', text: 'Executar build final da API e do frontend sem erro.'},
+                {
+                    priority: 'high',
+                    text: 'Preparar e ensaiar um roteiro curto de apresentação do problema, arquitetura e fluxos.'
+                }
+            ]
         }
-      ]
+    ]
 
-      const checklist = document.querySelector('#checklist')
-      const progressText = document.querySelector('#progressText')
-      const progressPercent = document.querySelector('#progressPercent')
-      const progressFill = document.querySelector('#progressFill')
+    const checkupGroups = [
+        {
+            area: 'Bloqueador',
+            title: '1. Autorização de Solicitações',
+            summary: 'Correção obrigatória antes do teste integrado por perfil.',
+            items: [
+                {
+                    priority: 'critical',
+                    text: 'Aplicar na API as permissões de edição por campo para ADMIN, GESTOR e USUARIO.'
+                },
+                {
+                    priority: 'high',
+                    text: 'Testar proprietário, setor, perfil e transições de status diretamente na API.'
+                }
+            ]
+        },
+        {
+            area: 'Correções prioritárias',
+            title: '2. Formulário e tabela de Solicitações',
+            summary: 'Eliminar limitações que afetam o uso real do CRUD já implementado.',
+            items: [
+                {
+                    priority: 'high',
+                    text: 'Carregar todos os usuários e tipos válidos nos selects, sem limitar às primeiras 10 opções.'
+                },
+                {
+                    priority: 'high',
+                    text: 'Exibir somente solicitantes permitidos para o perfil autenticado.'
+                },
+                {
+                    priority: 'high',
+                    text: 'Preservar página, filtros e ordenação da tabela depois de criar ou editar.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Corrigir a propagação do erro da listagem entre store e página.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Usar os enums corretos nos contratos de status e prioridade.'
+                }
+            ]
+        },
+        {
+            area: 'Correções prioritárias',
+            title: '3. Módulo de Usuários',
+            summary: 'Ajustar erros de contrato e componentes que passaram pelo build.',
+            items: [
+                {
+                    priority: 'high',
+                    text: 'Corrigir UsuarioResumido.setor, que está tipado como TipoSolicitacao.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Importar o componente Message utilizado em UsuariosPage.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Definir os campos de ordenação das colunas Setor e Perfil.'
+                },
+                {
+                    priority: 'low',
+                    text: 'Remover a store de Solicitações não utilizada em useUsuarioForm.'
+                }
+            ]
+        },
+        {
+            area: 'Qualidade antes da entrega',
+            title: '4. Contratos, mensagens e interface',
+            summary: 'Pendências menores que reduzem a confiabilidade e a apresentação do projeto.',
+            items: [
+                {
+                    priority: 'medium',
+                    text: 'Tratar userMessage, detail e fields nas respostas de erro da API.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Corrigir ErrorResponse.fields para representar uma lista de erros.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Corrigir os tipos de resposta dos services de Tipos e Solicitações.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Remover o Toast duplicado da página de Tipos.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Validar e corrigir somente quebras de uso em telas pequenas.'
+                },
+                {
+                    priority: 'low',
+                    text: 'Limpar os estados de erro e validação antes de uma nova tentativa de login.'
+                },
+                {
+                    priority: 'low',
+                    text: 'Remover imports sem uso e substituir Record<string, any> nos formulários.'
+                }
+            ]
+        },
+        {
+            area: 'Qualidade antes da entrega',
+            title: '5. Configuração e testes finais',
+            summary: 'Somente ajustes necessários para entregar uma versão segura e demonstrável.',
+            items: [
+                {
+                    priority: 'high',
+                    text: 'Criar testes automatizados dos fluxos críticos da API e do frontend.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Desabilitar Open Session in View explicitamente na API.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Mover a origem permitida pelo CORS para configuração por ambiente.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Restringir ou desabilitar Swagger e API Docs no ambiente de produção.'
+                },
+                {
+                    priority: 'medium',
+                    text: 'Adicionar lint ao frontend e executar junto do type-check e build.'
+                },
+                {
+                    priority: 'high',
+                    text: 'Executar o roteiro completo de ADMIN, GESTOR e USUARIO após as correções.'
+                }
+            ]
+        }
+    ]
 
-      function itemId(groupIndex, itemIndex) { return `group-${groupIndex}-item-${itemIndex}` }
-      function getSavedState() { try { return JSON.parse(localStorage.getItem(storageKey) || '{}') } catch { return {} } }
-      function saveState(state) { localStorage.setItem(storageKey, JSON.stringify(state)) }
+    const checklist = document.querySelector('#checklist')
+    const progressText = document.querySelector('#progressText')
+    const progressPercent = document.querySelector('#progressPercent')
+    const progressFill = document.querySelector('#progressFill')
+    const checkupChecklist = document.querySelector('#checkupChecklist')
+    const checkupProgressText = document.querySelector('#checkupProgressText')
+    const checkupProgressPercent = document.querySelector('#checkupProgressPercent')
+    const checkupProgressFill = document.querySelector('#checkupProgressFill')
+    let activeTab = 'planningTab'
 
-      function render() {
+    function itemId(groupIndex, itemIndex) {
+        return `group-${groupIndex}-item-${itemIndex}`
+    }
+
+    function getSavedState(key = storageKey) {
+        try {
+            return JSON.parse(localStorage.getItem(key) || '{}')
+        } catch {
+            return {}
+        }
+    }
+
+    function saveState(state, key = storageKey) {
+        localStorage.setItem(key, JSON.stringify(state))
+    }
+
+    function render() {
         const saved = getSavedState()
         let currentArea = ''
         checklist.innerHTML = groups.map((group, groupIndex) => {
-          const areaHeading = group.area !== currentArea ? `<h2 class="area-title">${group.area}</h2>` : ''
-          currentArea = group.area
-          const items = group.items.map((item, itemIndex) => {
-            const id = itemId(groupIndex, itemIndex)
-            const checked = Object.hasOwn(saved, id) ? saved[id] : Boolean(item.done)
-            const label = item.priority === 'done' ? 'Concluído' : item.priority
-            return `<li><input type="checkbox" id="${id}" data-id="${id}" ${checked ? 'checked' : ''}><label for="${id}"><span class="badge ${item.priority}">${label}</span>${item.text}</label></li>`
-          }).join('')
-          return `${areaHeading}<section><h2>${group.title}</h2><p class="summary">${group.summary}</p><ul>${items}</ul></section>`
+            const areaHeading = group.area !== currentArea ? `<h2 class="area-title">${group.area}</h2>` : ''
+            currentArea = group.area
+            const items = group.items.map((item, itemIndex) => {
+                const id = itemId(groupIndex, itemIndex)
+                const checked = Object.hasOwn(saved, id) ? saved[id] : Boolean(item.done)
+                const label = item.priority === 'done' ? 'Concluído' : item.priority
+                return `<li><input type="checkbox" id="${id}" data-id="${id}" ${checked ? 'checked' : ''}><label for="${id}"><span class="badge ${item.priority}">${label}</span>${item.text}</label></li>`
+            }).join('')
+            return `${areaHeading}<section><h2>${group.title}</h2><p class="summary">${group.summary}</p><ul>${items}</ul></section>`
         }).join('')
         updateProgress()
-      }
+    }
 
-      function updateProgress() {
-        const checks = [...document.querySelectorAll('input[type="checkbox"]')]
+    function updateProgress() {
+        const checks = [...checklist.querySelectorAll('input[type="checkbox"]')]
         const done = checks.filter(check => check.checked).length
         const percent = checks.length ? Math.round(done / checks.length * 100) : 0
         progressText.textContent = `${done} de ${checks.length} concluídos`
         progressPercent.textContent = `${percent}%`
         progressFill.style.width = `${percent}%`
-      }
+    }
 
-      checklist.addEventListener('change', event => {
+    checklist.addEventListener('change', event => {
         if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'checkbox') return
         const saved = getSavedState()
         saved[event.target.dataset.id] = event.target.checked
         saveState(saved)
         updateProgress()
-      })
+    })
 
-      document.querySelector('#resetButton').addEventListener('click', () => { localStorage.removeItem(storageKey); render() })
-      document.querySelector('#markAllButton').addEventListener('click', () => {
+    function checkupItemId(groupIndex, itemIndex) {
+        return `checkup-${groupIndex}-item-${itemIndex}`
+    }
+
+    function renderCheckup() {
+        const saved = getSavedState(checkupStorageKey)
+        let currentArea = ''
+        checkupChecklist.innerHTML = checkupGroups.map((group, groupIndex) => {
+            const areaHeading = group.area !== currentArea ? `<h2 class="area-title">${group.area}</h2>` : ''
+            currentArea = group.area
+            const items = group.items.map((item, itemIndex) => {
+                const id = checkupItemId(groupIndex, itemIndex)
+                const checked = Object.hasOwn(saved, id) ? saved[id] : Boolean(item.done)
+                return `<li><input type="checkbox" id="${id}" data-id="${id}" ${checked ? 'checked' : ''}><label for="${id}"><span class="badge ${item.priority}">${item.priority}</span>${item.text}</label></li>`
+            }).join('')
+            return `${areaHeading}<section><h2>${group.title}</h2><p class="summary">${group.summary}</p><ul>${items}</ul></section>`
+        }).join('')
+        updateCheckupProgress()
+    }
+
+    function updateCheckupProgress() {
+        const checks = [...checkupChecklist.querySelectorAll('input[type="checkbox"]')]
+        const done = checks.filter(check => check.checked).length
+        const percent = checks.length ? Math.round(done / checks.length * 100) : 0
+        checkupProgressText.textContent = `${done} de ${checks.length} concluídos`
+        checkupProgressPercent.textContent = `${percent}%`
+        checkupProgressFill.style.width = `${percent}%`
+    }
+
+    checkupChecklist.addEventListener('change', event => {
+        if (!(event.target instanceof HTMLInputElement) || event.target.type !== 'checkbox') return
+        const saved = getSavedState(checkupStorageKey)
+        saved[event.target.dataset.id] = event.target.checked
+        saveState(saved, checkupStorageKey)
+        updateCheckupProgress()
+    })
+
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            activeTab = button.dataset.tab
+            document.querySelectorAll('.tab-button').forEach(item => item.classList.toggle('active', item === button))
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.hidden = panel.id !== activeTab)
+        })
+    })
+
+    document.querySelector('#resetButton').addEventListener('click', () => {
+        if (activeTab === 'checkupTab') {
+            localStorage.removeItem(checkupStorageKey)
+            renderCheckup()
+            return
+        }
+        localStorage.removeItem(storageKey)
+        render()
+    })
+    document.querySelector('#markAllButton').addEventListener('click', () => {
+        if (activeTab === 'checkupTab') {
+            const saved = {}
+            checkupGroups.forEach((group, groupIndex) => group.items.forEach((_, itemIndex) => {
+                saved[checkupItemId(groupIndex, itemIndex)] = true
+            }))
+            saveState(saved, checkupStorageKey)
+            renderCheckup()
+            return
+        }
         const saved = {}
-        groups.forEach((group, groupIndex) => group.items.forEach((_, itemIndex) => { saved[itemId(groupIndex, itemIndex)] = true }))
+        groups.forEach((group, groupIndex) => group.items.forEach((_, itemIndex) => {
+            saved[itemId(groupIndex, itemIndex)] = true
+        }))
         saveState(saved)
         render()
-      })
-      render()
-    </script>
-  </body>
+    })
+    render()
+    renderCheckup()
+</script>
+</body>
 </html>

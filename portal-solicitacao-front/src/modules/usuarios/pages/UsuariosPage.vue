@@ -4,20 +4,17 @@ import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 import {storeToRefs} from "pinia";
 import {useUsuarioStore} from "@/modules/usuarios/stores/usuarios.stores.ts";
 import {onMounted, ref} from "vue";
-import type {ErrorResponse, LazyParams} from "@/interfaces/interfaces.ts";
+import type {LazyParams} from "@/types/interfaces.ts";
 import type {DataTablePageEvent, DataTableSortEvent} from "primevue/datatable";
-import axios from "axios";
 import ContainerPage from "@/shared/components/ContainerPage.vue";
 import TabelaUsuarios from "@/modules/usuarios/components/TabelaUsuarios.vue";
-import Loading from "@/shared/components/Loading.vue";
 import {Button, ConfirmDialog, useConfirm} from "primevue";
 import Titulo from "@/shared/components/Titulo.vue";
 import UsuarioFormDialog from "@/modules/usuarios/components/UsuarioFormDialog.vue";
-import type {UsuarioRequest} from "@/modules/usuarios/types/usuario.types.ts";
-import {PerfilUsuario, Setor} from "@/enums/enums.ts";
 import {useAuthStore} from "@/modules/auth/stores/auth.ts";
 import {obterMensagemErro} from "@/shared/utils/store/mensagem.store.ts";
-
+import {useUsuarioForm} from "@/modules/usuarios/composables/useUsuarioForm.ts";
+import Message from "primevue/message"
 
 const authStore = useAuthStore();
 const {userSession, isAdmin, isGestor} = storeToRefs(authStore);
@@ -30,8 +27,25 @@ const {toastError, toastSuccess} = useCustomToast();
 const usuarioStore = useUsuarioStore()
 
 
-const {usuarios, erro, isLoading} = storeToRefs(usuarioStore);
+const {usuarios, erro, isLoading,} = storeToRefs(usuarioStore);
 
+const {
+  preparaDialog,
+  fecharDialog,
+  abrirEdicao,
+  salvar,
+  visible,
+  modo,
+  usuario,
+  listaPerfisUsuario,
+  listaSetores,
+} = useUsuarioForm({
+  isAdmin: isAdmin.value,
+  setorUsuarioAutenticado: usuarioAutenticado!.setor,
+  mostrarMensagemErro: toastError,
+  mostrarMensagemSucesso: toastSuccess,
+  recarregarUsuarios: loadLazyData,
+});
 
 const lazyParams = ref<LazyParams>({
   first: 0,
@@ -79,129 +93,6 @@ async function loadLazyData() {
 }
 
 
-//salvar
-
-//cadastroo
-
-
-const visible = ref(false);
-const modo = ref<"cadastro" | "edicao">("cadastro");
-const idSelecionado = ref<number | null>(null);
-const usuario = ref<UsuarioRequest>({
-
-  nome: "",
-  email: "",
-  setor: setorUsuarioAutenticado.value,
-  senha: "",
-  perfil: PerfilUsuario.USUARIO,
-
-})
-
-
-const listaPerfisUsuario = ref<PerfilUsuario[] | []>([]);
-const listaSetores = ref<Setor[] | []>([]);
-
-const preparaDialog = (modoDialog: "cadastro" | "edicao") => {
-
-  modo.value = modoDialog
-  visible.value = true;
-
-  if (isAdmin.value) {
-    listaPerfisUsuario.value = Object.values(PerfilUsuario);
-    listaSetores.value = Object.values(Setor);
-  } else {
-    listaPerfisUsuario.value = [PerfilUsuario.USUARIO];
-    listaSetores.value = [setorUsuarioAutenticado.value];
-  }
-
-}
-
-const fecharDialog = () => {
-  visible.value = false;
-  usuario.value = {
-    nome: "",
-    email: "",
-    setor: usuarioAutenticado!.setor,
-    senha: "",
-    perfil: PerfilUsuario.USUARIO,
-
-  }
-
-  idSelecionado.value = null
-}
-
-
-//salvar
-
-const salvar = async (modo: "cadastro" | "edicao", dados: UsuarioRequest) => {
-
-  try {
-
-    if (modo === "cadastro") {
-
-      await usuarioStore.criarUsuario(dados)
-
-      toastSuccess("Criado com sucesso");
-
-    } else {
-
-      if (idSelecionado.value === null) {
-        toastError("Registro não selecionado.")
-        return
-      }
-
-      await usuarioStore.atualizarUsuario(idSelecionado.value, dados)
-
-      toastSuccess("Atualizado com sucesso");
-
-
-    }
-
-    fecharDialog()
-
-    await loadLazyData()
-
-  } catch (e) {
-    let erro = obterMensagemErro(e)
-
-    toastError(erro)
-  }
-}
-
-// editar
-
-
-const abrirEdicao = async (id: number) => {
-
-  if (id === null) {
-    toastError("Registro não capturado")
-    return
-  }
-
-
-  try {
-    const usuarioEdicao = await usuarioStore.buscarUsuarioPorId(id)
-
-    usuario.value = {
-      nome: usuarioEdicao.nome,
-      email: usuarioEdicao.email,
-      setor: Setor[usuarioEdicao.setor as keyof typeof Setor],
-      senha: "",
-      perfil: PerfilUsuario[usuarioEdicao.perfil as keyof typeof PerfilUsuario],
-    }
-
-
-    idSelecionado.value = id
-    preparaDialog("edicao")
-
-  } catch (e) {
-    let erro = obterMensagemErro(e)
-
-    toastError(erro)
-  }
-}
-
-
 //ativar /INATIVAR
 
 
@@ -235,12 +126,12 @@ const inativarAtivar = (id: number, nome: String, ativo: boolean) => {
 
       } catch (error) {
         let erroDeletar: string | undefined = ativo ? "Não foi possível inativar o registro. Tente mais tarde." : "Não foi possível ativar o registro. Tente mais tarde.";
-        if (axios.isAxiosError<ErrorResponse>(error)) {
-          erroDeletar = error.response?.data.detail
+
+        if (error != null) {
+          erroDeletar = obterMensagemErro(error)
         }
 
         toastError(erroDeletar)
-
 
       }
     },
@@ -269,13 +160,12 @@ onMounted(() => {
       </div>
 
 
-      <Loading v-if="isLoading"/>
-
-      <Message v-else-if="erro" severity="error" :closable="false">
+      <Message v-if="erro" severity="error" :closable="false">
         {{ erro }}
       </Message>
 
       <TabelaUsuarios v-else
+                      :isLoading="isLoading"
                       :usuarios="usuarios?.dados?? []"
                       :totalRegistros="usuarios?.totalDados??0"
                       :lazyParams="lazyParams"

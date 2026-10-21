@@ -1,5 +1,5 @@
 import axios from "axios";
-import type {ErrorResponse} from "@/interfaces/interfaces.ts";
+import type {ErrorResponse} from "@/types/interfaces.ts";
 
 export function obterMensagemErro(error: unknown): string {
     if (axios.isAxiosError<ErrorResponse>(error)) {

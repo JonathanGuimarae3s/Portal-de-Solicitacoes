@@ -5,8 +5,10 @@ import Button from "primevue/button";
 import ButtonGroup from "primevue/buttongroup";
 
 import IconComponent from "@/shared/components/IconComponent.vue";
-import type {LazyParams} from "@/interfaces/interfaces.ts";
-import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
+import type {LazyParams} from "@/types/interfaces.ts";
+import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.ts";
+import Skeleton from "primevue/skeleton";
+import {computed} from "vue";
 
 
 interface iProps {
@@ -17,9 +19,18 @@ interface iProps {
   tipos: TipoSolicitacao[] | [],
   totalRegistros: number;
   lazyParams: LazyParams;
+  isLoading: boolean;
 }
 
-defineProps<iProps>();
+const props = defineProps<iProps>();
+
+const linhasTabela = computed(() => {
+  if (!props.isLoading) {
+    return props.tipos;
+  }
+
+  return Array.from({length: 5}, (_, index) => ({id: -(index + 1)}));
+});
 
 </script>
 
@@ -27,7 +38,7 @@ defineProps<iProps>();
 
 
   <DataTable
-      :value="tipos"
+      :value="linhasTabela"
       lazy
       paginator
       dataKey="id"
@@ -40,14 +51,34 @@ defineProps<iProps>();
       :totalRecords="totalRegistros"
       @page="paginar"
       @sort="ordenar"
+      :stripedRows="true"
+      :showGridlines="true"
   >
 
-    <Column field="id" header="Código" sortable/>
-    <Column field="nome" header="Nome" sortable/>
+    <template #empty>
+      <div class="text-center p-4">
+        Nenhum registro foi encontrado.
+      </div>
+    </template>
+
+    <Column field="id" header="Código" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="4rem"/>
+        <span v-else>{{ slotProps.data.id }}</span>
+      </template>
+    </Column>
+
+    <Column field="nome" header="Nome" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="70%"/>
+        <span v-else>{{ slotProps.data.nome }}</span>
+      </template>
+    </Column>
+
     <Column>
       <template #body="slotProps">
-
-        <ButtonGroup>
+        <Skeleton v-if="isLoading" width="6rem" height="2.5rem"/>
+        <ButtonGroup v-else>
 
           <Button severity="info" @click="editar(slotProps.data.id)">
             <IconComponent icon="pi pi-pencil" :estilo="{fontWeight: 'bold'}"/>

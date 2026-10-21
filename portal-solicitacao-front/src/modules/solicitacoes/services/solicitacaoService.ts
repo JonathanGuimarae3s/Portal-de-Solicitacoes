@@ -1,7 +1,7 @@
-import type {ConsultaTabelaSolicitacao, PageResponse} from "@/interfaces/interfaces.ts";
+import type {ConsultaTabelaSolicitacao, PageResponse} from "@/types/interfaces.ts";
 
 import api from "@/core/http/api.ts";
-import type {Solicitacao, SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.types.ts";
+import type {Solicitacao, SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.ts";
 
 const ENDPOINT = "/solicitacoes";
 

@@ -3,10 +3,9 @@
 import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 import {storeToRefs} from "pinia";
 import {onMounted, ref} from "vue";
-import type {LazyParams} from "@/interfaces/interfaces.ts";
+import type {LazyParams} from "@/types/interfaces.ts";
 import type {DataTablePageEvent, DataTableSortEvent} from "primevue/datatable";
 import ContainerPage from "@/shared/components/ContainerPage.vue";
-import Loading from "@/shared/components/Loading.vue";
 import {Button} from "primevue";
 import Titulo from "@/shared/components/Titulo.vue";
 import {useAuthStore} from "@/modules/auth/stores/auth.ts";
@@ -20,6 +19,7 @@ import {formatarStatusSolicitacao} from "@/shared/utils/mappers/StatusUtils.ts";
 import Message from "primevue/message";
 import SolicitacaoFiltroSelect from "@/modules/solicitacoes/components/SolicitacaoFiltroSelect.vue";
 import {useSolicitacaoForm} from "@/modules/solicitacoes/composables/useSolicitacaoForm.ts";
+import {useRoute} from "vue-router";
 
 const authStore = useAuthStore();
 const {userSession, isAdmin, isGestor, isUsuario} = storeToRefs(authStore);
@@ -41,7 +41,15 @@ const {
   statusList,
   usuarioList,
   tipoList,
-} = useSolicitacaoForm(isGestor.value, isAdmin.value, isUsuario.value, usuarioAutenticado!);
+} = useSolicitacaoForm({
+  isGestor: isGestor.value,
+  isAdmin: isAdmin.value,
+  isUsuario: isUsuario.value,
+  usuarioAutenticado: usuarioAutenticado!,
+  mostrarMensagemErro: toastError,
+  mostrarMensagemSucesso: toastSuccess,
+  recarregarSolicitacoes: loadLazyData,
+});
 
 const solicitacaoStore = useSolicitacaoStore()
 
@@ -127,6 +135,11 @@ async function filtrarTabela() {
 
 }
 
+const route = useRoute();
+if (route.query.novaSolicitacao) {
+  preparaDialog("cadastro")
+}
+
 
 onMounted(() => {
   loadLazyData()
@@ -147,9 +160,7 @@ onMounted(() => {
       </div>
 
 
-      <Loading v-if="isLoading"/>
-
-      <Message v-else-if="erro" severity="error" :closable="false">
+      <Message v-if="erro" severity="error" :closable="false">
         {{ erro }}
       </Message>
 
@@ -178,6 +189,7 @@ onMounted(() => {
 
 
         <TabelaSolicitacoes
+            :isLoading="isLoading"
             :solicitacoes="solicitacoes?.dados?? []"
             :totalRegistros="solicitacoes?.totalDados??0"
             :lazyParams="lazyParams"

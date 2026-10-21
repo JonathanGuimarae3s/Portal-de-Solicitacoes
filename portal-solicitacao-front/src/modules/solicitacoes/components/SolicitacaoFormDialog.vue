@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import Button from "primevue/button"
 import Dialog from "primevue/dialog"
-import type {Usuario} from "@/modules/usuarios/types/usuario.types.ts";
+import type {Usuario} from "@/modules/usuarios/types/usuario.ts";
 import {computed} from 'vue';
 import {Form, type FormSubmitEvent} from "@primevue/forms";
 import CampoInput from "@/shared/components/CampoInput.vue";
 import Textarea from "primevue/textarea";
-import type {ErrosFormulario} from "@/modules/solicitacoes/types/errosFormularioSolicitacao.types.ts";
-import type {SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.types.ts";
-import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
+import type {ErrosFormulario} from "@/modules/solicitacoes/types/errosFormularioSolicitacao.ts";
+import type {SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.ts";
+import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.ts";
 import {Select} from "primevue";
 import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.ts";
 import {formatarPrioridade} from "@/shared/utils/mappers/PrioridadeSolicitacaoUtils.ts";

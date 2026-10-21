@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Button from "primevue/button"
 import Dialog from "primevue/dialog"
-import type {UsuarioRequest} from "@/modules/usuarios/types/usuario.types.ts";
+import type {UsuarioRequest} from "@/modules/usuarios/types/usuario.ts";
 import {PerfilUsuario, Setor} from "@/enums/enums.ts";
 import {Select} from "primevue";
 import {computed} from 'vue';

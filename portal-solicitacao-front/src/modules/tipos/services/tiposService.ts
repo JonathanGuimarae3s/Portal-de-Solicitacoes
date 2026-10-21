@@ -1,7 +1,7 @@
-import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
+import type {Consulta, PageResponse} from "@/types/interfaces.ts";
 
 import api from "@/core/http/api.ts";
-import type {TipoSolicitacao, TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.types.ts";
+import type {TipoSolicitacao, TipoSolicitacaoRequest} from "@/modules/tipos/types/tipos.ts";
 
 const ENDPOINT = "/tipos";
 

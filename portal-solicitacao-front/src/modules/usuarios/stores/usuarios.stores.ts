@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import type {Consulta, PageResponse} from "@/interfaces/interfaces.ts";
-import type {Usuario, UsuarioRequest} from "@/modules/usuarios/types/usuario.types.ts";
+import type {Consulta, PageResponse} from "@/types/interfaces.ts";
+import type {Usuario, UsuarioRequest} from "@/modules/usuarios/types/usuario.ts";
 import * as usuarioService from "@/modules/usuarios/services/usuarioService.ts";
 
 export const useUsuarioStore = defineStore("usuarios", () => {

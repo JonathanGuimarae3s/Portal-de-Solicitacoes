@@ -1,24 +1,28 @@
 import {ref} from "vue";
 import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.ts";
-import type {SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.types.ts";
+import type {SolicitacaoRequest} from "@/modules/solicitacoes/types/solicitacao.ts";
 import {obterMensagemErro} from "@/shared/utils/store/mensagem.store.ts";
-import type {Usuario} from "@/modules/usuarios/types/usuario.types.ts";
-import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.types.ts";
+import type {Usuario} from "@/modules/usuarios/types/usuario.ts";
+import type {TipoSolicitacao} from "@/modules/tipos/types/tipos.ts";
 import {storeToRefs} from "pinia";
 import {useTiposStore} from "@/modules/tipos/stores/tipos.stores.ts";
 import {useUsuarioStore} from "@/modules/usuarios/stores/usuarios.stores.ts";
-import type {UsuarioAutenticado} from "@/modules/auth/interfaces/UsuarioAutenticado.ts";
 import {useSolicitacaoStore} from "@/modules/solicitacoes/stores/solicitacoes.stores.ts";
 import {formatarStatusEnum} from "@/shared/utils/mappers/StatusUtils.ts";
 import {formatarPrioridadeEnum} from "@/shared/utils/mappers/PrioridadeSolicitacaoUtils.ts";
-import {useCustomToast} from "@/shared/composables/toastCustomizados.ts";
 import {carregaStatusDeAcordoComStatusAnterior} from "@/modules/solicitacoes/regras/solicitacaoStatusRules.ts";
+import type {UseSolicitacaoFormOptions} from "@/modules/solicitacoes/types/solicitacaoFormOptions.ts";
 
 
-export const useSolicitacaoForm = (isGestor: boolean,
-                                   isAdmin: boolean, isUsuario: boolean, usuarioAutenticado: UsuarioAutenticado) => {
-    const {toastError, toastSuccess} = useCustomToast();
-
+export const useSolicitacaoForm = ({
+                                       isGestor,
+                                       isAdmin,
+                                       isUsuario,
+                                       usuarioAutenticado,
+                                       mostrarMensagemErro,
+                                       mostrarMensagemSucesso,
+                                       recarregarSolicitacoes,
+                                   }: UseSolicitacaoFormOptions) => {
     const solicitacaoStore = useSolicitacaoStore();
 
     let tipoList = ref<TipoSolicitacao[] | undefined>([])
@@ -36,16 +40,16 @@ export const useSolicitacaoForm = (isGestor: boolean,
     const {usuarios} = storeToRefs(usuarioStore);
     const {tipos} = storeToRefs(tiposStore);
 
-    const solicitacaoInitial = {
+    const criarSolicitacaoInicial = (): SolicitacaoRequest => ({
         titulo: "",
         descricao: "",
         prioridade: PrioridadeSolicitacao.BAIXA,
         status: StatusSolicitacao.ABERTA,
         usuario: null,
         tipo: null
-    }
+    });
 
-    const solicitacao = ref<SolicitacaoRequest>(solicitacaoInitial);
+    const solicitacao = ref<SolicitacaoRequest>(criarSolicitacaoInicial());
 
     async function carregaLista() {
 
@@ -92,8 +96,8 @@ export const useSolicitacaoForm = (isGestor: boolean,
 
     const fecharDialog = () => {
         visible.value = false;
-        solicitacao.value = solicitacaoInitial
-        idSelecionado.value = 0
+        solicitacao.value = criarSolicitacaoInicial()
+        idSelecionado.value = null
 
     }
 
@@ -108,47 +112,42 @@ export const useSolicitacaoForm = (isGestor: boolean,
 
                 await solicitacaoStore.criarSolicitacao(dados)
 
-                toastSuccess("Solicitacao criada com sucesso!");
+                mostrarMensagemSucesso("Solicitação criada com sucesso!");
 
             } else {
 
                 if (idSelecionado.value === null) {
-                    toastError("Registro não selecionado.")
+                    mostrarMensagemErro("Registro não selecionado.")
                     return
                 }
 
 
                 await solicitacaoStore.atualizarSolicitacao(idSelecionado.value, dados)
 
-                toastSuccess("Solicitacao atualizada com sucesso!");
+                mostrarMensagemSucesso("Solicitação atualizada com sucesso!");
 
             }
 
             fecharDialog()
 
-            await solicitacaoStore.carregarSolicitacoes({
-                pagina: 0,
-                tamanho: 10,
-                ordenarPor: "id",
-                direcao: "asc"
-            })
+            await recarregarSolicitacoes()
 
         } catch (e) {
             let erro = obterMensagemErro(e)
 
-            toastError(erro)
+            mostrarMensagemErro(erro)
         }
     }
 
 // editar
 
-    const idSelecionado = ref(0)
+    const idSelecionado = ref<number | null>(null)
     const minhaSolicitacao = ref(false)
 
     const abrirEdicao = async (id: number) => {
 
         if (id === null) {
-            toastError("Registro não capturado")
+            mostrarMensagemErro("Registro não capturado")
             return
         }
 
@@ -176,7 +175,7 @@ export const useSolicitacaoForm = (isGestor: boolean,
         } catch (e) {
             let erro = obterMensagemErro(e)
 
-            toastError(erro)
+            mostrarMensagemErro(erro)
         }
     }
 

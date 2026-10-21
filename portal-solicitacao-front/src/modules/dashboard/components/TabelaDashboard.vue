@@ -1,82 +1,14 @@
 <script setup lang="ts">
-import Column from "primevue/column"
 import DataTable, {type DataTablePageEvent, type DataTableSortEvent} from "primevue/datatable"
-import {onMounted, ref} from "vue";
-import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.js"
-import {useDashboardStore} from "@/modules/dashboard/stores/dashboard.store.js";
-import {storeToRefs} from "pinia";
-import Message from "primevue/message";
-import Loading from "@/shared/components/Loading.vue";
-import Tag from 'primevue/tag';
-import {formatarStatusEnum, formatarStatusSolicitacao} from "@/shared/utils/mappers/StatusUtils.ts";
+import type {LazyParams} from "@/types/interfaces.ts";
+import {formatarStatusSolicitacao} from "@/shared/utils/mappers/StatusUtils.ts";
 import {formatarPrioridade} from "@/shared/utils/mappers/PrioridadeSolicitacaoUtils.ts";
-
-const dashboardStore = useDashboardStore();
-const {solicitacoes, erroTabela} = storeToRefs(dashboardStore);
-
-type SortOrder = 1 | -1;
-
-interface LazyParams {
-  first: number;
-  rows: number;
-  sortField: string;
-  sortOrder: SortOrder;
-}
-
-const lazyParams = ref<LazyParams>({
-  first: 0,
-  rows: 10,
-  sortField: "id",
-  sortOrder: -1,
-});
-
-const isLoading = ref(false);
-
-async function onPage(event: DataTablePageEvent) {
-  lazyParams.value.first = event.first;
-  lazyParams.value.rows = event.rows;
-
-  await loadLazyData();
-}
-
-async function onSort(event: DataTableSortEvent) {
-  lazyParams.value.first = 0;
-
-  lazyParams.value.sortField =
-      typeof event.sortField === "string"
-          ? event.sortField
-          : "id";
-
-  lazyParams.value.sortOrder =
-      event.sortOrder === 1 ? 1 : -1;
-
-  await loadLazyData();
-}
-
-async function loadLazyData() {
-  try {
-    isLoading.value = true;
-    const {
-      first,
-      rows,
-      sortField,
-      sortOrder,
-    } = lazyParams.value;
-
-
-    await dashboardStore.carregarSolicitacoes({
-      pagina: Math.floor(first / rows),
-      tamanho: rows,
-      ordenarPor: sortField,
-      direcao: sortOrder === 1 ? "asc" : "desc",
-
-    });
-
-
-  } finally {
-    isLoading.value = false;
-  }
-}
+import type {SolicitacaoResumo} from "@/modules/dashboard/interfaces/dashboard.ts";
+import Column from "primevue/column"
+import Tag from "primevue/tag";
+import Skeleton from "primevue/skeleton";
+import {computed} from "vue";
+import {PrioridadeSolicitacao, StatusSolicitacao} from "@/enums/enums.ts";
 
 function getSeverityPrioridade(prioridade: string): string {
 
@@ -109,56 +41,99 @@ function getSeverityStatus(status: string): string {
 }
 
 
-onMounted(() => {
-  loadLazyData();
+interface iProps {
+  lazyParams: LazyParams;
+  paginar: (event: DataTablePageEvent) => void;
+  ordenar: (event: DataTableSortEvent) => void;
+  totalRegistros: number;
+  solicitacoes: SolicitacaoResumo[] | [];
+  isLoading: boolean
+
+}
+
+const props = defineProps<iProps>();
+
+const linhasTabela = computed<SolicitacaoResumo[]>(() => {
+  if (!props.isLoading) {
+    return props.solicitacoes;
+  }
+
+  return Array.from({length: 5}, (_, index) => ({
+    id: -(index + 1),
+    titulo: "",
+    status: StatusSolicitacao.ABERTA,
+    prioridade: PrioridadeSolicitacao.BAIXA,
+  }));
 });
 
 </script>
 
 <template>
 
-  <Loading v-if="isLoading"/>
 
-  <Message v-else-if="erroTabela" severity="error" :closable="false">
-    {{ erroTabela }}
-  </Message>
-
-  <DataTable v-else
-             :value="solicitacoes?.dados ?? []"
-             lazy
-             paginator
-             dataKey="id"
-             class="w-full"
-             paginatorPosition="top"
-             :first="lazyParams.first"
-             :rows="lazyParams.rows"
-             :rowsPerPageOptions="[5, 10, 20]"
-             :sortField="lazyParams.sortField"
-             :sortOrder="lazyParams.sortOrder"
-             :totalRecords="solicitacoes?.totalDados ?? 0"
-             :loading="isLoading"
-             @page="onPage"
-             @sort="onSort"
+  <DataTable
+      :value="linhasTabela"
+      lazy
+      paginator
+      dataKey="id"
+      class="w-full"
+      paginatorPosition="top"
+      :first="lazyParams.first"
+      :rows="lazyParams.rows"
+      :rowsPerPageOptions="[5, 10, 20]"
+      :sortField="lazyParams.sortField"
+      :sortOrder="lazyParams.sortOrder"
+      :totalRecords="totalRegistros"
+      @page="paginar"
+      @sort="ordenar"
+      :stripedRows="true"
+      :showGridlines="true"
   >
-    <Column field="id" header="Código" sortable/>
-    <Column field="titulo" header="Título" sortable/>
+
+    <template #empty>
+      <div class="text-center p-4">
+        Nenhum registro foi encontrado.
+      </div>
+    </template>
+
+
+    <Column field="id" header="Código" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="4rem"/>
+        <span v-else>{{ slotProps.data.id }}</span>
+      </template>
+    </Column>
+
+    <Column field="titulo" header="Título" sortable>
+      <template #body="slotProps">
+        <Skeleton v-if="isLoading" width="70%"/>
+        <span v-else>{{ slotProps.data.titulo }}</span>
+      </template>
+    </Column>
+
     <Column field="status" header="Status" sortable>
       <template #body="slotProps">
-            <span>
-            </span>
-        <Tag rounded :severity="getSeverityStatus(slotProps.data.status)">
-          {{ formatarStatusSolicitacao(slotProps.data.status) }}
-        </Tag>
+        <Skeleton v-if="isLoading" width="7rem" borderRadius="1rem"/>
+        <template v-else>
+          <Tag rounded :severity="getSeverityStatus(slotProps.data.status)">
+            {{ formatarStatusSolicitacao(slotProps.data.status) }}
+          </Tag>
+        </template>
       </template>
     </Column>
+
     <Column field="prioridade" header="Prioridade" sortable>
       <template #body="slotProps">
-
-        <Tag rounded :severity="getSeverityPrioridade(slotProps.data.prioridade)">
-          {{ formatarPrioridade(slotProps.data.prioridade) }}
-        </Tag>
-
+        <Skeleton v-if="isLoading" width="6rem" borderRadius="1rem"/>
+        <template v-else>
+          <Tag rounded :severity="getSeverityPrioridade(slotProps.data.prioridade)">
+            {{ formatarPrioridade(slotProps.data.prioridade) }}
+          </Tag>
+        </template>
       </template>
     </Column>
+
+
   </DataTable>
+
 </template>
